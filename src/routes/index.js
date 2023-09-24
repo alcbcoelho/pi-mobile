@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 // import { NavigationContainer } from '@react-navigation/native';
 
 // Routes
-import DrawerRoutes from './drawer.routes';
+import AppRoutes from './app.routes';
 
 // Contexts
 import AppThemeProvider from '../contexts/AppThemeContext';
@@ -17,5 +17,5 @@ export default function Routes() {
 		setTimeout(() => setShowSplashScreen(false), 3000);
 	}, []);
 
-	return <AppThemeProvider>{showSplashScreen ? <SplashScreen /> : <DrawerRoutes />}</AppThemeProvider>;
+	return <AppThemeProvider>{showSplashScreen ? <SplashScreen /> : <AppRoutes />}</AppThemeProvider>;
 }
