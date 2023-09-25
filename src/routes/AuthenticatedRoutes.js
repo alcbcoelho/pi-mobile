@@ -1,15 +1,19 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { Divider } from 'react-native-paper';
-import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 
 // Hooks
 import useAppTheme from '../hooks/useAppTheme';
 
+// Routes
+import RegisteredObjectsRoutes from './RegisteredObjectsRoutes';
+import NotificationsRoutes from './NotificationsRoutes';
+
 // Pages
 import Home from '../pages/Home';
-import MyNotifications from '../pages/MyNotifications';
-import MyObjects from '../pages/MyObjects';
+// import MyNotifications from '../pages/MyNotifications';
+// import MyObjects from '../pages/MyObjects';
 import MyProfile from '../pages/MyProfile';
 import ObjectDetails from '../pages/ObjectDetails';
 import ObjectRegister from '../pages/ObjectRegister';
@@ -82,7 +86,7 @@ export default function AuthenticatedRoutes() {
 			/>
 			<Drawer.Screen
 				name='MyNotifications'
-				component={MyNotifications}
+				component={NotificationsRoutes}
 				options={{
 					drawerIcon: ({ color, size }) => <MaterialIcons name='notifications' size={size} color={color} />,
 					drawerLabel: 'Minhas Notificações',
@@ -91,7 +95,7 @@ export default function AuthenticatedRoutes() {
 			/>
 			<Drawer.Screen
 				name='MyObjects'
-				component={MyObjects}
+				component={RegisteredObjectsRoutes}
 				options={{
 					drawerIcon: ({ color, size }) => <MaterialIcons name='image-search' size={size} color={color} />,
 					drawerLabel: 'Meus Objetos',

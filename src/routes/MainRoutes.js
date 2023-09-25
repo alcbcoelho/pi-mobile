@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 
 // Routes
-import AuthenticatedRoutes from './drawer.routes';
-import UnauthenticatedRoutes from './stack.routes';
+import AuthenticatedRoutes from './AuthenticatedRoutes';
+import UnauthenticatedRoutes from './UnauthenticatedRoutes';
 
 const Stack = createStackNavigator();
 
