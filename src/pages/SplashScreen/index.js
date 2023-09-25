@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
 
 // Styles
 import { global } from '../../styles/global';
