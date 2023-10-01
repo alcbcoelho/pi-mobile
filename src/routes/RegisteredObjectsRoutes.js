@@ -23,13 +23,5 @@ export default function RegisteredObjectsRoutes() {
 			<Tab.Screen name='LostObjects' component={LostObjects} options={{ title: 'Objetos Perdidos' }} />
 			<Tab.Screen name='FoundObjects' component={FoundObjects} options={{ title: 'Objetos Achados' }} />
 		</Tab.Navigator>
-
-		// <FAB
-		// 	style={global.fab}
-		// 	icon='plus'
-		// 	label='Novo Registro'
-		// 	// color='white'
-		// 	onPress={() => navigation.navigate('ObjectRegister')}
-		// />
 	);
 }
