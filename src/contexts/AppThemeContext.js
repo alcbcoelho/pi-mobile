@@ -1,5 +1,4 @@
 import { useState, createContext, useMemo, useCallback } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useColorScheme } from 'react-native';
 
 import {
@@ -129,14 +128,12 @@ export default function AppThemeProvider({ children }) {
 	const theme = useMemo(() => (isDarkTheme ? appDarkTheme : appDefaultTheme), [isDarkTheme]);
 
 	return (
-		<SafeAreaProvider>
-			<PaperProvider theme={theme}>
-				<NavigationContainer theme={theme}>
-					<AppThemeContext.Provider value={{ isDarkTheme, theme, themeType, setThemeType, toggleThemeType }}>
-						{children}
-					</AppThemeContext.Provider>
-				</NavigationContainer>
-			</PaperProvider>
-		</SafeAreaProvider>
+		<PaperProvider theme={theme}>
+			<NavigationContainer theme={theme}>
+				<AppThemeContext.Provider value={{ isDarkTheme, theme, themeType, setThemeType, toggleThemeType }}>
+					{children}
+				</AppThemeContext.Provider>
+			</NavigationContainer>
+		</PaperProvider>
 	);
 }
