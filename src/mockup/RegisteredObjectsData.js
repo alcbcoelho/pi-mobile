@@ -1,0 +1,53 @@
+const MyObjectsList = {
+	lostObjects: [
+		{
+			id: '1',
+			situation: 'lost',
+			owner: 'Cleiton Fernandes',
+			object: 'Copo Stanley',
+			brand: 'Stanley',
+			model: 'SVT40',
+			color: 'Branco',
+			characteristics: ['Rachado', 'Sujo'],
+			place: 'IESB',
+			date: '08/09/2023',
+			time: '18:30',
+			info: 'Achei perto dos microondas da cantina.',
+			imgUrl: 'https://images.tcdn.com.br/img/img_prod/1013387/copo_de_cerveja_termico_stanley_beer_pint_branco_c_tampa_473ml_2809_1_3c5dd5836379b858dffb0713a4c755ae.jpg',
+		},
+	],
+	foundObjects: [
+		{
+			id: '2',
+			situation: 'found',
+			owner: 'Cleiton Fernandes',
+			object: 'Copo Stanley',
+			brand: 'Stanley',
+			model: '',
+			color: 'Branco',
+			characteristics: ['rachado ao meio', 'sujo'],
+			place: 'IESB',
+			date: '08/09/2023',
+			time: '18:30',
+			info: 'Achei perto dos microondas da cantida.',
+			imgUrl: 'https://d2r9epyceweg5n.cloudfront.net/stores/002/644/199/products/screenshot_20221208-171415_chrome1-1e4157f8b43dd558b116705316736080-640-0.jpg',
+		},
+		{
+			id: '3',
+			situation: 'found',
+			owner: 'Cleiton Fernandes',
+			object: 'Copo Stanley',
+			brand: 'Stanley',
+			model: '',
+			color: 'Branco',
+			characteristics: ['rachado ao meio', 'sujo'],
+			place: 'IESB',
+			date: '08/09/2023',
+			time: '18:30',
+			info: 'Achei perto dos microondas da cantida.',
+			imgUrl: 'https://d2r9epyceweg5n.cloudfront.net/stores/002/644/199/products/screenshot_20221208-171415_chrome1-1e4157f8b43dd558b116705316736080-640-0.jpg',
+		},
+	],
+};
+
+export default MyObjectsList;
