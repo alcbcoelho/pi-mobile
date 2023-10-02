@@ -6,9 +6,13 @@ export const global = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	contentContainer: {
+	scrollviewContainer: {
 		flex: 1,
-		width: '90%',
+		justifyContent: 'center',
+	},
+	input: {
+		width: '80%',
+		marginBottom: 8,
 	},
 	inputRow: {
 		flexDirection: 'row',
@@ -20,6 +24,69 @@ export const global = StyleSheet.create({
 		right: 0,
 		bottom: 0,
 	},
+	button: {
+		marginVertical: 24,
+	},
+	pressableButton: {
+		width: '30%',
+		marginVertical: 24,
+		padding: 16,
+		backgroundColor: '#654',
+		borderRadius: 32,
+	},
+	title: {
+		fontSize: 28,
+		color: '#000',
+		marginBottom: 16,
+	},
+	loginLinks: {
+		width: '80%',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		gap: 8,
+	},
+	agreement: {
+		flexDirection: 'row',
+		width: '80%',
+		marginTop: 16,
+	},
+	imageRating: {
+		width: '100%',
+		aspectRatio: 16 / 9,
+		backgroundColor: 'grey',
+	},
+	imageBackground: {
+		aspectRatio: 16 / 9,
+		objectFit: 'contain',
+		resizeMode: 'center',
+	},
+	objectTags: {
+		width: '100%',
+		padding: 16,
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		gap: 8,
+	},
+	objectSpecs: {
+		width: '100%',
+	},
+	objectItemSpec: { marginVertical: -8 },
+	objectInfo: {
+		padding: 24,
+		width: '100%',
+		alignSelf: 'flex-start',
+		// backgroundColor: 'blue',
+	},
+	objectInfoText: { fontSize: 16 },
+	perfilUserName: { fontSize: 24 },
+	message: {
+		textAlign: 'center',
+		fontSize: 16,
+	},
+	notificationImage: {
+		width: 64,
+		height: 64,
+	},
 
 	container: {
 		flex: 1,
@@ -29,14 +96,12 @@ export const global = StyleSheet.create({
 		backgroundColor: '#f5f5f5',
 		padding: 10,
 	},
-	button: {
-		fontSize: 15,
-	},
 	item: {
+		width: '100%',
 		flexDirection: 'row',
 		backgroundColor: 'white',
-		padding: 15,
-		marginVertical: 1,
+		alignItems: 'center',
+		padding: 16,
 	},
 	subContainer: {
 		alignItems: 'flex-end',
