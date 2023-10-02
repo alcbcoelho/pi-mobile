@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 
 import { useState, useEffect } from 'react';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // Contexts
 import AppThemeProvider from './src/contexts/AppThemeContext';
@@ -18,5 +19,18 @@ export default function App() {
 		setTimeout(() => setShowSplashScreen(false), 3000);
 	}, []);
 
-	return <AppThemeProvider>{showSplashScreen ? <SplashScreen /> : <MainRoutes />}</AppThemeProvider>;
+	return (
+		<SafeAreaProvider>
+			<AppThemeProvider>
+				{/* <SafeAreaView style={{ flex: 1, backgroundColor: 'blue' }}> */}
+				{showSplashScreen ? <SplashScreen /> : <MainRoutes />}
+				{/* </SafeAreaView> */}
+			</AppThemeProvider>
+		</SafeAreaProvider>
+	);
+}
+
+{
+	/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : ''} keyboardVerticalOffset={} style={{ flex: 1 }}>
+	</KeyboardAvoidingView> */
 }
