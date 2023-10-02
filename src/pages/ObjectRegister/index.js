@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Text, RadioButton, Button, HelperText, Switch, useTheme } from 'react-native-paper';
+import { View, ScrollView } from 'react-native';
+import { Text, RadioButton, Button, HelperText, Switch, TextInput, useTheme } from 'react-native-paper';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-// import { schemaValidation } from './yupSchemaValidation';
+import { objectSchemaValidation } from './objectSchemaValidation';
 
 // Components
 import TextInputController from '../../components/TextInputController';
@@ -13,22 +14,16 @@ import TextInputController from '../../components/TextInputController';
 // Styles
 import { global } from '../../styles/global';
 
-const schemaValidation = yup.object({
-	situation: yup.string().required('A situação do objeto é obrigatória!'),
-	object: yup.string().required('O obejto é obrigatório!'),
-	brand: yup.string().notRequired(),
-	model: yup.string().notRequired(),
-	color: yup.string().required('A cor predominante é obrigatória!'),
-	characteristics: yup.string().notRequired(),
-	place: yup.string().required('O local é obrigatório!'),
-	date: yup.string().required('A data obrigatória!'),
-	time: yup.string().required('O horário é obrigatório!'),
-	info: yup.string().notRequired(),
-});
-
 export default function ObjectRegister() {
 	const [radioValue, setRadioValue] = useState('found'); // setar um valor inicial?
 	const [isSwitchOn, setIsSwitchOn] = useState(false);
+
+	const [date, setDate] = useState(new Date());
+	const [mode, setMode] = useState('date');
+	const [formatedDate, setFormatedDate] = useState('');
+	const [formatedTime, setFormatedTime] = useState('');
+	const [showDatePicker, setShowDatePicker] = useState(false);
+
 	const theme = useTheme();
 
 	const situation = radioValue === 'found' ? ['achado', 'achei'] : ['perdido', 'perdi'];
@@ -41,18 +36,45 @@ export default function ObjectRegister() {
 		control,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({ mode: 'all', resolver: yupResolver(schemaValidation) });
+		setValue,
+	} = useForm({ mode: 'onSubmit', resolver: yupResolver(objectSchemaValidation) });
 
-	const onSubmit = (data) => console.log(data);
+	const onSubmit = (data) => {
+		console.log('Dados Formulário Objeto:', data);
+	};
 
 	const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
+	const onChangeMode = (selectedMode) => {
+		setShowDatePicker(true);
+		setMode(selectedMode);
+	};
+
+	const onChangeDate = (event, selectedDate) => {
+		const currentDate = selectedDate || date;
+		setShowDatePicker(false);
+		setDate(currentDate);
+
+		let tempDate = new Date(currentDate).toLocaleDateString('pt-BR', { dateStyle: 'short' });
+		let tempTime = new Date(currentDate).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+		if (mode === 'date') {
+			setValue('date', tempDate);
+			setFormatedDate(tempDate);
+		} else {
+			setValue('time', tempTime);
+			setFormatedTime(tempTime);
+		}
+	};
+
 	return (
-		<View style={global.pageContainer}>
-			<ScrollView style={global.contentContainer} showsVerticalScrollIndicator={false} horizontal={false}>
+		<ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
+			<View style={global.pageContainer}>
 				<Controller
 					name={'situation'}
 					control={control}
+					defaultValue='found'
+					rules={{ required: 'Selecione uma das opções acima!' }}
 					render={({ field: { value, onChange } }) => (
 						<RadioButton.Group
 							onValueChange={(value) => {
@@ -61,17 +83,24 @@ export default function ObjectRegister() {
 							}}
 							value={value}
 						>
-							<View style={global.inputRow}>
-								<RadioButton value='found' />
-								<Text>Objeto Achado</Text>
-							</View>
-							<View style={global.inputRow}>
-								<RadioButton value='lost' />
-								<Text>Objeto Perdido</Text>
+							<View style={{ marginVertical: 16 }}>
+								<View style={global.inputRow}>
+									<RadioButton value='found' />
+									<Text>Objeto Achado</Text>
+								</View>
+								<View style={global.inputRow}>
+									<RadioButton value='lost' />
+									<Text>Objeto Perdido</Text>
+								</View>
 							</View>
 						</RadioButton.Group>
 					)}
 				/>
+				{errors.situation ? (
+					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+						{errors.situation?.message}
+					</HelperText>
+				) : null}
 
 				<TextInputController
 					name={'object'}
@@ -79,12 +108,14 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "Celular"'}
 					control={control}
 					error={errors.object}
-					leftIcon={<MaterialIcons name='watch' size={24} color={theme.colors.error} />}
+					leftIcon={<MaterialIcons name='watch' size={24} color={theme.colors.backdrop} />}
 				/>
-				<HelperText type='info'>Aquilo que seu objeto consiste.</HelperText>
+				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+					Aquilo que seu objeto consiste.
+				</HelperText>
 				{errors.object ? (
-					<HelperText type='error' visible={false}>
-						{errors.object.message}
+					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+						{errors.object?.message}
 					</HelperText>
 				) : null}
 
@@ -94,14 +125,16 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "Apple"'}
 					control={control}
 					error={errors.brand}
-					leftIcon={<Ionicons name='logo-apple' size={24} color={theme.colors.error} />}
+					leftIcon={<Ionicons name='logo-apple' size={24} color={theme.colors.backdrop} />}
 				/>
-				<HelperText type='info'>A marca do seu objeto, caso seja aplicável.</HelperText>
+				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+					A marca do seu objeto, caso seja aplicável.
+				</HelperText>
 				{/* {errors.brand ? (
-					<HelperText type='error' visible={false}>
-						{errors.brand.message}
-					</HelperText>
-				) : null} */}
+						<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+							{errors.brand?.message}
+						</HelperText>
+					) : null} */}
 
 				<TextInputController
 					name={'model'}
@@ -109,14 +142,16 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "iPhone12"'}
 					control={control}
 					error={errors.model}
-					leftIcon={<Ionicons name='logo-apple' size={24} color={theme.colors.error} />}
+					leftIcon={<Ionicons name='logo-apple' size={24} color={theme.colors.backdrop} />}
 				/>
-				<HelperText type='info'>O modelo do seu objeto, caso seja aplicável.</HelperText>
+				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+					O modelo do seu objeto, caso seja aplicável.
+				</HelperText>
 				{/* {errors.model ? (
-					<HelperText type='error' visible={false}>
-						{errors.model.message}
-					</HelperText>
-				) : null} */}
+						<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+							{errors.model?.message}
+						</HelperText>
+					) : null} */}
 
 				<TextInputController
 					name={'color'}
@@ -124,12 +159,14 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "Branco"'}
 					control={control}
 					error={errors.color}
-					leftIcon={<MaterialIcons name='format-paint' size={24} color={theme.colors.error} />}
+					leftIcon={<MaterialIcons name='format-paint' size={24} color={theme.colors.backdrop} />}
 				/>
-				<HelperText type='info'>A cor predominante do seu objeto.</HelperText>
+				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+					A cor predominante do seu objeto.
+				</HelperText>
 				{errors.color ? (
-					<HelperText type='error' visible={false}>
-						{errors.color.message}
+					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+						{errors.color?.message}
 					</HelperText>
 				) : null}
 
@@ -139,85 +176,116 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "capinha vermelha, tela rachada"'}
 					control={control}
 					error={errors.characteristics}
-					leftIcon={<MaterialIcons name='description' size={24} color={theme.colors.error} />}
+					leftIcon={<MaterialIcons name='description' size={24} color={theme.colors.backdrop} />}
 				/>
-				<HelperText type='info'>
-					Detalhes descritivos adicionais que possam ajudar a especificar ainda mais o objeto em questão.{' '}
+				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+					Detalhes descritivos adicionais que possam ajudar a especificar ainda mais o objeto em questão.
+					{`\n`}
 					<Text style={{ fontWeight: 'bold' }}>Separe cada característica com uma vírgula.</Text>
 				</HelperText>
 				{/* {errors.characteristics ? (
-					<HelperText type='error' visible={false}>
-						{errors.characteristics.message}
-					</HelperText>
-				) : null} */}
+						<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+							{errors.characteristics?.message}
+						</HelperText>
+					) : null} */}
 
 				<TextInputController
 					name={'place'}
 					label={labelPlace}
 					control={control}
 					error={errors.place}
-					leftIcon={<MaterialIcons name='place' size={24} color={theme.colors.error} />}
+					leftIcon={<MaterialIcons name='place' size={24} color={theme.colors.backdrop} />}
 				/>
 				{errors.place ? (
-					<HelperText type='error' visible={false}>
-						{errors.place.message}
+					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+						{errors.place?.message}
 					</HelperText>
 				) : null}
 
-				<TextInputController
-					name={'date'}
+				{showDatePicker && (
+					<DateTimePicker
+						value={date}
+						onChange={onChangeDate}
+						mode={mode}
+						is24Hour={true}
+						display={'spinner'}
+					/>
+				)}
+
+				<TextInput
+					style={global.input}
 					label={labelDate}
-					control={control}
 					error={errors.date}
-					leftIcon={<MaterialIcons name='date-range' size={24} color={theme.colors.error} />}
+					value={formatedDate}
+					maxLength={10}
+					mode='outlined'
+					onPressIn={() => onChangeMode('date')}
+					left={
+						<TextInput.Icon
+							icon={() => <MaterialIcons name='date-range' size={24} color={theme.colors.backdrop} />}
+						/>
+					}
 				/>
 				{errors.date ? (
-					<HelperText type='error' visible={false}>
-						{errors.date.message}
+					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+						{errors.date?.message}
 					</HelperText>
 				) : null}
 
-				<TextInputController
-					name={'time'}
+				<TextInput
+					style={global.input}
 					label={labelTime}
-					control={control}
 					error={errors.time}
-					leftIcon={<MaterialIcons name='access-time' size={24} color={theme.colors.error} />}
+					value={formatedTime}
+					maxLength={5}
+					mode='outlined'
+					onPressIn={() => onChangeMode('time')}
+					left={
+						<TextInput.Icon
+							icon={() => <MaterialIcons name='access-time' size={24} color={theme.colors.backdrop} />}
+						/>
+					}
 				/>
 				{errors.time ? (
-					<HelperText type='error' visible={false}>
-						{errors.time.message}
+					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+						{errors.time?.message}
 					</HelperText>
 				) : null}
 
 				<TextInputController
 					name={'info'}
 					label={'Informações complementares'}
-					placeholder={'Ex.: "Achei no refeitório, ao lado dos microondas..."'}
+					placeholder={'Ex.: "Achei no refeitório, perto do microondas..."'}
 					control={control}
 					error={errors.info}
-					leftIcon={<MaterialIcons name='info' size={24} color={theme.colors.error} />}
+					multiline={true}
+					maxLength={110}
+					leftIcon={<MaterialIcons name='info' size={24} color={theme.colors.backdrop} />}
 				/>
-				<HelperText type='info'>
+				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					Informações adicionais sobre o objeto que você ache importante ressaltar.
 				</HelperText>
 				{/* {errors.info ? (
-					<HelperText type='error' visible={false}>
-						{errors.info.message}
-					</HelperText>
-				) : null} */}
+						<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
+							{errors.info?.message}
+						</HelperText>
+					) : null} */}
 
-				<View style={global.inputRow}>
+				<View style={global.agreement}>
 					<Text style={{ width: '80%' }}>{labelAgreement}</Text>
 					<Switch value={isSwitchOn} onValueChange={onToggleSwitch} style={{ width: '20%' }} />
 				</View>
 
-				<Button mode='outlined' loading={false} onPress={handleSubmit(onSubmit)}>
+				<Button
+					style={global.button}
+					mode='contained'
+					// loading={true}
+					disabled={isSwitchOn ? false : true} // adicionar mais condições
+					onPress={handleSubmit(onSubmit)}
+				>
 					Adicionar Objeto
 				</Button>
-			</ScrollView>
-		</View>
+			</View>
+		</ScrollView>
 	);
 }
-
-const styles = StyleSheet.create({});
