@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Text, FAB } from 'react-native-paper';
 
 // Styles
-import { global } from '../../styles/global';
+import { global } from '../styles/global';
 
 export default function Home({ navigation }) {
 	const [user, setUser] = useState({ name: 'Fulano de Tal' });

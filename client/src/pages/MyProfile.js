@@ -3,7 +3,7 @@ import { View, Image } from 'react-native';
 import { Text, Avatar, List, FAB } from 'react-native-paper';
 
 // Styles
-import { global } from '../../styles/global';
+import { global } from '../styles/global';
 
 export default function MyProfile() {
 	const [user, setUser] = useState({

@@ -31,14 +31,6 @@ export default function Header({ navigation, route, back, options }) {
 					/>
 				)}
 			/>
-			{/* <Appbar.Action
-				icon={() => <MaterialIcons name='notifications' size={24} />}
-				onPress={() => navigation.navigate('MyNotifications')}
-			/>
-			<Appbar.Action
-				icon={() => <MaterialIcons name='account-circle' size={24} />}
-				onPress={() => navigation.navigate('MyProfile')}
-			/> */}
 			<Appbar.Action
 				icon={() => <MaterialIcons name='menu' size={24} onPress={() => navigation.toggleDrawer()} />}
 			/>

@@ -2,10 +2,10 @@ import { View, Image } from 'react-native';
 import { Text, Chip, List, FAB } from 'react-native-paper';
 
 // Data
-import MyObjectsList from '../../mockup/RegisteredObjectsData';
+import MyObjectsList from '../mockup/RegisteredObjectsData';
 
 // Styles
-import { global } from '../../styles/global';
+import { global } from '../styles/global';
 
 export default function ObjectDetails() {
 	const lostObject = MyObjectsList.lostObjects[0];

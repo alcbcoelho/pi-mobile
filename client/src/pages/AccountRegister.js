@@ -5,13 +5,13 @@ import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { userSchemaValidation } from './userSchemaValidation';
+import { userSchemaValidation } from '../helpers/userSchemaValidation';
 
 // Components
-import TextInputController from '../../components/TextInputController';
+import TextInputController from '../components/TextInputController';
 
 // Styles
-import { global } from '../../styles/global';
+import { global } from '../styles/global';
 
 export default function AccountRegister({ navigation }) {
 	const {

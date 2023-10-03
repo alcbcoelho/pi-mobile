@@ -3,13 +3,13 @@ import { Text, Button, HelperText } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { recoverSchemaValidation } from './recoverSchemaValidation';
+import { recoverSchemaValidation } from '../helpers/recoverSchemaValidation';
 
 // Components
-import TextInputController from '../../components/TextInputController';
+import TextInputController from '../components/TextInputController';
 
 // Styles
-import { global } from '../../styles/global';
+import { global } from '../styles/global';
 
 export default function AccountRecover({ navigation }) {
 	const {

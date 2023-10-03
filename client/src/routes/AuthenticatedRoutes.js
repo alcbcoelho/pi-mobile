@@ -71,7 +71,7 @@ export default function AuthenticatedRoutes() {
 				component={Home}
 				options={{
 					drawerIcon: ({ color, size }) => <MaterialIcons name='home' size={size} color={color} />,
-					drawerLabel: 'Início',
+					drawerLabel: 'Santo Pulinho',
 					title: 'Santo Pulinho', // Qual nome a gnt deve deixar?
 				}}
 			/>

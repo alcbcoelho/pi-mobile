@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
+
+// Styles
+import { global } from '../styles/global';
 
 export default function MyNotifications() {
 	return (
-		<View>
+		<View style={global.pageContainer}>
 			<Text>MyNotifications</Text>
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({});

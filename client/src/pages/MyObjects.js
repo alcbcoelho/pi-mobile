@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
+
+// Styles
+import { global } from '../styles/global';
 
 export default function MyObjects() {
 	return (
-		<View>
+		<View style={global.pageContainer}>
 			<Text>MyObjects</Text>
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({});

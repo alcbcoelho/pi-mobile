@@ -6,13 +6,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { objectSchemaValidation } from './objectSchemaValidation';
+import { objectSchemaValidation } from '../helpers/objectSchemaValidation';
 
 // Components
-import TextInputController from '../../components/TextInputController';
+import TextInputController from '../components/TextInputController';
 
 // Styles
-import { global } from '../../styles/global';
+import { global } from '../styles/global';
 
 export default function ObjectRegister() {
 	const [radioValue, setRadioValue] = useState('found'); // setar um valor inicial?

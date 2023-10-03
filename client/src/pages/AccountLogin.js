@@ -4,13 +4,13 @@ import { Text, Button, HelperText } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { loginSchemaValidation } from './loginSchemaValidation';
+import { loginSchemaValidation } from '../helpers/loginSchemaValidation';
 
 // Components
-import TextInputController from '../../components/TextInputController';
+import TextInputController from '../components/TextInputController';
 
 // Styles
-import { global } from '../../styles/global';
+import { global } from '../styles/global';
 
 export default function AccountLogin({ navigation }) {
 	const [showPassword, setShowPassword] = useState(false);

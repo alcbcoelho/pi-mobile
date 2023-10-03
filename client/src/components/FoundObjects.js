@@ -1,5 +1,5 @@
 import { View, FlatList, Image } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Text, FAB } from 'react-native-paper';
 
 // Data
 import RegisteredObjectsData from '../mockup/RegisteredObjectsData';
