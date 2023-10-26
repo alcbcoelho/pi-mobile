@@ -1,5 +1,6 @@
 import { View, Image } from 'react-native';
 import { Text, Chip, List, FAB } from 'react-native-paper';
+import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 
 // Data
 import MyObjectsList from '../../mockup/RegisteredObjectsData';
@@ -37,22 +38,24 @@ export default function ObjectDetails() {
 				<List.Item
 					style={global.objectItemSpec}
 					title={`Achado por ${lostObject.owner}`}
-					left={(props) => <List.Icon {...props} icon='account-circle-outline' />}
+					left={(props) => <List.Icon {...props} /* icon='account-circle-outline' */
+						icon={({ size }) => <Image source={{ uri: 'https://img.freepik.com/psd-gratuitas/ilustracao-3d-de-avatar-ou-perfil-humano_23-2150671142.jpg'}} style={{ width: size, height: size, aspectRatio: 1 / 1, borderRadius: 256}} />} />}
+						
 				/>
 				<List.Item
 					style={global.objectItemSpec}
 					title={lostObject.date}
-					left={(props) => <List.Icon {...props} icon='calendar-month-outline' />}
+					left={(props) => <List.Icon {...props} /* icon='calendar-month-outline' */ icon={({ size, color }) => <Ionicons name='calendar-outline' size={size} color={color}  />} />}
 				/>
 				<List.Item
 					style={global.objectItemSpec}
 					title={`Por volta de ${lostObject.time}`}
-					left={(props) => <List.Icon {...props} icon='clock-outline' />}
+					left={(props) => <List.Icon {...props} /* icon='clock-outline' */ icon={({ size, color }) => <Ionicons name='time-outline' size={size} color={color} />} />}
 				/>
 				<List.Item
 					style={global.objectItemSpec}
 					title={lostObject.place}
-					left={(props) => <List.Icon {...props} icon='map-marker-outline' />}
+					left={(props) => <List.Icon {...props} /* icon='map-marker-outline' */ icon={({ size, color }) => <Ionicons name='location-outline' size={size} color={color} />} />}
 				/>
 			</View>
 			<View style={global.objectInfo}>

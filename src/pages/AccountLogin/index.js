@@ -1,19 +1,40 @@
-import { useState } from 'react';
-import { View, Pressable } from 'react-native';
-import { Text, Button, HelperText } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useState, useContext, useEffect } from 'react';
+import { View, Image, Pressable, StyleSheet } from 'react-native';
+import { Text, Button, HelperText, useTheme } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchemaValidation } from './loginSchemaValidation';
+import { LinearGradient } from 'expo-linear-gradient';
+import LinearGradientView from '../../components/LinearGradientView';
+import { CommonActions } from '@react-navigation/native';
 
 // Components
 import TextInputController from '../../components/TextInputController';
 
 // Styles
-import { global } from '../../styles/global';
+import { global, styleUnauthenticatedScreens } from '../../styles/global';
+
+// Contexts
+import { AppThemeContext } from '../../contexts/AppThemeContext';
 
 export default function AccountLogin({ navigation }) {
 	const [showPassword, setShowPassword] = useState(false);
+	const [inputLabelColor, setInputLabelColor] = useState('#fff');
+
+	const theme = useTheme();
+	const { themeType } = useContext(AppThemeContext);
+	
+	useEffect(() => {
+		navigation.addListener('focus', () => {
+			setInputLabelColor('#fff')
+		})
+	}, [navigation]);	// https://stackoverflow.com/questions/69878853/how-do-i-reset-a-screens-state-to-its-initial-state-when-using-react-navigation#comment135883212_69891844
+
+	useEffect(() => {
+		theme.colors.onSurfaceVariant = inputLabelColor;
+		console.log('executeii')	//
+	}, [inputLabelColor]);
 
 	const {
 		control,
@@ -22,49 +43,57 @@ export default function AccountLogin({ navigation }) {
 	} = useForm({ mode: 'all', resolver: yupResolver(loginSchemaValidation) });
 
 	const onSignIn = (data) => {
+		setInputLabelColor(themeType === 'light' ? 'rgb(82, 68, 59)' : 'rgb(214, 195, 183)');
 		console.log('Dados Formulário Login:', data);
-		navigation.navigate('AuthenticatedRoutes', { screen: 'Home' });
+		navigation.navigate('AuthenticatedRoutes', { disableBackActionOnHeader: true }/* , { screen: 'Home' } */);
 	};
 
-	const toggleShowPassword = () => setShowPassword(!showPassword);
+	const toggleShowPassword = () => setShowPassword(previous => !previous);
 
 	return (
-		<View style={global.pageContainer}>
-			<Text style={global.title}>Santo Pulinho</Text>
+		<LinearGradientView>
+			{/* <Text style={[global.title, styles.whiteText]}>Santo Pulinho</Text> */}
+			<Image style={styleUnauthenticatedScreens.logo} source={require('../../../assets/logo.png')} />
 
 			<TextInputController
+				style={[global.input, styleUnauthenticatedScreens.input]}
 				name={'email'}
 				label={'Email'}
 				placeholder={'Insira seu email'}
 				control={control}
 				error={errors.email}
+				outlineColor={'white'}
+				textColor={'white'}
 				keyboardType={'email-address'}
-				leftIcon={<MaterialCommunityIcons name='email-outline' size={24} color='black' />}
+				leftIcon={<Ionicons name='mail-outline' size={24}color='white' />}
 			/>
 			{errors.email ? <HelperText type='error'>{errors.email.message}</HelperText> : null}
 
 			<TextInputController
+				style={[global.input, styleUnauthenticatedScreens.input]}
 				name={'password'}
 				label={'Senha'}
-				placeholder={'Insira seu senha'}
+				placeholder={'Insira sua senha'}
 				control={control}
 				error={errors.password}
+				outlineColor={'white'}
+				textColor={'white'}
 				secureTextEntry={!showPassword}
 				keyboardType={'default'}
-				leftIcon={<MaterialCommunityIcons name='lock-outline' size={24} color='black' />}
+				leftIcon={<Ionicons name='lock-closed-outline' size={24} color='white' />}
 				rightIcon={
 					showPassword ? (
-						<MaterialCommunityIcons
+						<Ionicons
 							name='eye-outline'
 							size={24}
-							color='black'
+							color='white'
 							onPress={toggleShowPassword}
 						/>
 					) : (
-						<MaterialCommunityIcons
+						<Ionicons
 							name='eye-off-outline'
 							size={24}
-							color='black'
+							color='white'
 							onPress={toggleShowPassword}
 						/>
 					)
@@ -74,6 +103,8 @@ export default function AccountLogin({ navigation }) {
 
 			<Button
 				style={global.button}
+				buttonColor='white'
+				textColor='#946d51'
 				mode='contained'
 				// loading={true}
 				onPress={handleSubmit(onSignIn)}
@@ -83,12 +114,12 @@ export default function AccountLogin({ navigation }) {
 
 			<View style={global.loginLinks}>
 				<Pressable onPress={() => navigation.navigate('AccountRecover')}>
-					<Text>Recuperar conta</Text>
+					<Text style={[styleUnauthenticatedScreens.whiteText, styleUnauthenticatedScreens.underlinedText]}>Recuperar conta</Text>
 				</Pressable>
 				<Pressable onPress={() => navigation.navigate('AccountRegister')}>
-					<Text>Criar conta</Text>
+					<Text style={[styleUnauthenticatedScreens.whiteText, styleUnauthenticatedScreens.underlinedText]}>Criar conta</Text>
 				</Pressable>
 			</View>
-		</View>
+		</LinearGradientView>
 	);
 }

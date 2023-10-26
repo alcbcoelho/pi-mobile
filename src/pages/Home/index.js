@@ -13,10 +13,9 @@ export default function Home({ navigation }) {
 			<View style={styles.homeContainer}>
 				<Text style={styles.greeting}>Olá, {user.name}</Text>
 				<Text style={styles.message}>
-					Parece que você ainda não fez nenhum{'\n'}
-					registro de item achado ou perdido!
+					Parece que você ainda não fez nenhum {/* '\n' */}registro de item achado ou perdido!
 				</Text>
-				<View style={styles.routesContainer}>
+				{/* <View style={styles.routesContainer}>
 					<Text style={styles.message} onPress={() => navigation.navigate('ObjectDetails')}>
 						Detalhes do Objeto
 					</Text>
@@ -29,7 +28,7 @@ export default function Home({ navigation }) {
 					<Text style={styles.message} onPress={() => navigation.navigate('AccountRegister')}>
 						Cadastre-se
 					</Text>
-				</View>
+				</View> */}
 				<FAB
 					style={global.fabButton}
 					icon='plus'
@@ -46,17 +45,19 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		width: '100%',
+		paddingHorizontal: 32,
+		paddingVertical: 64,
 	},
 	greeting: {
 		fontSize: 24,
-		marginVertical: 48,
+		marginBottom: 64,
 	},
 	message: {
 		textAlign: 'center',
 		fontSize: 16,
 	},
 	routesContainer: {
-		marginVertical: 48,
+		marginVertical: 64,
 		gap: 16,
 	},
 });

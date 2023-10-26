@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 
 import { useState, useEffect } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
 
 // Contexts
 import AppThemeProvider from './src/contexts/AppThemeContext';
@@ -22,6 +23,7 @@ export default function App() {
 	return (
 		<SafeAreaProvider>
 			<AppThemeProvider>
+				<StatusBar barStyle={'light-content'} />
 				{/* <SafeAreaView style={{ flex: 1, backgroundColor: 'blue' }}> */}
 				{showSplashScreen ? <SplashScreen /> : <MainRoutes />}
 				{/* </SafeAreaView> */}

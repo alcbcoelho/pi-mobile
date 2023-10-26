@@ -18,7 +18,7 @@ export default function MyProfile() {
 		<View style={[global.pageContainer, { justifyContent: 'flex-start' }]}>
 			<Avatar.Image
 				size={192}
-				style={{ marginVertical: 40 }}
+				style={{ marginVertical: 32 }}
 				source={() => <Image style={{ aspectRatio: 1 / 1, borderRadius: 256 }} source={{ uri: user.avatar }} />}
 			/>
 			<Text style={global.perfilUserName}>{user.name}</Text>
@@ -26,12 +26,24 @@ export default function MyProfile() {
 				<List.Item
 					style={global.objectItemSpec}
 					title={user.email}
-					left={(props) => <List.Icon {...props} icon='email-outline' />}
+					left={(props) => <List.Icon
+						{...props}
+						icon={({ size, color }) => <Image
+							source={require('../../../assets/icons/mail-outline.png')}
+							style={{width: size, height: size, tintColor: color}}
+						/>}
+					/>}
 				/>
 				<List.Item
 					style={global.objectItemSpec}
 					title={user.phone}
-					left={(props) => <List.Icon {...props} icon='phone-outline' />}
+					left={(props) => <List.Icon
+						{...props}
+						icon={({ size, color }) => <Image
+							source={require('../../../assets/icons/phone-outline.png')}
+							style={{width: size, height: size, tintColor: color }}
+						/>}
+					/>}
 				/>
 			</View>
 			<View style={[global.fabButton, { gap: 16 }]}>
