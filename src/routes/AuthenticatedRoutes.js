@@ -34,10 +34,12 @@ const { lostObjects, foundObjects } = MyObjectsList;
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
+	const { theme } = useAppTheme();
+
 	return (
 		<DrawerContentScrollView {...props}>
 			<DrawerItemList {...props} />
-			<Divider bold style={{ width: '92%', alignSelf: 'center' }} />
+			<Divider bold style={{ width: '92%', alignSelf: 'center', backgroundColor: theme.colors.onSurfaceVariant }} />
 			<DrawerItem
 				icon={({ focused, color, size }) => <Ionicons name={focused ? 'log-out' : 'log-out-outline'} size={size} color={color} />}
 				label='Sair'
@@ -46,6 +48,9 @@ function CustomDrawerContent(props) {
 					props.navigation.navigate('UnauthenticatedRoutes', { screen: 'AccountLogin' })
 				}}
 				style={{ borderRadius: 32 }}
+				activeBackgroundColor='#946D51'
+				activeTintColor={theme.colors.surface}
+				inactiveTintColor={theme.colors.onSurfaceVariant}
 			/>
 		</DrawerContentScrollView>
 	);
@@ -67,13 +72,17 @@ export default function AuthenticatedRoutes({ route }) {
 					),
 					swipeEnabled: false, // Manter False ou não?
 					drawerPosition: 'right',
+					drawerActiveBackgroundColor: '#946D51'/* theme.colors.primary */,
+					drawerActiveTintColor: theme.colors.surface,
+					drawerInactiveTintColor: theme.colors.onSurfaceVariant,
 					drawerStyle: {
 						height: '50%',
-						borderTopStartRadius: 32,
+						// borderTopStartRadius: 32,
 						borderBottomStartRadius: 32,
+						backgroundColor: theme.colors.background
 						// paddingBottom: top,
 					},
-					// drawerItemStyle: { borderRadius: 32 },
+					drawerItemStyle: { borderRadius: 32 },
 					// tentar colocar o theme.roundness ao invés de 32
 				}}
 			>
