@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text, FAB } from 'react-native-paper';
+import { Text } from 'react-native-paper';
+import PrimaryFAB from '../../components/PrimaryFAB';
 
 // Styles
 import { global } from '../../styles/global';
@@ -29,7 +30,7 @@ export default function Home({ navigation }) {
 						Cadastre-se
 					</Text>
 				</View> */}
-				<FAB
+				<PrimaryFAB
 					style={global.fabButton}
 					icon='plus'
 					label='Novo Registro'

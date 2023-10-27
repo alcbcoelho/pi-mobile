@@ -17,7 +17,7 @@ export default function LostObjects({ navigation }) {
 				renderItem={({ item }) => (
 					<Pressable onPress={() => navigation.navigate('ObjectDetails')}>
 						<View style={global.item}>
-							<Image style={{ width: 50, height: 50 }} source={{ uri: item.imgUrl }} />
+							<Image style={{ width: 50, height: 50 }} source={{ uri: item.imgUrl[0] }} />
 							<View>
 								<Text style={global.prod}>{item.object}</Text>
 								<Text style={global.prod}>Perdido em {item.date}, por volta das {item.time}, em {item.place}</Text>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Image } from 'react-native';
-import { Text, Avatar, List, FAB } from 'react-native-paper';
+import { Text, Avatar, List } from 'react-native-paper';
+import PrimaryFAB from '../../components/PrimaryFAB';
 
 // Styles
 import { global } from '../../styles/global';
@@ -47,7 +48,7 @@ export default function MyProfile() {
 				/>
 			</View>
 			<View style={[global.fabButton, { gap: 16 }]}>
-				<FAB icon='pencil-outline' onPress={() => console.log('Editar')} />
+				<PrimaryFAB icon='pencil-outline' onPress={() => console.log('Editar')} />
 			</View>
 		</View>
 	);

@@ -33,14 +33,14 @@ export const global = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	imageBackground: {
-		aspectRatio: 16 / 9,
+		aspectRatio: 4/3/* 16 / 9 */,
 		objectFit: 'contain',
 		resizeMode: 'center',
 	},
 	imageRating: {
 		width: '100%',
-		aspectRatio: 16 / 9,
-		backgroundColor: 'grey',
+		aspectRatio: 4/3,
+		backgroundColor: 'rgb(32, 26, 23)' /* 'grey' */,
 	},
 	input: {
 		width: '80%',
@@ -92,6 +92,10 @@ export const global = StyleSheet.create({
 		alignSelf: 'flex-start',
 		// backgroundColor: 'blue',
 	},
+	objectInfoText: {
+		fontSize: 16,
+		marginBottom: 136,
+	},
 	perfilUserName: { fontSize: 24 },
 	message: {
 		textAlign: 'center',
@@ -101,7 +105,6 @@ export const global = StyleSheet.create({
 		width: 64,
 		height: 64,
 	},
-	objectInfoText: { fontSize: 16 },
 
 	subContainer: {
 		alignItems: 'flex-end',
