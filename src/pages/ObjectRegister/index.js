@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import { Text, RadioButton, Button, HelperText, Switch, TextInput, useTheme } from 'react-native-paper';
-import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
@@ -108,7 +108,7 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "Celular"'}
 					control={control}
 					error={errors.object}
-					leftIcon={<MaterialIcons name='watch' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<Ionicons name='watch-outline' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					Aquilo que seu objeto consiste.
@@ -125,7 +125,7 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "Apple"'}
 					control={control}
 					error={errors.brand}
-					leftIcon={<Ionicons name='logo-apple' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<AntDesign name='apple-o' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					A marca do seu objeto, caso seja aplicável.
@@ -142,7 +142,7 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "iPhone12"'}
 					control={control}
 					error={errors.model}
-					leftIcon={<Ionicons name='logo-apple' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<AntDesign name='apple-o' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					O modelo do seu objeto, caso seja aplicável.
@@ -159,7 +159,7 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "Branco"'}
 					control={control}
 					error={errors.color}
-					leftIcon={<MaterialIcons name='format-paint' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<Ionicons name='color-palette-outline' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					A cor predominante do seu objeto.
@@ -176,7 +176,7 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "capinha vermelha, tela rachada"'}
 					control={control}
 					error={errors.characteristics}
-					leftIcon={<MaterialIcons name='description' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<Ionicons name='document-text-outline' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					Detalhes descritivos adicionais que possam ajudar a especificar ainda mais o objeto em questão.
@@ -194,7 +194,7 @@ export default function ObjectRegister() {
 					label={labelPlace}
 					control={control}
 					error={errors.place}
-					leftIcon={<MaterialIcons name='place' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<Ionicons name='location-outline' size={24} color={theme.colors.outline} />}
 				/>
 				{errors.place ? (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
@@ -222,7 +222,7 @@ export default function ObjectRegister() {
 					onPressIn={() => onChangeMode('date')}
 					left={
 						<TextInput.Icon
-							icon={() => <MaterialIcons name='date-range' size={24} color={theme.colors.backdrop} />}
+							icon={() => <Ionicons name='calendar-outline' size={24} color={theme.colors.outline} />}
 						/>
 					}
 				/>
@@ -242,7 +242,7 @@ export default function ObjectRegister() {
 					onPressIn={() => onChangeMode('time')}
 					left={
 						<TextInput.Icon
-							icon={() => <MaterialIcons name='access-time' size={24} color={theme.colors.backdrop} />}
+							icon={() => <Ionicons name='time-outline' size={24} color={theme.colors.outline} />}
 						/>
 					}
 				/>
@@ -260,7 +260,7 @@ export default function ObjectRegister() {
 					error={errors.info}
 					multiline={true}
 					maxLength={110}
-					leftIcon={<MaterialIcons name='info' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<Ionicons name='information' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					Informações adicionais sobre o objeto que você ache importante ressaltar.

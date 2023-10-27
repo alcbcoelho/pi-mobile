@@ -1,5 +1,4 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { FAB } from 'react-native-paper';
 
 // Components
 import LostObjects from '../components/LostObjects';

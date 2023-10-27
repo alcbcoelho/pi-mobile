@@ -1,14 +1,46 @@
 import { StyleSheet } from 'react-native';
 
 export const global = StyleSheet.create({
+	agreement: {
+		flexDirection: 'row',
+		width: '80%',
+		marginTop: 16,
+	},
+	button: {
+		marginVertical: 24,
+	},
+	container: {
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		alignItems: 'flex-start',
+		backgroundColor: '#f5f5f5',
+		padding: 10,
+	},
+	fabButton: {
+		position: 'absolute',
+		margin: 16,
+		right: 0,
+		bottom: 0,
+	},
 	pageContainer: {
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	scrollviewContainer: {
 		flex: 1,
 		justifyContent: 'center',
+	},
+	imageBackground: {
+		aspectRatio: 4/3/* 16 / 9 */,
+		objectFit: 'contain',
+		resizeMode: 'center',
+	},
+	imageRating: {
+		width: '100%',
+		aspectRatio: 4/3,
+		backgroundColor: 'rgb(32, 26, 23)' /* 'grey' */,
 	},
 	input: {
 		width: '80%',
@@ -18,14 +50,12 @@ export const global = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
-	fabButton: {
-		position: 'absolute',
-		margin: 16,
-		right: 0,
-		bottom: 0,
-	},
-	button: {
-		marginVertical: 24,
+	item: {
+		width: '100%',
+		flexDirection: 'row',
+		backgroundColor: 'white',
+		alignItems: 'center',
+		padding: 16,
 	},
 	pressableButton: {
 		width: '30%',
@@ -43,22 +73,7 @@ export const global = StyleSheet.create({
 		width: '80%',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		gap: 8,
-	},
-	agreement: {
-		flexDirection: 'row',
-		width: '80%',
-		marginTop: 16,
-	},
-	imageRating: {
-		width: '100%',
-		aspectRatio: 16 / 9,
-		backgroundColor: 'grey',
-	},
-	imageBackground: {
-		aspectRatio: 16 / 9,
-		objectFit: 'contain',
-		resizeMode: 'center',
+		gap: 16,
 	},
 	objectTags: {
 		width: '100%',
@@ -77,7 +92,10 @@ export const global = StyleSheet.create({
 		alignSelf: 'flex-start',
 		// backgroundColor: 'blue',
 	},
-	objectInfoText: { fontSize: 16 },
+	objectInfoText: {
+		fontSize: 16,
+		marginBottom: 136,
+	},
 	perfilUserName: { fontSize: 24 },
 	message: {
 		textAlign: 'center',
@@ -88,23 +106,28 @@ export const global = StyleSheet.create({
 		height: 64,
 	},
 
-	container: {
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-		alignItems: 'flex-start',
-		backgroundColor: '#f5f5f5',
-		padding: 10,
-	},
-	item: {
-		width: '100%',
-		flexDirection: 'row',
-		backgroundColor: 'white',
-		alignItems: 'center',
-		padding: 16,
-	},
 	subContainer: {
 		alignItems: 'flex-end',
 		padding: 16,
 	},
+});
+
+export const styleUnauthenticatedScreens = StyleSheet.create({
+	whiteText: {
+		color: '#fff'
+	},
+	underlinedText: {
+		borderStyle: 'dotted',
+		borderBottomColor: '#fff',
+		borderBottomWidth: 1,
+		// textDecorationLine: 'underline'
+	},
+	input: {
+		backgroundColor: '#AA866D'
+	},
+	logo: {
+		marginBottom: 32,
+		width: 278,
+		height: 30,
+	}
 });
