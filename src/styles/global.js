@@ -1,4 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+import { ThemeProvider } from 'react-native-paper';
+
+const windowWidth = Dimensions.get('window').width;
 
 export const global = StyleSheet.create({
 	agreement: {
@@ -23,15 +26,6 @@ export const global = StyleSheet.create({
 		right: 0,
 		bottom: 0,
 	},
-	pageContainer: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	scrollviewContainer: {
-		flex: 1,
-		justifyContent: 'center',
-	},
 	imageBackground: {
 		aspectRatio: 4/3/* 16 / 9 */,
 		objectFit: 'contain',
@@ -51,23 +45,12 @@ export const global = StyleSheet.create({
 		alignItems: 'center',
 	},
 	item: {
-		width: '100%',
+		flex: 1,
 		flexDirection: 'row',
-		backgroundColor: 'white',
+		gap: 16,
+		// backgroundColor: 'white',
 		alignItems: 'center',
 		padding: 16,
-	},
-	pressableButton: {
-		width: '30%',
-		marginVertical: 24,
-		padding: 16,
-		backgroundColor: '#654',
-		borderRadius: 32,
-	},
-	title: {
-		fontSize: 28,
-		color: '#000',
-		marginBottom: 16,
 	},
 	loginLinks: {
 		width: '80%',
@@ -75,17 +58,14 @@ export const global = StyleSheet.create({
 		alignItems: 'center',
 		gap: 16,
 	},
-	objectTags: {
-		width: '100%',
-		padding: 16,
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		gap: 8,
+	message: {
+		textAlign: 'center',
+		fontSize: 16,
 	},
-	objectSpecs: {
-		width: '100%',
+	notificationImage: {
+		width: 64,
+		height: 64,
 	},
-	objectItemSpec: { marginVertical: -8 },
 	objectInfo: {
 		padding: 24,
 		width: '100%',
@@ -96,19 +76,41 @@ export const global = StyleSheet.create({
 		fontSize: 16,
 		marginBottom: 136,
 	},
+	objectItemSpec: { marginVertical: -8 },
+	objectSpecs: {
+		width: '100%',
+	},
+	objectTags: {
+		width: '100%',
+		padding: 16,
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		gap: 8,
+	},
+	pageContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
 	perfilUserName: { fontSize: 24 },
-	message: {
-		textAlign: 'center',
-		fontSize: 16,
+	pressableButton: {
+		width: '30%',
+		marginVertical: 24,
+		padding: 16,
+		backgroundColor: '#654',
+		borderRadius: 32,
 	},
-	notificationImage: {
-		width: 64,
-		height: 64,
+	scrollviewContainer: {
+		flex: 1,
+		justifyContent: 'center',
 	},
-
 	subContainer: {
 		alignItems: 'flex-end',
 		padding: 16,
+	},
+	title: {
+		fontSize: 28,
+		marginBottom: 16,
 	},
 });
 

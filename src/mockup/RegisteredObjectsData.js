@@ -35,7 +35,7 @@ const MyObjectsList = {
 			date: '08/09/2023',
 			time: '18:30',
 			info: 'Achei perto dos microondas da cantida.',
-			imgUrl: 'https://d2r9epyceweg5n.cloudfront.net/stores/002/644/199/products/screenshot_20221208-171415_chrome1-1e4157f8b43dd558b116705316736080-640-0.jpg',
+			imgUrl: ['https://d2r9epyceweg5n.cloudfront.net/stores/002/644/199/products/screenshot_20221208-171415_chrome1-1e4157f8b43dd558b116705316736080-640-0.jpg'],
 		},
 		{
 			id: '3',
@@ -50,7 +50,7 @@ const MyObjectsList = {
 			date: '08/09/2023',
 			time: '18:30',
 			info: 'Achei perto dos microondas da cantida.',
-			imgUrl: 'https://d2r9epyceweg5n.cloudfront.net/stores/002/644/199/products/screenshot_20221208-171415_chrome1-1e4157f8b43dd558b116705316736080-640-0.jpg',
+			imgUrl: ['https://d2r9epyceweg5n.cloudfront.net/stores/002/644/199/products/screenshot_20221208-171415_chrome1-1e4157f8b43dd558b116705316736080-640-0.jpg'],
 		},
 	],
 };

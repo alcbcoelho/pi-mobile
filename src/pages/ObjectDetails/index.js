@@ -3,34 +3,41 @@ import { Swipeable } from 'react-native-gesture-handler';
 import { Text, Chip, List, FAB, useTheme } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import PrimaryFAB from '../../components/PrimaryFAB';
-import SwipeableImage from '../../components/SwipeableImage';
+import { useWindowDimensions } from 'react-native';
 
 // Data
 import MyObjectsList from '../../mockup/RegisteredObjectsData';
 
 // Styles
 import { global } from '../../styles/global';
+import { resizeMode } from 'deprecated-react-native-prop-types/DeprecatedImagePropType';
 
 export default function ObjectDetails() {
 	const lostObject = MyObjectsList.lostObjects[0];
 	const theme = useTheme();
+	const { width } = useWindowDimensions();
 
 	return (
 	<>
 		<ScrollView>
 			<View style={[global.pageContainer, { justifyContent: "flex-start", height: '100%' }]}>
-				{/* <Swipeable renderRightActions={() => <SwipeableImage renderRightActions={() => <SwipeableImage />}/>}>
-					<View style={global.imageRating}>
-						<Image
-						style={global.imageBackground}
-						// fadeDuration={1000}
-						source={{
-							uri: lostObject.imgUrl,
-						}}
-						/>
-					</View>
-				</Swipeable> */}
-				<SwipeableImage />
+				{/* <ImageCarousel data={lostObject.imgUrl} /> */}
+				{/* <Image source={{ uri: MyObjectsList.lostObjects[0].imgUrl[0] }} /> */}
+				<FlatList
+					data={MyObjectsList.lostObjects[0].imgUrl}
+					horizontal={true}
+					showsHorizontalScrollIndicator={false}
+					alwaysBounceHorizontal={false}
+					bounces={false}
+					directionalLockEnabled={true}
+					pagingEnabled={true}
+					// ListEmptyComponent={}	// configurar isso aqui depois
+					renderItem={({ item, index }) => (
+						<View key={index} style={{ width, height: width}}>
+							<Image style={{width, height: '100%'}} source={{ uri: item }}/>
+						</View>
+					)}
+				/>
 				<View style={global.objectTags}>
 					{lostObject.brand ? (
 					<Chip mode="outlined">{lostObject.brand}</Chip>

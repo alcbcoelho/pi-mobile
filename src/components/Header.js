@@ -18,8 +18,6 @@ export default function Header({ navigation, route, back, options }) {
 	const { top } = useSafeAreaInsets();
 	const { initialRouteName } = useContext(InitialRouteContext);
 
-	console.log(initialRouteName);
-
 	return (
 		<Appbar.Header style={{backgroundColor: '#946D51'}} elevated={true} safeAreaInsets={top}>
 			{back || route.name !== initialRouteName ? <Appbar.BackAction color={'#fff'} onPress={() => navigation.goBack()} /> : null}
