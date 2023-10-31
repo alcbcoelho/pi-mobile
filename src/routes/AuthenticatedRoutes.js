@@ -63,7 +63,7 @@ export default function AuthenticatedRoutes({ route }) {
 	return (
 		<InitialRouteContextProvider>
 			<Drawer.Navigator
-				initialRouteName={initialRouteName}
+				initialRouteName={'MyObjects'/* initialRouteName */}
 				drawerContent={(props) => <CustomDrawerContent {...props} />}
 				screenOptions={{
 					headerShown: true,
@@ -86,7 +86,7 @@ export default function AuthenticatedRoutes({ route }) {
 					// tentar colocar o theme.roundness ao invés de 32
 				}}
 			>
-				<Drawer.Screen
+				{/* <Drawer.Screen
 					name='Home'
 					component={Home}
 					options={{
@@ -94,7 +94,7 @@ export default function AuthenticatedRoutes({ route }) {
 						drawerLabel: 'Início',
 						title: 'Santo Pulinho', // Qual nome a gnt deve deixar?
 					}}
-				/>
+				/> */}
 				<Drawer.Screen
 					name='MyProfile'
 					component={MyProfile}
@@ -124,16 +124,14 @@ export default function AuthenticatedRoutes({ route }) {
 				/>
 				<Drawer.Screen
 					name='ObjectDetails'
-					// component={ObjectDetails}
+					component={ObjectDetails}
 					options={{
 						drawerIcon: ({ focused, color, size }) => <Ionicons name={focused ? 'albums' : 'albums-outline'} size={size} color={color} />,
 						drawerLabel: 'Detalhes do Objeto',
 						title: 'Detalhes do Objeto',
 						drawerItemStyle: { display: 'none' },
 					}}
-				>
-					{() => <ObjectDetails initialRouteName={initialRouteName} />}
-				</Drawer.Screen>
+				/>
 				<Drawer.Screen
 					name='ObjectRegister'
 					component={ObjectRegister}
