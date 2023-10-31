@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { View, Image, Pressable } from 'react-native';
 import { Text, Button, HelperText } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,14 +6,20 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchemaValidation } from './loginSchemaValidation';
 import LinearGradientView from '../../components/LinearGradientView';
+
 // Components
 import TextInputController from '../../components/TextInputController';
+
+// Contexts
+import { AuthContext } from '../../contexts/AuthContext';
 
 // Styles
 import { global, styleUnauthenticatedScreens } from '../../styles/global';
 
 export default function AccountLogin({ navigation }) {
 	const [showPassword, setShowPassword] = useState(false);
+
+	const { login } = useContext(AuthContext);
 
 	const {
 		control,
@@ -23,7 +29,8 @@ export default function AccountLogin({ navigation }) {
 
 	const onSignIn = (data) => {
 		console.log('Dados Formulário Login:', data);
-		navigation.navigate('AuthenticatedRoutes', { disableBackActionOnHeader: true }/* , { screen: 'Home' } */);
+		login(data.email);
+		navigation.navigate('AuthenticatedRoutes'/* , { screen: 'Home' } */);
 	};
 
 	const toggleShowPassword = () => setShowPassword(previous => !previous);
