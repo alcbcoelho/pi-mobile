@@ -43,6 +43,7 @@ export default function AccountRecover({ navigation }) {
 				error={errors.email}
 				keyboardType={'email-address'}
 				leftIcon={<Ionicons name='mail-outline' size={24} color='white' />}
+				theme={{ colors: { onSurfaceVariant: '#fff' }}}
 			/>
 			{errors.email ? <HelperText type='error'>{errors.email.message}</HelperText> : null}
 

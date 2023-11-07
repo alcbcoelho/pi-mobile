@@ -21,8 +21,6 @@ export default function ObjectDetails() {
 	<>
 		<ScrollView>
 			<View style={[global.pageContainer, { justifyContent: "flex-start", height: '100%' }]}>
-				{/* <ImageCarousel data={lostObject.imgUrl} /> */}
-				{/* <Image source={{ uri: MyObjectsList.lostObjects[0].imgUrl[0] }} /> */}
 				<FlatList
 					data={MyObjectsList.lostObjects[0].imgUrl}
 					horizontal={true}

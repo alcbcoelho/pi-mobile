@@ -58,6 +58,7 @@ export default function AccountRegister({ navigation }) {
 							error={errors.cpf}
 							keyboardType={'numeric'}
 							leftIcon={<AntDesign name='idcard' size={24} color='white' />}
+							theme={{ colors: { onSurfaceVariant: '#fff' }}}
 						/>
 						{errors.cpf ? <HelperText type='error'>{errors.cpf.message}</HelperText> : null}
 
@@ -71,6 +72,7 @@ export default function AccountRegister({ navigation }) {
 							textColor={'white'}
 							error={errors.firstName}
 							leftIcon={<AntDesign name='idcard' size={24} color='white' />}
+							theme={{ colors: { onSurfaceVariant: '#fff' }}}
 						/>
 						{errors.firstName ? <HelperText type='error'>{errors.firstName.message}</HelperText> : null}
 
@@ -84,6 +86,7 @@ export default function AccountRegister({ navigation }) {
 							textColor={'white'}
 							error={errors.lastName}
 							leftIcon={<AntDesign name='idcard' size={24} color='white' />}
+							theme={{ colors: { onSurfaceVariant: '#fff' }}}
 						/>
 						{errors.lastName ? <HelperText type='error'>{errors.lastName.message}</HelperText> : null}
 
@@ -98,6 +101,7 @@ export default function AccountRegister({ navigation }) {
 							error={errors.phone}
 							keyboardType={'phone-pad'}
 							leftIcon={<SimpleLineIcons name='phone' size={24} color='white' />}
+							theme={{ colors: { onSurfaceVariant: '#fff' }}}
 						/>
 						{errors.phone ? <HelperText type='error'>{errors.phone.message}</HelperText> : null}
 
@@ -112,6 +116,7 @@ export default function AccountRegister({ navigation }) {
 							error={errors.email}
 							keyboardType={'email-address'}
 							leftIcon={<Ionicons name='mail-outline' size={24} color='white' />}
+							theme={{ colors: { onSurfaceVariant: '#fff' }}}
 						/>
 						{errors.email ? <HelperText type='error'>{errors.email.message}</HelperText> : null}
 
@@ -143,6 +148,7 @@ export default function AccountRegister({ navigation }) {
 									/>
 								)
 							}
+							theme={{ colors: { onSurfaceVariant: '#fff' }}}
 						/>
 						{errors.password ? <HelperText type='error'>{errors.password.message}</HelperText> : null}
 
@@ -174,6 +180,7 @@ export default function AccountRegister({ navigation }) {
 									/>
 								)
 							}
+							theme={{ colors: { onSurfaceVariant: '#fff' }}}
 						/>
 						{errors.confirm ? <HelperText type='error'>{errors.confirm.message}</HelperText> : null}
 

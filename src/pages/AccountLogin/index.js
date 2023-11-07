@@ -1,40 +1,25 @@
-import { useState, useContext, useEffect } from 'react';
-import { View, Image, Pressable, StyleSheet } from 'react-native';
-import { Text, Button, HelperText, useTheme } from 'react-native-paper';
+import { useState, useContext } from 'react';
+import { View, Image, Pressable } from 'react-native';
+import { Text, Button, HelperText } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchemaValidation } from './loginSchemaValidation';
-import { LinearGradient } from 'expo-linear-gradient';
 import LinearGradientView from '../../components/LinearGradientView';
-import { CommonActions } from '@react-navigation/native';
 
 // Components
 import TextInputController from '../../components/TextInputController';
 
+// Contexts
+import { AuthContext } from '../../contexts/AuthContext';
+
 // Styles
 import { global, styleUnauthenticatedScreens } from '../../styles/global';
 
-// Contexts
-import { AppThemeContext } from '../../contexts/AppThemeContext';
-
 export default function AccountLogin({ navigation }) {
 	const [showPassword, setShowPassword] = useState(false);
-	const [inputLabelColor, setInputLabelColor] = useState('#fff');
 
-	const theme = useTheme();
-	const { themeType } = useContext(AppThemeContext);
-	
-	useEffect(() => {
-		navigation.addListener('focus', () => {
-			setInputLabelColor('#fff')
-		})
-	}, [navigation]);	// https://stackoverflow.com/questions/69878853/how-do-i-reset-a-screens-state-to-its-initial-state-when-using-react-navigation#comment135883212_69891844
-
-	useEffect(() => {
-		theme.colors.onSurfaceVariant = inputLabelColor;
-		console.log('executeii')	//
-	}, [inputLabelColor]);
+	const { login } = useContext(AuthContext);
 
 	const {
 		control,
@@ -43,16 +28,15 @@ export default function AccountLogin({ navigation }) {
 	} = useForm({ mode: 'all', resolver: yupResolver(loginSchemaValidation) });
 
 	const onSignIn = (data) => {
-		setInputLabelColor(themeType === 'light' ? 'rgb(82, 68, 59)' : 'rgb(214, 195, 183)');
 		console.log('Dados Formulário Login:', data);
-		navigation.navigate('AuthenticatedRoutes', { disableBackActionOnHeader: true }/* , { screen: 'Home' } */);
+		login(data.email);
+		navigation.navigate('AuthenticatedRoutes'/* , { screen: 'Home' } */);
 	};
 
 	const toggleShowPassword = () => setShowPassword(previous => !previous);
 
 	return (
 		<LinearGradientView>
-			{/* <Text style={[global.title, styles.whiteText]}>Santo Pulinho</Text> */}
 			<Image style={styleUnauthenticatedScreens.logo} source={require('../../../assets/logo.png')} />
 
 			<TextInputController
@@ -66,6 +50,7 @@ export default function AccountLogin({ navigation }) {
 				textColor={'white'}
 				keyboardType={'email-address'}
 				leftIcon={<Ionicons name='mail-outline' size={24}color='white' />}
+				theme={{ colors: { onSurfaceVariant: '#fff' }}}
 			/>
 			{errors.email ? <HelperText type='error'>{errors.email.message}</HelperText> : null}
 
@@ -98,6 +83,7 @@ export default function AccountLogin({ navigation }) {
 						/>
 					)
 				}
+				theme={{ colors: { onSurfaceVariant: '#fff' }}}
 			/>
 			{errors.password ? <HelperText type='error'>{errors.password.message}</HelperText> : null}
 
