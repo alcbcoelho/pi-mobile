@@ -6,15 +6,15 @@ import PrimaryFAB from '../../components/PrimaryFAB';
 // Styles
 import { global } from '../../styles/global';
 
-export default function Home({ navigation }) {
+export default function Home() {
 	const [user, setUser] = useState({ name: 'Fulano de Tal' });
 
 	return (
 		<View style={global.pageContainer}>
 			<View style={styles.homeContainer}>
-				<Text style={styles.greeting}>Olá, {user.name}</Text>
+				<Text style={styles.greeting}>Sem objetos para exibir</Text>
 				<Text style={styles.message}>
-					Parece que você ainda não fez nenhum {/* '\n' */}registro de item achado ou perdido!
+					Parece que você ainda não fez nenhum registro de item achado ou perdido!
 				</Text>
 				{/* <View style={styles.routesContainer}>
 					<Text style={styles.message} onPress={() => navigation.navigate('ObjectDetails')}>
@@ -30,12 +30,6 @@ export default function Home({ navigation }) {
 						Cadastre-se
 					</Text>
 				</View> */}
-				<PrimaryFAB
-					style={global.fabButton}
-					icon='plus'
-					label='Novo Registro'
-					onPress={() => navigation.navigate('ObjectRegister')}
-				/>
 			</View>
 		</View>
 	);
@@ -45,9 +39,10 @@ const styles = StyleSheet.create({
 	homeContainer: {
 		flex: 1,
 		alignItems: 'center',
+		// justifyContent: 'center',
 		width: '100%',
 		paddingHorizontal: 32,
-		paddingVertical: 64,
+		paddingVertical: 64 /*64*/,
 	},
 	greeting: {
 		fontSize: 24,

@@ -96,6 +96,15 @@ export default function AuthenticatedRoutes({ route }) {
 					}}
 				/> */}
 				<Drawer.Screen
+					name='MyObjects'
+					component={RegisteredObjectsRoutes}
+					options={{
+						drawerIcon: ({ focused, color, size }) => <Ionicons name={focused ? 'albums' : 'albums-outline'} size={size} color={color} />,
+						drawerLabel: 'Meus Objetos',
+						title: 'Meus Objetos',
+					}}
+				/>
+				<Drawer.Screen
 					name='MyProfile'
 					component={MyProfile}
 					options={{
@@ -114,23 +123,14 @@ export default function AuthenticatedRoutes({ route }) {
 					}}
 				/>
 				<Drawer.Screen
-					name='MyObjects'
-					component={RegisteredObjectsRoutes}
-					options={{
-						drawerIcon: ({ focused, color, size }) => <Ionicons name={focused ? 'albums' : 'albums-outline'} size={size} color={color} />,
-						drawerLabel: 'Meus Objetos',
-						title: 'Meus Objetos',
-					}}
-				/>
-				<Drawer.Screen
 					name='ObjectDetails'
 					component={ObjectDetails}
-					options={{
+					options={({ route }) => ({
 						drawerIcon: ({ focused, color, size }) => <Ionicons name={focused ? 'albums' : 'albums-outline'} size={size} color={color} />,
 						drawerLabel: 'Detalhes do Objeto',
-						title: 'Detalhes do Objeto',
+						title: (route.params?.foundObject ? foundObjects[route.params?.objectId - 1]?.object : lostObjects[route.params?.objectId - 1]?.object) || 'Detalhes do Objeto',
 						drawerItemStyle: { display: 'none' },
-					}}
+					})}
 				/>
 				<Drawer.Screen
 					name='ObjectRegister'
