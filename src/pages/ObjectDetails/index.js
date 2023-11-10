@@ -12,17 +12,31 @@ import MyObjectsList from '../../mockup/RegisteredObjectsData';
 import { global } from '../../styles/global';
 import { resizeMode } from 'deprecated-react-native-prop-types/DeprecatedImagePropType';
 
-export default function ObjectDetails() {
-	const lostObject = MyObjectsList.lostObjects[0];
+export default function ObjectDetails({ route }) {
+	const object = MyObjectsList[route.params.foundObject ? 'foundObjects' : 'lostObjects'][route.params.objectId - 1];
 	const theme = useTheme();
 	const { width } = useWindowDimensions();
+
+	console.log(route.params);
 
 	return (
 	<>
 		<ScrollView>
 			<View style={[global.pageContainer, { justifyContent: "flex-start", height: '100%' }]}>
 				<FlatList
-					data={MyObjectsList.lostObjects[0].imgUrl}
+					ListEmptyComponent={() => (
+						<View style={{
+							width,
+							height: width,
+							flex: 1,
+							alignItems: 'center',
+							justifyContent: 'center',
+							backgroundColor: theme.colors.background
+						}}>
+							<Ionicons name="american-football" size={width * 0.75} color={/* theme.colors.primaryContainer */'rgba(148, 109, 81, 0.2)'} />
+						</View>
+					)}
+					data={object.imgUrl}
 					horizontal={true}
 					showsHorizontalScrollIndicator={false}
 					alwaysBounceHorizontal={false}
@@ -37,17 +51,17 @@ export default function ObjectDetails() {
 					)}
 				/>
 				<View style={global.objectTags}>
-					{lostObject.brand ? (
-					<Chip mode="outlined">{lostObject.brand}</Chip>
+					{object.brand ? (
+					<Chip mode="outlined">{object.brand}</Chip>
 					) : null}
-					{lostObject.model ? (
-					<Chip mode="outlined">{lostObject.model}</Chip>
+					{object.model ? (
+					<Chip mode="outlined">{object.model}</Chip>
 					) : null}
-					{lostObject.color ? (
-					<Chip mode="outlined">{lostObject.color}</Chip>
+					{object.color ? (
+					<Chip mode="outlined">{object.color}</Chip>
 					) : null}
-					{lostObject.characteristics.length !== 0
-					? lostObject.characteristics.map((item, index) => (
+					{object.characteristics.length !== 0
+					? object.characteristics.map((item, index) => (
 						<Chip key={index} mode="outlined">
 							{item}
 						</Chip>
@@ -57,7 +71,7 @@ export default function ObjectDetails() {
 				<View style={global.objectSpecs}>
 					<List.Item
 					style={global.objectItemSpec}
-					title={`Achado por ${lostObject.owner}`}
+					title={`Achado por ${object.owner}`}
 					left={(props) => (
 						<List.Icon
 						{...props} /* icon='account-circle-outline' */
@@ -79,7 +93,7 @@ export default function ObjectDetails() {
 					/>
 					<List.Item
 					style={global.objectItemSpec}
-					title={lostObject.date}
+					title={object.date}
 					left={(props) => (
 						<List.Icon
 						{...props}
@@ -91,7 +105,7 @@ export default function ObjectDetails() {
 					/>
 					<List.Item
 					style={global.objectItemSpec}
-					title={`Por volta de ${lostObject.time}`}
+					title={`Por volta de ${object.time}`}
 					left={(props) => (
 						<List.Icon
 						{...props}
@@ -103,7 +117,7 @@ export default function ObjectDetails() {
 					/>
 					<List.Item
 					style={global.objectItemSpec}
-					title={lostObject.place}
+					title={object.place}
 					left={(props) => (
 						<List.Icon
 						{...props}
@@ -115,7 +129,7 @@ export default function ObjectDetails() {
 					/>
 				</View>
 				<View style={global.objectInfo}>
-					<Text style={global.objectInfoText}>{lostObject.info}</Text>
+					<Text style={global.objectInfoText}>{object.info}</Text>
 				</View>
 			</View>
 		</ScrollView>

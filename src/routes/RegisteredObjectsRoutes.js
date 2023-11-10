@@ -3,14 +3,18 @@ import LostObjects from "../components/LostObjects";
 import FoundObjects from "../components/FoundObjects";
 import TabBar from "../components/TabBar";
 import Home from "../pages/Home";
+import PrimaryFAB from "../components/PrimaryFAB";
 
 // Data
 import RegisteredObjectsData from "../mockup/RegisteredObjectsData";
 const { lostObjects, foundObjects } = RegisteredObjectsData;
 
-export default function RegisteredObjectsRoutes() {
-  if (foundObjects.length || lostObjects.length) {
-    return (
+// Styles
+import { global } from "../styles/global";
+
+export default function RegisteredObjectsRoutes({ navigation }) {
+  const page =
+    foundObjects.length || lostObjects.length ? (
       <TabBar
         screens={[
           { component: LostObjects, title: "Objetos Perdidos" },
@@ -21,7 +25,19 @@ export default function RegisteredObjectsRoutes() {
           RegisteredObjectsData.foundObjects.length,
         ]}
       />
-    )
-  }
-  return <Home />
+    ) : (
+      <Home />
+    );
+
+  return (
+    <>
+      {page}
+      <PrimaryFAB
+        style={global.fabButton}
+        icon="plus"
+        label="Novo Registro"
+        onPress={() => navigation.navigate("ObjectRegister")}
+      />
+    </>
+  );
 }

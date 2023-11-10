@@ -13,7 +13,10 @@ export default function ObjectList({ navigation, foundObjects = false }) {
       data={foundObjects ? RegisteredObjectsData.foundObjects : RegisteredObjectsData.lostObjects}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
-        <Pressable onPress={() => navigation.navigate("ObjectDetails")}>
+        <Pressable onPress={() => navigation.navigate("ObjectDetails", {
+          foundObject: foundObjects,
+          objectId: item.id,
+        })}>
           <View style={global.item}>
             <Image
               style={{ width: 50, height: 50, borderRadius: 2.5 }}
