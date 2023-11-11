@@ -1,10 +1,20 @@
 import { View, Image, ScrollView, FlatList } from "react-native";
-import { Text, Chip, List, FAB, useTheme } from "react-native-paper";
+import {
+  Button,
+  Chip,
+  Dialog,
+  FAB,
+  List,
+  Portal,
+  Text,
+  useTheme,
+} from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import PrimaryFAB from "../../components/PrimaryFAB";
 import { useWindowDimensions } from "react-native";
 
 // Hooks
+import { useState } from "react";
 import useAppTheme from "../../hooks/useAppTheme";
 
 // Data
@@ -13,20 +23,48 @@ import MyObjectsList from "../../mockup/RegisteredObjectsData";
 // Styles
 import { global } from "../../styles/global";
 
-export default function ObjectDetails({ route }) {
+export default function ObjectDetails({ navigation, route }) {
   const object =
     MyObjectsList[route.params.foundObject ? "foundObjects" : "lostObjects"][
       route.params.objectId - 1
     ];
 
+	const [dialogVisibility, setDialogVisibility] = useState(false);
+
   const theme = useTheme();
   const { themeType } = useAppTheme();
   const { width } = useWindowDimensions();
 
-  console.log(route.params);
+//   console.log(route.params);
 
   return (
     <>
+	<Portal>
+		<Dialog
+			visible={dialogVisibility}
+			onDismiss={() => setDialogVisibility(false)}
+			// contentContainerStyle={{ backgroundColor: theme.colors.background, padding: 16 }}
+			style={{ backgroundColor: theme.colors.background, padding: 8, height: '27.5%' }}
+		>
+			<Dialog.Title style={{ textAlign: "center" }}>Apagar registro?</Dialog.Title>
+			<Dialog.Content style={{ marginBottom: 0 }}>
+				<Text style={global.message}>Tem certeza que deseja apagar esse registro de objeto?</Text>
+				<Dialog.Actions style={{
+				marginTop: 16,
+				justifyContent: "space-evenly"
+				}}>
+					<Button onPress={() => setDialogVisibility(false)}>Não</Button>
+					<Button onPress={() => {
+						setDialogVisibility(false);
+						navigation.navigate('MyObjects', {
+							foundObject: route.params.foundObject,
+							objectId: route.params.objectId,
+						})
+					}}>Sim</Button>
+				</Dialog.Actions>
+			</Dialog.Content>
+		</Dialog>
+	</Portal>
       <ScrollView>
         <View
           style={[
@@ -170,7 +208,7 @@ export default function ObjectDetails({ route }) {
           style={{
             backgroundColor: "rgb(186, 26, 26)" /* theme.colors.error */,
           }}
-          onPress={() => console.log("Excluir")}
+          onPress={() => setDialogVisibility(true)}
         />
       </View>
     </>

@@ -16,20 +16,6 @@ export default function Home() {
 				<Text style={styles.message}>
 					Parece que você ainda não fez nenhum registro de item achado ou perdido!
 				</Text>
-				{/* <View style={styles.routesContainer}>
-					<Text style={styles.message} onPress={() => navigation.navigate('ObjectDetails')}>
-						Detalhes do Objeto
-					</Text>
-					<Text style={styles.message} onPress={() => navigation.navigate('AccountLogin')}>
-						Entrar
-					</Text>
-					<Text style={styles.message} onPress={() => navigation.navigate('AccountRecover')}>
-						Recuperar
-					</Text>
-					<Text style={styles.message} onPress={() => navigation.navigate('AccountRegister')}>
-						Cadastre-se
-					</Text>
-				</View> */}
 			</View>
 		</View>
 	);
