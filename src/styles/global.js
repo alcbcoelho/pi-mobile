@@ -1,5 +1,4 @@
 import { StyleSheet, Dimensions } from 'react-native';
-import { ThemeProvider } from 'react-native-paper';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -25,6 +24,12 @@ export const global = StyleSheet.create({
 		margin: 16,
 		right: 0,
 		bottom: 0,
+	},
+	imagePlaceholder: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		// backgroundColor: 'rgba(0, 0, 0, .1)',
+		// backgroundColor: 'rgba(148, 109, 81, 0.175)'
 	},
 	imageBackground: {
 		aspectRatio: 4/3/* 16 / 9 */,

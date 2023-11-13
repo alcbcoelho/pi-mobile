@@ -9,6 +9,7 @@ import useAppTheme from '../hooks/useAppTheme';
 // Routes
 import RegisteredObjectsRoutes from './RegisteredObjectsRoutes';
 import NotificationsRoutes from './NotificationsRoutes';
+import ObjectRoutes from './ObjectRoutes';
 
 // Pages
 import Home from '../pages/Home';
@@ -123,6 +124,23 @@ export default function AuthenticatedRoutes({ route }) {
 					}}
 				/>
 				<Drawer.Screen
+					name='ObjectRoutes'
+					component={ObjectRoutes}
+					options={{
+						drawerItemStyle: { display: 'none' },
+					}}
+				/>
+				{/* <Drawer.Screen
+					name='ObjectRegister'
+					component={ObjectRegister}
+					options={{
+						drawerIcon: ({ focused, color, size }) => <Ionicons name={focused ? 'albums' : 'albums-outline'} size={size} color={color} />,
+						drawerLabel: 'Novo Registro',
+						title: 'Novo Registro',
+						drawerItemStyle: { display: 'none' },
+					}}
+				/>
+				<Drawer.Screen
 					name='ObjectDetails'
 					component={ObjectDetails}
 					options={({ route }) => ({
@@ -133,15 +151,15 @@ export default function AuthenticatedRoutes({ route }) {
 					})}
 				/>
 				<Drawer.Screen
-					name='ObjectRegister'
-					component={ObjectRegister}
+					name='ObjectEdit'
+					component={ObjectEdit}
 					options={{
 						drawerIcon: ({ focused, color, size }) => <Ionicons name={focused ? 'albums' : 'albums-outline'} size={size} color={color} />,
-						drawerLabel: 'Novo Registro',
-						title: 'Novo Registro',
+						drawerLabel: 'Editar Registro',
+						title: 'Editar Registro',
 						drawerItemStyle: { display: 'none' },
 					}}
-				/>
+				/> */}
 			</Drawer.Navigator>
 		</InitialRouteContextProvider>
 	);
