@@ -7,17 +7,12 @@ import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 // Hooks
 import useAppTheme from '../hooks/useAppTheme';
 
-// Contexts
-import { InitialRouteContext } from '../contexts/InitialRouteContext';
-
 // Styles
 import { global } from '../styles/global';
 
 export default function Header({ navigation, route, back, options }) {
 	const { theme, toggleThemeType, themeType } = useAppTheme();
 	const { top } = useSafeAreaInsets();
-	
-	const { initialRouteName } = useContext(InitialRouteContext);
 
 	return (
     <Appbar.Header
@@ -25,7 +20,7 @@ export default function Header({ navigation, route, back, options }) {
       elevated={true}
       safeAreaInsets={top}
     >
-      {back || route.name !== initialRouteName ? (
+      {back || route.name !== 'MyObjects' ? (
         <Appbar.BackAction color={"#fff"} onPress={() => navigation.goBack()} />
       ) : null}
       {/* Verificar lógica do botão de voltar */}

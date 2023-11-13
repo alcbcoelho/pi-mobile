@@ -6,7 +6,7 @@ import PrimaryFAB from '../../components/PrimaryFAB';
 // Styles
 import { global } from '../../styles/global';
 
-export default function MyProfile() {
+export default function MyProfile({ navigation }) {
 	const [user, setUser] = useState({
 		id: 1,
 		name: 'Cleiton Fernandes',
@@ -48,7 +48,7 @@ export default function MyProfile() {
 				/>
 			</View>
 			<View style={[global.fabButton, { gap: 16 }]}>
-				<PrimaryFAB icon='pencil-outline' onPress={() => console.log('Editar')} />
+				<PrimaryFAB icon='pencil-outline' onPress={() => console.log(navigation.navigate("EditProfile"))} />
 			</View>
 		</View>
 	);

@@ -14,12 +14,6 @@ const { lostObjects, foundObjects } = RegisteredObjectsData;
 import { global } from "../styles/global";
 
 export default function RegisteredObjectsRoutes({ navigation, route }) {
-  // const lostOrFound = route?.params?.foundObject ? "foundObjects" : "lostObjects";
-
-  // const objectId = RegisteredObjectsData[lostOrFound].find(item => item.id == route?.params?.objectId)
-
-  // const object = RegisteredObjectsData[lostOrFound][objectId]?.name;
-
   const page =
     foundObjects.length || lostObjects.length ? (
       <TabBar
@@ -45,6 +39,15 @@ export default function RegisteredObjectsRoutes({ navigation, route }) {
         label="Novo Registro"
         onPress={() => navigation.navigate("ObjectRegister")}
       />
+      <Portal>
+        <Snackbar visible={route?.params ? true : false}>
+          {
+            RegisteredObjectsData[
+              route?.params?.foundObject ? "foundObjects" : "lostObjects"
+            ][route?.params?.objectId - 1]?.object + " apagado com sucesso"
+          }
+        </Snackbar>
+      </Portal>
     </>
   );
 }
