@@ -30,7 +30,7 @@ export default function AccountLogin({ navigation }) {
 	const onSignIn = (data) => {
 		console.log('Dados Formulário Login:', data);
 		login(data.email);
-		navigation.navigate('AuthenticatedRoutes'/* , { screen: 'Home' } */);
+		navigation.navigate('AuthenticatedRoutes', { screen: 'MyObjects' });
 	};
 
 	const toggleShowPassword = () => setShowPassword(previous => !previous);

@@ -29,42 +29,56 @@ export default function ObjectDetails({ navigation, route }) {
       route.params.objectId - 1
     ];
 
-	const [dialogVisibility, setDialogVisibility] = useState(false);
+  const [dialogVisibility, setDialogVisibility] = useState(false);
 
   const theme = useTheme();
   const { themeType } = useAppTheme();
   const { width } = useWindowDimensions();
 
-//   console.log(route.params);
+  //   console.log(route.params);
 
   return (
     <>
-	<Portal>
-		<Dialog
-			visible={dialogVisibility}
-			onDismiss={() => setDialogVisibility(false)}
-			// contentContainerStyle={{ backgroundColor: theme.colors.background, padding: 16 }}
-			style={{ backgroundColor: theme.colors.background, padding: 8, height: '27.5%' }}
-		>
-			<Dialog.Title style={{ textAlign: "center" }}>Apagar registro?</Dialog.Title>
-			<Dialog.Content style={{ marginBottom: 0 }}>
-				<Text style={global.message}>Tem certeza que deseja apagar esse registro de objeto?</Text>
-				<Dialog.Actions style={{
-				marginTop: 16,
-				justifyContent: "space-evenly"
-				}}>
-					<Button onPress={() => setDialogVisibility(false)}>Não</Button>
-					<Button onPress={() => {
-						setDialogVisibility(false);
-						navigation.navigate('MyObjects', {
-							foundObject: route.params.foundObject,
-							objectId: route.params.objectId,
-						})
-					}}>Sim</Button>
-				</Dialog.Actions>
-			</Dialog.Content>
-		</Dialog>
-	</Portal>
+      <Portal>
+        <Dialog
+          visible={dialogVisibility}
+          onDismiss={() => setDialogVisibility(false)}
+          // contentContainerStyle={{ backgroundColor: theme.colors.background, padding: 16 }}
+          style={{
+            backgroundColor: theme.colors.background,
+            padding: 8,
+            height: "27.5%",
+          }}
+        >
+          <Dialog.Title style={{ textAlign: "center" }}>
+            Apagar registro?
+          </Dialog.Title>
+          <Dialog.Content style={{ marginBottom: 0 }}>
+            <Text style={global.message}>
+              Tem certeza que deseja apagar esse registro de objeto?
+            </Text>
+            <Dialog.Actions
+              style={{
+                marginTop: 16,
+                justifyContent: "space-evenly",
+              }}
+            >
+              <Button onPress={() => setDialogVisibility(false)}>Não</Button>
+              <Button
+                onPress={() => {
+                  setDialogVisibility(false);
+                  navigation.navigate("MyObjects", {
+                    foundObject: route.params.foundObject,
+                    objectId: route.params.objectId,
+                  });
+                }}
+              >
+                Sim
+              </Button>
+            </Dialog.Actions>
+          </Dialog.Content>
+        </Dialog>
+      </Portal>
       <ScrollView>
         <View
           style={[
@@ -81,7 +95,10 @@ export default function ObjectDetails({ navigation, route }) {
                     width,
                     height: width,
                     flex: 1,
-					backgroundColor: (themeType === 'light') ? 'rgba(147, 75, 0, 0.15)' : 'rgba(255, 183, 130, 0.15)'
+                    backgroundColor:
+                      themeType === "light"
+                        ? "rgba(147, 75, 0, 0.15)"
+                        : "rgba(255, 183, 130, 0.15)",
                   },
                 ]}
               >
@@ -200,7 +217,16 @@ export default function ObjectDetails({ navigation, route }) {
       <View style={[global.fabButton, { gap: 16 }]}>
         <PrimaryFAB
           icon="pencil-outline"
-          onPress={() => console.log("Editar")}
+          onPress={
+            () =>
+              navigation.navigate("ObjectRoutes", {
+				screen: "ObjectEdit",
+				params: {
+					foundObject: route.params.foundObject,
+					objectId: route.params.objectId,
+				}
+              }) /* console.log("Editar") */
+          }
         />
         <FAB
           icon="trash-can-outline"

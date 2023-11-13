@@ -27,7 +27,7 @@ export default function App() {
         <AuthProvider>
           <StatusBar barStyle={"light-content"} />
           {/* <SafeAreaView style={{ flex: 1, backgroundColor: 'blue' }}> */}
-          {showSplashScreen ? <SplashScreen /> : <MainRoutes />}
+          {/* showSplashScreen ? <SplashScreen /> : */ <MainRoutes />}
           {/* </SafeAreaView> */}
         </AuthProvider>
       </AppThemeProvider>
