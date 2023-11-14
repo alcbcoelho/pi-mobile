@@ -1,5 +1,5 @@
-import { createStackNavigator } from "@react-navigation/stack";
-import ObjectRegister from "../pages/ObjectRegister";
+import { CardStyleInterpolators, TransitionSpecs, createStackNavigator } from "@react-navigation/stack";
+import Header from "../components/Header";
 import ObjectDetails from "../pages/ObjectDetails";
 import ObjectEdit from "../pages/ObjectEdit";
 
@@ -9,11 +9,15 @@ const { lostObjects, foundObjects } = MyObjectsList;
 
 const Stack = createStackNavigator();
 
-export default function ObjectRoutes() {
+export default function ObjectScreenRoutes() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        header: ({ navigation, route, back, options }) => (
+          <Header navigation={navigation} route={route} back={back} options={options} />
+        ),
+        // animationEnabled: false,
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
       }}
     >
       <Stack.Screen
@@ -32,15 +36,16 @@ export default function ObjectRoutes() {
         component={ObjectEdit}
         options={{
           title: "Editar Registro",
+          hideHeaderActions: true
         }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ObjectRegister"
         component={ObjectRegister}
         options={{
           title: "Novo Registro",
         }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }

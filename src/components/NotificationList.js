@@ -13,7 +13,7 @@ export default function NotificationList({ navigation, allNotifications = false 
       data={allNotifications ? allNotifications_ : unreadNotifications}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
-        <Pressable onPress={() => navigation.navigate("ObjectRoutes", { screen: "ObjectDetails" })}>
+        <Pressable onPress={() => navigation.navigate("ObjectScreenRoutes", { screen: "ObjectDetails" })}>
           <View style={global.item}>
             <Image
               style={{ width: 50, height: 50, borderRadius: 2.5 }}

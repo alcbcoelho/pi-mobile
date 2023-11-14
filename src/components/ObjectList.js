@@ -21,7 +21,7 @@ export default function ObjectList({ navigation, foundObjects = false }) {
         data={foundObjects ? RegisteredObjectsData.foundObjects : RegisteredObjectsData.lostObjects}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Pressable onPress={() => navigation.navigate("ObjectRoutes", {
+          <Pressable onPress={() => navigation.navigate("ObjectScreenRoutes", {
             screen: "ObjectDetails",
             params: {
               foundObject: foundObjects,
