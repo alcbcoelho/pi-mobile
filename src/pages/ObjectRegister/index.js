@@ -96,11 +96,11 @@ export default function ObjectRegister() {
 						</RadioButton.Group>
 					)}
 				/>
-				{errors.situation ? (
+				{errors.situation && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.situation?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				<TextInputController
 					name={'object'}
@@ -113,11 +113,11 @@ export default function ObjectRegister() {
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					Aquilo que seu objeto consiste.
 				</HelperText>
-				{errors.object ? (
+				{errors.object && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.object?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				<TextInputController
 					name={'brand'}
@@ -164,11 +164,11 @@ export default function ObjectRegister() {
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					A cor predominante do seu objeto.
 				</HelperText>
-				{errors.color ? (
+				{errors.color && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.color?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				<TextInputController
 					name={'characteristics'}
@@ -179,7 +179,7 @@ export default function ObjectRegister() {
 					leftIcon={<Ionicons name='document-text-outline' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-					Detalhes descritivos adicionais que possam ajudar a especificar ainda mais o objeto em questão.
+					Elementos descritivos adicionais que possam ajudar a especificar ainda mais o objeto em questão.
 					{`\n`}
 					<Text style={{ fontWeight: 'bold' }}>Separe cada característica com uma vírgula.</Text>
 				</HelperText>
@@ -196,11 +196,11 @@ export default function ObjectRegister() {
 					error={errors.place}
 					leftIcon={<Ionicons name='location-outline' size={24} color={theme.colors.outline} />}
 				/>
-				{errors.place ? (
+				{errors.place && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.place?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				{showDatePicker && (
 					<DateTimePicker
@@ -226,11 +226,11 @@ export default function ObjectRegister() {
 						/>
 					}
 				/>
-				{errors.date ? (
+				{errors.date && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.date?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				<TextInput
 					style={global.input}
@@ -246,11 +246,11 @@ export default function ObjectRegister() {
 						/>
 					}
 				/>
-				{errors.time ? (
+				{errors.time && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.time?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				<TextInputController
 					name={'info'}

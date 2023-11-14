@@ -1,4 +1,5 @@
 import { View, FlatList, Image, Pressable, ScrollView, StyleSheet } from "react-native";
+import CustomPressable from "./CustomPressable";
 import { Divider, Text } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -21,7 +22,8 @@ export default function ObjectList({ navigation, foundObjects = false }) {
         data={foundObjects ? RegisteredObjectsData.foundObjects : RegisteredObjectsData.lostObjects}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Pressable onPress={() => navigation.navigate("ObjectRoutes", {
+          <CustomPressable
+            onPress={() => navigation.navigate("ObjectScreenRoutes", {
             screen: "ObjectDetails",
             params: {
               foundObject: foundObjects,
@@ -53,7 +55,7 @@ export default function ObjectList({ navigation, foundObjects = false }) {
               </ScrollView>
             </View>
             <Divider />
-          </Pressable>
+          </CustomPressable>
         )}
       />
   );

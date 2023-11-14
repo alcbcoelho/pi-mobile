@@ -37,7 +37,7 @@ export default function RegisteredObjectsRoutes({ navigation, route }) {
         style={global.fabButton}
         icon="plus"
         label="Novo Registro"
-        onPress={() => navigation.navigate("ObjectRoutes", { screen: "ObjectRegister" })}
+        onPress={() => navigation.navigate("ObjectRegister")}
       />
       <Portal>
         <Snackbar visible={route?.params ? true : false}>

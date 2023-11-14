@@ -219,7 +219,7 @@ export default function ObjectDetails({ navigation, route }) {
           icon="pencil-outline"
           onPress={
             () =>
-              navigation.navigate("ObjectRoutes", {
+              navigation.navigate("ObjectScreenRoutes", {
 				screen: "ObjectEdit",
 				params: {
 					foundObject: route.params.foundObject,
