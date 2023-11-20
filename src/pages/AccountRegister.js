@@ -11,17 +11,17 @@ import { Ionicons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { userSchemaValidation } from "./userSchemaValidation";
+import { userSchemaValidation } from "../helpers/userSchemaValidation";
 
 // Components
-import TextInputController from "../../components/TextInputController";
+import TextInputController from "../components/TextInputController";
 import TextInputController2, {
   colorUnauthScreensError
-} from "../../components/TextInputController2";
-import LinearGradientView from "../../components/LinearGradientView";
+} from "../components/TextInputController2";
+import LinearGradientView from "../components/LinearGradientView";
 
 // Styles
-import { global, styleUnauthenticatedScreens } from "../../styles/global";
+import { global, styleUnauthenticatedScreens } from "../styles/global";
 
 export default function AccountRegister({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);

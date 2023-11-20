@@ -1,23 +1,23 @@
 // Components
 import { Image, ScrollView, View } from "react-native";
 import { Text, HelperText, useTheme, Avatar, IconButton } from "react-native-paper";
-import TextInputController from "../../components/TextInputController";
+import TextInputController from "../components/TextInputController";
 import { Ionicons, AntDesign, SimpleLineIcons } from '@expo/vector-icons';
-import PrimaryFAB from "../../components/PrimaryFAB";
+import PrimaryFAB from "../components/PrimaryFAB";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { userSchemaValidation } from "../AccountRegister/userSchemaValidation";
+import { userSchemaValidation } from "../helpers/userSchemaValidation";
 
 // Hooks
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import useAppTheme from "../../hooks/useAppTheme";
+import useAppTheme from "../hooks/useAppTheme";
 
 // Styles
-import { global } from "../../styles/global";
+import { global } from "../styles/global";
 
 // Data
-import { userData } from "../../mockup/UserData";
+import { userData } from "../mockup/UserData";
 
 export default function MyProfileEdit({ route, navigation }) {
     const index = userData.findIndex(user => user.id == route.params.userId);

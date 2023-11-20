@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import PrimaryFAB from '../../components/PrimaryFAB';
+import PrimaryFAB from '../components/PrimaryFAB';
 
 // Styles
-import { global } from '../../styles/global';
+import { global } from '../styles/global';
 
 export default function Home() {
 	const [user, setUser] = useState({ name: 'Fulano de Tal' });

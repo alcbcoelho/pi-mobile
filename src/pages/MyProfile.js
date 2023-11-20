@@ -2,19 +2,19 @@ import { useState, useContext } from "react";
 import { View, Image } from "react-native";
 import { Text, Avatar, List } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
-import PrimaryFAB from "../../components/PrimaryFAB";
+import PrimaryFAB from "../components/PrimaryFAB";
 
 // Hooks
-import useAppTheme from "../../hooks/useAppTheme";
+import useAppTheme from "../hooks/useAppTheme";
 
 // Contexts
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext } from "../contexts/AuthContext";
 
 // Styles
-import { global } from "../../styles/global";
+import { global } from "../styles/global";
 
 // Data
-import { userData } from "../../mockup/UserData";
+import { userData } from "../mockup/UserData";
 
 export default function MyProfile({ navigation }) {
   const { user } = useContext(AuthContext);

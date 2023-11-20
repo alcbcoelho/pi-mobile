@@ -11,18 +11,18 @@ import {
   useTheme,
 } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
-import PrimaryFAB from "../../components/PrimaryFAB";
+import PrimaryFAB from "../components/PrimaryFAB";
 import { useWindowDimensions } from "react-native";
 
 // Hooks
 import { useState } from "react";
-import useAppTheme from "../../hooks/useAppTheme";
+import useAppTheme from "../hooks/useAppTheme";
 
 // Data
-import MyObjectsList from "../../mockup/RegisteredObjectsData";
+import MyObjectsList from "../mockup/RegisteredObjectsData";
 
 // Styles
-import { global } from "../../styles/global";
+import { global } from "../styles/global";
 
 export default function ObjectDetails({ navigation, route }) {
   const object =

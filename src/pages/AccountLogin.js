@@ -4,17 +4,17 @@ import { Text, Button, HelperText } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { loginSchemaValidation } from './loginSchemaValidation';
-import LinearGradientView from '../../components/LinearGradientView';
+import { loginSchemaValidation } from '../helpers/loginSchemaValidation';
+import LinearGradientView from '../components/LinearGradientView';
 
 // Components
-import TextInputController2, { colorUnauthScreensError } from '../../components/TextInputController2';
+import TextInputController2, { colorUnauthScreensError } from '../components/TextInputController2';
 
 // Contexts
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 // Styles
-import { global, styleUnauthenticatedScreens } from '../../styles/global';
+import { global, styleUnauthenticatedScreens } from '../styles/global';
 
 export default function AccountLogin({ navigation }) {
 	const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +29,7 @@ export default function AccountLogin({ navigation }) {
 
 	const onSignIn = (data) => {
 		console.log('Dados Formulário Login:', data);
-		login(data.email === 'cleitin.hta@gmail.com' ? data.email : 'alcbcoelho@gmail.com'/* data.email */);
+		login(/* data.email === 'cleitin.hta@gmail.com' ? data.email : 'alcbcoelho@gmail.com' */data.email);
 		navigation.navigate('AuthenticatedRoutes', { screen: 'MyObjects' });
 	};
 

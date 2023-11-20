@@ -3,15 +3,15 @@ import { Text, Button, HelperText } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { recoverSchemaValidation } from './recoverSchemaValidation';
-import LinearGradientView from '../../components/LinearGradientView';
+import { recoverSchemaValidation } from '../helpers/recoverSchemaValidation';
+import LinearGradientView from '../components/LinearGradientView';
 
 // Components
-import TextInputController from '../../components/TextInputController';
-import TextInputController2, { colorUnauthScreensError } from '../../components/TextInputController2';
+import TextInputController from '../components/TextInputController';
+import TextInputController2, { colorUnauthScreensError } from '../components/TextInputController2';
 
 // Styles
-import { global, styleUnauthenticatedScreens } from '../../styles/global';
+import { global, styleUnauthenticatedScreens } from '../styles/global';
 
 export default function AccountRecover({ navigation }) {
 	const {

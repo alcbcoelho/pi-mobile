@@ -11,19 +11,19 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import useAppTheme from "../../hooks/useAppTheme";
-import { objectSchemaValidation } from "../ObjectRegister/objectSchemaValidation";
+import useAppTheme from "../hooks/useAppTheme";
+import { objectSchemaValidation } from "../helpers/objectSchemaValidation";
 
 // Components
-import TextInputController from "../../components/TextInputController";
-import PrimaryFAB from "../../components/PrimaryFAB";
-import AddImageButton from "../../components/AddImageButton";
+import TextInputController from "../components/TextInputController";
+import PrimaryFAB from "../components/PrimaryFAB";
+import AddImageButton from "../components/AddImageButton";
 
 // Styles
-import { global } from "../../styles/global";
+import { global } from "../styles/global";
 
 // Data
-import MyObjectsList from "../../mockup/RegisteredObjectsData";
+import MyObjectsList from "../mockup/RegisteredObjectsData";
 const { foundObjects, lostObjects } = MyObjectsList;
 
 export default function ObjectEdit({ route, navigation }) {
