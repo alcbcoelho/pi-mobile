@@ -1,9 +1,8 @@
-import { View, useWindowDimensions, Pressable } from "react-native";
-import CustomPressable from "./CustomPressable";
+import { View, useWindowDimensions, Image, Pressable } from "react-native";
 import useAppTheme from "../hooks/useAppTheme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function AddImageButton({ onPress }) {
+export default function AddImageButton({ image, onPress }) {
   const { theme, themeType } = useAppTheme();
   const { width } = useWindowDimensions();
 
@@ -16,25 +15,41 @@ export default function AddImageButton({ onPress }) {
   const handleOnPress = () => {}
 
   return (
-    <CustomPressable
+    <Pressable
+      android_ripple={{
+        color: theme.colors.surfaceVariant,
+        // radius: 80,
+        // borderless: true,
+        foreground: image ? true : false
+      }}
       onPress={handleOnPress}
     >
-      <View
-        style={{
+      {
+        image ?
+        <Image source={{ uri: image}} style={{
           width: imageButtonSize,
           height: imageButtonSize,
-          backgroundColor: imageSelectorBackgroundColor,
           borderRadius: 8,
           alignItems: "center",
           justifyContent: "center",
-        }}
-      >
-        <MaterialCommunityIcons
-          name="camera-plus-outline"
-          size={24}
-          color={theme.colors.background}
-        />
-      </View>
-    </CustomPressable>
+        }}/> :
+        <View
+          style={{
+            width: imageButtonSize,
+            height: imageButtonSize,
+            backgroundColor: imageSelectorBackgroundColor,
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <MaterialCommunityIcons
+            name="camera-plus-outline"
+            size={24}
+            color={theme.colors.background}
+          />
+        </View>
+      }
+    </Pressable>
   );
 }

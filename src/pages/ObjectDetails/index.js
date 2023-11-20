@@ -3,6 +3,7 @@ import {
   Button,
   Chip,
   Dialog,
+  Divider,
   FAB,
   List,
   Portal,
@@ -141,7 +142,7 @@ export default function ObjectDetails({ navigation, route }) {
           <View style={global.objectSpecs}>
             <List.Item
               style={global.objectItemSpec}
-              title={`Achado por ${object.owner}`}
+              title={`${route.params.foundObject ? "Achado" : "Perdido"} por ${object.owner}`}
               left={(props) => (
                 <List.Icon
                   {...props} /* icon='account-circle-outline' */
@@ -182,7 +183,7 @@ export default function ObjectDetails({ navigation, route }) {
             />
             <List.Item
               style={global.objectItemSpec}
-              title={`Por volta de ${object.time}`}
+              title={`${route.params.foundObject ? "Às" : "Por volta de"} ${object.time}`}
               left={(props) => (
                 <List.Icon
                   {...props}
@@ -208,6 +209,7 @@ export default function ObjectDetails({ navigation, route }) {
                 />
               )}
             />
+            <Divider style={{ marginTop: 16 }}/>
           </View>
           <View style={global.objectInfo}>
             <Text style={global.objectInfoText}>{object.info}</Text>

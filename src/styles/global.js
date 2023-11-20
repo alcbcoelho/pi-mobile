@@ -25,6 +25,11 @@ export const global = StyleSheet.create({
 		right: 0,
 		bottom: 0,
 	},
+	helperTextUnauthenticatedPage: {
+		backgroundColor: 'rgb(186, 26, 26)',
+		color: '#fff',
+		borderRadius: 32
+	},
 	imagePlaceholder: {
 		alignItems: 'center',
 		justifyContent: 'center',
@@ -115,7 +120,8 @@ export const global = StyleSheet.create({
 	},
 	title: {
 		fontSize: 28,
-		marginBottom: 16,
+		marginBottom: 32,
+		marginTop: 32
 	},
 });
 

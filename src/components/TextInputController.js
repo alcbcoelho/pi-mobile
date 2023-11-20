@@ -40,8 +40,8 @@ export default function TextInputController({
 					value={value}
 					onChangeText={onChange}
 					mode='outlined'
-					left={<TextInput.Icon icon={() => leftIcon} />}
-					right={<TextInput.Icon icon={() => rightIcon} />}
+					left={leftIcon && <TextInput.Icon icon={() => leftIcon} />}
+					right={rightIcon && <TextInput.Icon icon={() => rightIcon} />}
 					{...textInputProps}
 				/>
 			)}

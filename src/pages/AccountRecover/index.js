@@ -8,6 +8,7 @@ import LinearGradientView from '../../components/LinearGradientView';
 
 // Components
 import TextInputController from '../../components/TextInputController';
+import TextInputController2, { colorUnauthScreensError } from '../../components/TextInputController2';
 
 // Styles
 import { global, styleUnauthenticatedScreens } from '../../styles/global';
@@ -32,20 +33,15 @@ export default function AccountRecover({ navigation }) {
 				</Text>
 			</View>
 
-			<TextInputController
-				style={[global.input, { backgroundColor: '#AA866D' }]}
+			<TextInputController2
 				name={'email'}
 				label={'Email'}
-				placeholder={'Insira seu email'}
-				outlineColor={'white'}
-				textColor={'white'}
+				placeholder={'Insira seu endereço de email'}
 				control={control}
 				error={errors.email}
 				keyboardType={'email-address'}
-				leftIcon={<Ionicons name='mail-outline' size={24} color='white' />}
-				theme={{ colors: { onSurfaceVariant: '#fff' }}}
+				leftIcon={<Ionicons name='mail-outline' size={24} color={errors.email ? colorUnauthScreensError : 'white'} />}		
 			/>
-			{errors.email ? <HelperText type='error'>{errors.email.message}</HelperText> : null}
 
 			<Button
 				style={global.button}

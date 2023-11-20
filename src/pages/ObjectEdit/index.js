@@ -12,7 +12,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useAppTheme from "../../hooks/useAppTheme";
-// import { objectSchemaValidation } from './objectSchemaValidation';
+import { objectSchemaValidation } from "../ObjectRegister/objectSchemaValidation";
 
 // Components
 import TextInputController from "../../components/TextInputController";
@@ -21,6 +21,10 @@ import AddImageButton from "../../components/AddImageButton";
 
 // Styles
 import { global } from "../../styles/global";
+
+// Data
+import MyObjectsList from "../../mockup/RegisteredObjectsData";
+const { foundObjects, lostObjects } = MyObjectsList;
 
 export default function ObjectEdit({ route, navigation }) {
   const [radioValue, setRadioValue] = useState("found");
@@ -40,14 +44,34 @@ export default function ObjectEdit({ route, navigation }) {
   const labelDate = `Data em que foi ${situation[0]}`;
   const labelTime = `Horário em que foi ${situation[0]}`;
 
+  const objectType = route.params.foundObject ? foundObjects : lostObjects;
+  const index = objectType.findIndex(object => object.id == route.params.objectId);
+
   const {
     control,
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      situation: route.params.foundObject ? "found" : "lost",
+      object: objectType[index].object,
+      brand: objectType[index].brand,
+      model: objectType[index].model,
+      color: objectType[index].color,
+      characteristics: objectType[index].characteristics.join(", "),
+      place: objectType[index].place,
+      date: /* new Date(objectType[index].date).toLocaleDateString("pt-BR", {
+        dateStyle: "short",
+      }) */objectType[index].date,
+      time: objectType[index].time,
+      info: objectType[index].info
+    },
+    resolver: yupResolver(objectSchemaValidation)
+  });
 
   const onSubmit = (data) => {
+    console.log(data);  //
     navigation.navigate("ObjectDetails", {
       foundObject: route.params.foundObject,
       objectId: route.params.objectId,
@@ -97,7 +121,7 @@ export default function ObjectEdit({ route, navigation }) {
             }}
           >
             {[1, 2, 3, 4].map((item) => (
-              <AddImageButton key={item} onPress={() => console.log("*abre galeria de fotos*")} />
+              <AddImageButton key={item} image={objectType[index].imgUrl[item - 1]} onPress={() => console.log("*abre galeria de fotos*")} />
             ))}
           </View>
           <Controller
@@ -308,25 +332,31 @@ export default function ObjectEdit({ route, navigation }) {
             />
           )}
 
-          <TextInput
-            style={global.input}
-            label={labelDate}
-            error={errors.date}
-            value={formatedDate}
-            maxLength={10}
-            mode="outlined"
-            onPressIn={() => onChangeMode("date")}
-            left={
-              <TextInput.Icon
-                icon={() => (
-                  <Ionicons
-                    name="calendar-outline"
-                    size={24}
-                    color={theme.colors.outline}
+          <Controller
+            name={"date"}
+            control={control}
+            render={({ field: { value }}) => (
+              <TextInput
+                style={global.input}
+                label={labelDate}
+                error={errors.date}
+                value={value/* formatedDate */}
+                maxLength={10}
+                mode="outlined"
+                onPressIn={() => onChangeMode("date")}
+                left={
+                  <TextInput.Icon
+                    icon={() => (
+                      <Ionicons
+                        name="calendar-outline"
+                        size={24}
+                        color={theme.colors.outline}
+                      />
+                    )}
                   />
-                )}
+                }
               />
-            }
+            )}
           />
           {errors.date && (
             <HelperText
@@ -337,25 +367,31 @@ export default function ObjectEdit({ route, navigation }) {
             </HelperText>
           )}
 
-          <TextInput
-            style={global.input}
-            label={labelTime}
-            error={errors.time}
-            value={formatedTime}
-            maxLength={5}
-            mode="outlined"
-            onPressIn={() => onChangeMode("time")}
-            left={
-              <TextInput.Icon
-                icon={() => (
-                  <Ionicons
-                    name="time-outline"
-                    size={24}
-                    color={theme.colors.outline}
+          <Controller
+            name="time"
+            control={control}
+            render={({ field: { value }}) => (
+              <TextInput
+                style={global.input}
+                label={labelTime}
+                error={errors.time}
+                value={value/* formatedTime */}
+                maxLength={5}
+                mode="outlined"
+                onPressIn={() => onChangeMode("time")}
+                left={
+                  <TextInput.Icon
+                    icon={() => (
+                      <Ionicons
+                        name="time-outline"
+                        size={24}
+                        color={theme.colors.outline}
+                      />
+                    )}
                   />
-                )}
+                }
               />
-            }
+            )}
           />
           {errors.time && (
             <HelperText

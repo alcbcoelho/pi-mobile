@@ -1,37 +1,37 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { View, Image } from "react-native";
 import { Text, Avatar, List } from "react-native-paper";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import PrimaryFAB from "../../components/PrimaryFAB";
 
 // Hooks
 import useAppTheme from "../../hooks/useAppTheme";
 
+// Contexts
+import { AuthContext } from "../../contexts/AuthContext";
+
 // Styles
 import { global } from "../../styles/global";
 
-export default function MyProfile({ navigation }) {
-  const [user, setUser] = useState({
-    id: 1,
-    name: "Cleiton Fernandes",
-    email: "cleitin.hta@gmail.com",
-    phone: "+55 61 9 9251-3746",
-    avatar:
-      /* null */'https://img.freepik.com/psd-gratuitas/ilustracao-3d-de-avatar-ou-perfil-humano_23-2150671142.jpg',
-  });
+// Data
+import { userData } from "../../mockup/UserData";
 
+export default function MyProfile({ navigation }) {
+  const { user } = useContext(AuthContext);
   const { themeType } = useAppTheme();
+
+  const index = userData.findIndex((user_) => user_.email === user.email);
 
   return (
     <View style={[global.pageContainer, { justifyContent: "flex-start" }]}>
-      {user.avatar ? (
+      {userData[index].avatar ? (
         <Avatar.Image
           size={192}
           style={{ marginVertical: 32 }}
           source={() => (
             <Image
               style={{ aspectRatio: 1 / 1, borderRadius: 256 }}
-              source={{ uri: user.avatar }}
+              source={{ uri: userData[index].avatar }}
             />
           )}
         />
@@ -50,11 +50,11 @@ export default function MyProfile({ navigation }) {
           }}
         />
       )}
-      <Text style={global.perfilUserName}>{user.name}</Text>
+      <Text style={global.perfilUserName}>{`${userData[index].firstName} ${userData[index].lastName}`}</Text>
       <View style={global.button}>
         <List.Item
           style={global.objectItemSpec}
-          title={user.email}
+          title={userData[index].email}
           left={(props) => (
             <List.Icon
               {...props}
@@ -69,7 +69,7 @@ export default function MyProfile({ navigation }) {
         />
         <List.Item
           style={global.objectItemSpec}
-          title={user.phone}
+          title={userData[index].phone}
           left={(props) => (
             <List.Icon
               {...props}
@@ -86,7 +86,11 @@ export default function MyProfile({ navigation }) {
       <View style={[global.fabButton, { gap: 16 }]}>
         <PrimaryFAB
           icon="pencil-outline"
-          onPress={() => console.log(navigation.navigate("EditProfile"))}
+          onPress={() =>
+            navigation.navigate("EditProfile", {
+              userId: userData[index].id,
+            })
+          }
         />
       </View>
     </View>

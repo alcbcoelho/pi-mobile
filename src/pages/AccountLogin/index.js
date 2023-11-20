@@ -8,7 +8,7 @@ import { loginSchemaValidation } from './loginSchemaValidation';
 import LinearGradientView from '../../components/LinearGradientView';
 
 // Components
-import TextInputController from '../../components/TextInputController';
+import TextInputController2, { colorUnauthScreensError } from '../../components/TextInputController2';
 
 // Contexts
 import { AuthContext } from '../../contexts/AuthContext';
@@ -29,63 +29,55 @@ export default function AccountLogin({ navigation }) {
 
 	const onSignIn = (data) => {
 		console.log('Dados Formulário Login:', data);
-		login(data.email);
+		login(data.email === 'cleitin.hta@gmail.com' ? data.email : 'alcbcoelho@gmail.com'/* data.email */);
 		navigation.navigate('AuthenticatedRoutes', { screen: 'MyObjects' });
 	};
 
 	const toggleShowPassword = () => setShowPassword(previous => !previous);
 
+	const setIconColor = (name) => errors[name] ? colorUnauthScreensError : 'white';
+
 	return (
 		<LinearGradientView>
 			<Image style={styleUnauthenticatedScreens.logo} source={require('../../../assets/logo.png')} />
 
-			<TextInputController
-				style={[global.input, styleUnauthenticatedScreens.input]}
+			<TextInputController2
 				name={'email'}
 				label={'Email'}
 				placeholder={'Insira seu email'}
 				control={control}
 				error={errors.email}
-				outlineColor={'white'}
-				textColor={'white'}
 				keyboardType={'email-address'}
-				leftIcon={<Ionicons name='mail-outline' size={24}color='white' />}
-				theme={{ colors: { onSurfaceVariant: '#fff' }}}
+				leftIcon={<Ionicons name='mail-outline' size={24} color={setIconColor('email')} />}
 			/>
-			{errors.email ? <HelperText type='error'>{errors.email.message}</HelperText> : null}
 
-			<TextInputController
-				style={[global.input, styleUnauthenticatedScreens.input]}
+			<TextInputController2
 				name={'password'}
-				label={'Senha'}
+				label={'Password'}
 				placeholder={'Insira sua senha'}
 				control={control}
 				error={errors.password}
-				outlineColor={'white'}
-				textColor={'white'}
 				secureTextEntry={!showPassword}
 				keyboardType={'default'}
-				leftIcon={<Ionicons name='lock-closed-outline' size={24} color='white' />}
+				leftIcon={<Ionicons name='lock-closed-outline' size={24} color={setIconColor('password')} />}
 				rightIcon={
 					showPassword ? (
 						<Ionicons
 							name='eye-outline'
 							size={24}
-							color='white'
+							color={setIconColor('password')}
 							onPress={toggleShowPassword}
 						/>
 					) : (
 						<Ionicons
 							name='eye-off-outline'
 							size={24}
-							color='white'
+							color={setIconColor('password')}
 							onPress={toggleShowPassword}
 						/>
 					)
 				}
-				theme={{ colors: { onSurfaceVariant: '#fff' }}}
 			/>
-			{errors.password ? <HelperText type='error'>{errors.password.message}</HelperText> : null}
 
 			<Button
 				style={global.button}

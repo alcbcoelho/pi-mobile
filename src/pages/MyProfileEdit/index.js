@@ -5,6 +5,9 @@ import TextInputController from "../../components/TextInputController";
 import { Ionicons, AntDesign, SimpleLineIcons } from '@expo/vector-icons';
 import PrimaryFAB from "../../components/PrimaryFAB";
 
+import { yupResolver } from "@hookform/resolvers/yup";
+import { userSchemaValidation } from "../AccountRegister/userSchemaValidation";
+
 // Hooks
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -13,18 +16,25 @@ import useAppTheme from "../../hooks/useAppTheme";
 // Styles
 import { global } from "../../styles/global";
 
-export default function MyProfileEdit({ navigation }) {
-    const [user, setUser] = useState({
-		id: 1,
-		name: 'Cleiton Fernandes',
-		email: 'cleitin.hta@gmail.com',
-		phone: '+55 61 9 9251-3746',
-		avatar: /* null */'https://img.freepik.com/psd-gratuitas/ilustracao-3d-de-avatar-ou-perfil-humano_23-2150671142.jpg',
-	});
+// Data
+import { userData } from "../../mockup/UserData";
+
+export default function MyProfileEdit({ route, navigation }) {
+    const index = userData.findIndex(user => user.id == route.params.userId);
+
     const [showPassword, setShowPassword] = useState(false);
 	const [showPassword2, setShowPassword2] = useState(false);
 
-    const { control, handleSubmit, formState: { errors } } = useForm();
+    const { control, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(userSchemaValidation),
+        defaultValues: {
+            firstName: userData[index].firstName,
+            lastName: userData[index].lastName,
+            phone: userData[index].phone,
+            email: userData[index].email,
+            password: userData[index].password,
+        }
+    });
 
     const theme = useTheme();
     const { themeType } = useAppTheme();
@@ -45,11 +55,11 @@ export default function MyProfileEdit({ navigation }) {
         <View style={{ flex: 1 }}>
             <ScrollView contentContainerStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}>
                 {
-                    user.avatar ?
+                    userData[index].avatar ?
                     <Avatar.Image
                         size={192}
                         style={{ marginVertical: 32 }}
-                        source={() => <Image style={{ aspectRatio: 1 / 1, borderRadius: 256, }} source={{ uri: user.avatar }} />}
+                        source={() => <Image style={{ aspectRatio: 1 / 1, borderRadius: 256, }} source={{ uri: userData[index].avatar }} />}
                     /> : 
                     <Avatar.Icon
                     size={192}
@@ -78,7 +88,7 @@ export default function MyProfileEdit({ navigation }) {
                     error={errors.firstName}
                     leftIcon={<AntDesign name='idcard' {...iconProperties} />}
                 />
-                <HelperText type='error' visible={errors.firstName}>O nome é obrigatório!</HelperText>
+                <HelperText type='error'>{errors.firstName?.message}</HelperText>
 
                 <TextInputController
                     name='lastName'
@@ -88,7 +98,7 @@ export default function MyProfileEdit({ navigation }) {
                     error={errors.lastName}
                     leftIcon={<AntDesign name='idcard' {...iconProperties} />}
                 />
-                <HelperText type='error' visible={errors.lastName}>O sobrenome é obrigatório!</HelperText>
+                <HelperText type='error'>{errors.lastName?.message}</HelperText>
 
                 <TextInputController
                     name='phone'
@@ -98,7 +108,7 @@ export default function MyProfileEdit({ navigation }) {
                     error={errors.phone}
                     leftIcon={<SimpleLineIcons name='phone' {...iconProperties} />}
                 />
-                <HelperText type='error' visible={errors.phone}>O telefone é obrigatório!</HelperText>
+                <HelperText type='error'>{errors.phone?.message}</HelperText>
 
                 <TextInputController
                     name='email'
@@ -108,7 +118,7 @@ export default function MyProfileEdit({ navigation }) {
                     error={errors.email}
                     leftIcon={<Ionicons name='mail-outline' {...iconProperties} />}
                 />
-                <HelperText type='error' visible={errors.email}>O email é obrigatório!</HelperText>
+                <HelperText type='error'>{errors.email?.message}</HelperText>
 
                 <TextInputController
                     name='password'
@@ -134,7 +144,7 @@ export default function MyProfileEdit({ navigation }) {
                     }
                     secureTextEntry={!showPassword}
                 />
-                <HelperText type='error' visible={errors.password}>A senha é obrigatória!</HelperText>
+                <HelperText type='error'>{errors.password?.message}</HelperText>
 
                 <TextInputController
                     name='confirm'
@@ -160,7 +170,7 @@ export default function MyProfileEdit({ navigation }) {
                     }
                     secureTextEntry={!showPassword2}
                 />
-                <HelperText type='error' visible={errors.confirm} style={{marginBottom: 40}}>A confirmação de senha é obrigatória!</HelperText>
+                <HelperText type='error' style={{marginBottom: 40}}>{errors.confirm?.message}</HelperText>
             </ScrollView>
             <View style={[global.fabButton, { gap: 16 }]}>
                 <PrimaryFAB icon='content-save-outline' onPress={handleSubmit(onSubmit)} />

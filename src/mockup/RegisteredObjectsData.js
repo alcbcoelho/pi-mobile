@@ -12,12 +12,12 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [
         "https://down-br.img.susercontent.com/file/sg-11134201-7qvef-li3j1cjkr20af5",
         "https://down-br.img.susercontent.com/file/sg-11134201-7qvg6-li3j1c877oxy1b",
         "https://down-br.img.susercontent.com/file/sg-11134201-7qvfr-li3j1c8r6vzj6c",
-        "https://down-br.img.susercontent.com/file/sg-11134201-7qvfr-li3j1c8r6vzj6c",
+        // "https://down-br.img.susercontent.com/file/sg-11134201-7qvfr-li3j1c8r6vzj6c",
       ],
     },
     {
@@ -32,7 +32,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [
         "https://down-br.img.susercontent.com/file/sg-11134201-7qvef-li3j1cjkr20af5",
         "https://down-br.img.susercontent.com/file/sg-11134201-7qvg6-li3j1c877oxy1b",
@@ -52,7 +52,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [
         "https://down-br.img.susercontent.com/file/sg-11134201-7qvef-li3j1cjkr20af5",
         "https://down-br.img.susercontent.com/file/sg-11134201-7qvg6-li3j1c877oxy1b",
@@ -87,7 +87,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
     {
@@ -102,7 +102,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
     {
@@ -117,7 +117,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
     {
@@ -132,7 +132,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
     {
@@ -147,7 +147,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
     {
@@ -162,7 +162,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
     {
@@ -177,7 +177,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
     {
@@ -192,7 +192,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
     {
@@ -207,7 +207,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
     {
@@ -222,7 +222,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
     {
@@ -237,7 +237,7 @@ const MyObjectsList = {
       place: "IESB",
       date: "08/09/2023",
       time: "18:30",
-      info: "Achei perto dos microondas da cantina.",
+      info: "Devo ter perdido na cantina, comi numa mesa na frente do microondas.",
       imgUrl: [],
     },
   ],
