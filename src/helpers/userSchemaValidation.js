@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 
 export const userSchemaValidation = yup.object({
-    cpf: yup.string().min(11).required('O email é obrigatório!'),
+    cpf: yup.string().min(11).required('O CPF é obrigatório!'),
     firstName: yup.string().required('O nome é obrigatório!'),
     lastName: yup.string().required('O sobrenome é obrigatório!'),
     email: yup.string().email().required('O email é obrigatório!'),

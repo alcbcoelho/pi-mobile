@@ -33,3 +33,14 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+assets/logo-alt.png
+assets/logo-alt2.png
+assets/logo-alt3.png
+assets/logo-alt4.png
+assets/logo.svg
+assets/splash.gif
+assets/splash-alt.png
+assets/icons/mail-outline.svg
+assets/icons/phone.svg
+santo-pulinho-figma-screens.pdf
