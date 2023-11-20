@@ -1,42 +1,98 @@
-import { useState } from 'react';
-import { View, Image } from 'react-native';
-import { Text, Avatar, List, FAB } from 'react-native-paper';
+import { useState, useContext } from "react";
+import { View, Image } from "react-native";
+import { Text, Avatar, List } from "react-native-paper";
+import { Ionicons } from "@expo/vector-icons";
+import PrimaryFAB from "../components/PrimaryFAB";
+
+// Hooks
+import useAppTheme from "../hooks/useAppTheme";
+
+// Contexts
+import { AuthContext } from "../contexts/AuthContext";
 
 // Styles
-import { global } from '../styles/global';
+import { global } from "../styles/global";
 
-export default function MyProfile() {
-	const [user, setUser] = useState({
-		id: 1,
-		name: 'Cleiton Fernandes',
-		email: 'cleitin.hta@gmail.com',
-		phone: '+55 61 9 9251-3746',
-		avatar: 'https://img.freepik.com/psd-gratuitas/ilustracao-3d-de-avatar-ou-perfil-humano_23-2150671142.jpg',
-	});
+// Data
+import { userData } from "../mockup/UserData";
 
-	return (
-		<View style={[global.pageContainer, { justifyContent: 'flex-start' }]}>
-			<Avatar.Image
-				size={192}
-				style={{ marginVertical: 40 }}
-				source={() => <Image style={{ aspectRatio: 1 / 1, borderRadius: 256 }} source={{ uri: user.avatar }} />}
-			/>
-			<Text style={global.perfilUserName}>{user.name}</Text>
-			<View style={global.button}>
-				<List.Item
-					style={global.objectItemSpec}
-					title={user.email}
-					left={(props) => <List.Icon {...props} icon='email-outline' />}
-				/>
-				<List.Item
-					style={global.objectItemSpec}
-					title={user.phone}
-					left={(props) => <List.Icon {...props} icon='phone-outline' />}
-				/>
-			</View>
-			<View style={[global.fabButton, { gap: 16 }]}>
-				<FAB icon='pencil-outline' onPress={() => console.log('Editar')} />
-			</View>
-		</View>
-	);
+export default function MyProfile({ navigation }) {
+  const { user } = useContext(AuthContext);
+  const { themeType } = useAppTheme();
+
+  const index = userData.findIndex((user_) => user_.email === user.email);
+
+  return (
+    <View style={[global.pageContainer, { justifyContent: "flex-start" }]}>
+      {userData[index].avatar ? (
+        <Avatar.Image
+          size={192}
+          style={{ marginVertical: 32 }}
+          source={() => (
+            <Image
+              style={{ aspectRatio: 1 / 1, borderRadius: 256 }}
+              source={{ uri: userData[index].avatar }}
+            />
+          )}
+        />
+      ) : (
+        <Avatar.Icon
+          size={192}
+          icon={({ size, color }) => (
+            <Ionicons name="person" size={size} color={color} />
+          )} /* 'account' */
+          style={{
+            backgroundColor:
+              themeType === "light"
+                ? "rgba(147, 75, 0, 0.15)"
+                : "rgba(255, 183, 130, 0.15)",
+            marginVertical: 32,
+          }}
+        />
+      )}
+      <Text style={global.perfilUserName}>{`${userData[index].firstName} ${userData[index].lastName}`}</Text>
+      <View style={global.button}>
+        <List.Item
+          style={global.objectItemSpec}
+          title={userData[index].email}
+          left={(props) => (
+            <List.Icon
+              {...props}
+              icon={({ size, color }) => (
+                <Image
+                  source={require("../../assets/icons/mail-outline.png")}
+                  style={{ width: size, height: size, tintColor: color }}
+                />
+              )}
+            />
+          )}
+        />
+        <List.Item
+          style={global.objectItemSpec}
+          title={userData[index].phone}
+          left={(props) => (
+            <List.Icon
+              {...props}
+              icon={({ size, color }) => (
+                <Image
+                  source={require("../../assets/icons/phone-outline.png")}
+                  style={{ width: size, height: size, tintColor: color }}
+                />
+              )}
+            />
+          )}
+        />
+      </View>
+      <View style={[global.fabButton, { gap: 16 }]}>
+        <PrimaryFAB
+          icon="pencil-outline"
+          onPress={() =>
+            navigation.navigate("EditProfile", {
+              userId: userData[index].id,
+            })
+          }
+        />
+      </View>
+    </View>
+  );
 }

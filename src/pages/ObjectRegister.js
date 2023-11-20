@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import { Text, RadioButton, Button, HelperText, Switch, TextInput, useTheme } from 'react-native-paper';
-import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
@@ -96,11 +96,11 @@ export default function ObjectRegister() {
 						</RadioButton.Group>
 					)}
 				/>
-				{errors.situation ? (
+				{errors.situation && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.situation?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				<TextInputController
 					name={'object'}
@@ -108,16 +108,16 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "Celular"'}
 					control={control}
 					error={errors.object}
-					leftIcon={<MaterialIcons name='watch' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<Ionicons name='watch-outline' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					Aquilo que seu objeto consiste.
 				</HelperText>
-				{errors.object ? (
+				{errors.object && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.object?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				<TextInputController
 					name={'brand'}
@@ -125,7 +125,7 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "Apple"'}
 					control={control}
 					error={errors.brand}
-					leftIcon={<Ionicons name='logo-apple' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<AntDesign name='apple-o' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					A marca do seu objeto, caso seja aplicável.
@@ -142,7 +142,7 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "iPhone12"'}
 					control={control}
 					error={errors.model}
-					leftIcon={<Ionicons name='logo-apple' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<AntDesign name='apple-o' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					O modelo do seu objeto, caso seja aplicável.
@@ -159,16 +159,16 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "Branco"'}
 					control={control}
 					error={errors.color}
-					leftIcon={<MaterialIcons name='format-paint' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<Ionicons name='color-palette-outline' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					A cor predominante do seu objeto.
 				</HelperText>
-				{errors.color ? (
+				{errors.color && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.color?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				<TextInputController
 					name={'characteristics'}
@@ -176,10 +176,10 @@ export default function ObjectRegister() {
 					placeholder={'Ex.: "capinha vermelha, tela rachada"'}
 					control={control}
 					error={errors.characteristics}
-					leftIcon={<MaterialIcons name='description' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<Ionicons name='document-text-outline' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-					Detalhes descritivos adicionais que possam ajudar a especificar ainda mais o objeto em questão.
+					Elementos descritivos adicionais que possam ajudar a especificar ainda mais o objeto em questão.
 					{`\n`}
 					<Text style={{ fontWeight: 'bold' }}>Separe cada característica com uma vírgula.</Text>
 				</HelperText>
@@ -194,13 +194,13 @@ export default function ObjectRegister() {
 					label={labelPlace}
 					control={control}
 					error={errors.place}
-					leftIcon={<MaterialIcons name='place' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<Ionicons name='location-outline' size={24} color={theme.colors.outline} />}
 				/>
-				{errors.place ? (
+				{errors.place && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.place?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				{showDatePicker && (
 					<DateTimePicker
@@ -222,15 +222,15 @@ export default function ObjectRegister() {
 					onPressIn={() => onChangeMode('date')}
 					left={
 						<TextInput.Icon
-							icon={() => <MaterialIcons name='date-range' size={24} color={theme.colors.backdrop} />}
+							icon={() => <Ionicons name='calendar-outline' size={24} color={theme.colors.outline} />}
 						/>
 					}
 				/>
-				{errors.date ? (
+				{errors.date && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.date?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				<TextInput
 					style={global.input}
@@ -242,15 +242,15 @@ export default function ObjectRegister() {
 					onPressIn={() => onChangeMode('time')}
 					left={
 						<TextInput.Icon
-							icon={() => <MaterialIcons name='access-time' size={24} color={theme.colors.backdrop} />}
+							icon={() => <Ionicons name='time-outline' size={24} color={theme.colors.outline} />}
 						/>
 					}
 				/>
-				{errors.time ? (
+				{errors.time && (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.time?.message}
 					</HelperText>
-				) : null}
+				)}
 
 				<TextInputController
 					name={'info'}
@@ -260,7 +260,7 @@ export default function ObjectRegister() {
 					error={errors.info}
 					multiline={true}
 					maxLength={110}
-					leftIcon={<MaterialIcons name='info' size={24} color={theme.colors.backdrop} />}
+					leftIcon={<Ionicons name='information' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					Informações adicionais sobre o objeto que você ache importante ressaltar.
