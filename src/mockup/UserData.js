@@ -5,7 +5,7 @@ export const userData = [
     lastName: "Fernandes",
     password: "123456",
     email: "cleitin.hta@gmail.com",
-    phone: "+55 61 9 9251-3746",
+    phone: "61 99251-3746",
     avatar:
       /* null */ "https://img.freepik.com/psd-gratuitas/ilustracao-3d-de-avatar-ou-perfil-humano_23-2150671142.jpg",
   },
@@ -15,7 +15,7 @@ export const userData = [
     lastName: "Coêlho",
     password: "123456",
     email: "alcbcoelho@gmail.com",
-    phone: "+55 61 9 9251-3746",
+    phone: "61 99251-3746",
     avatar:
       null /* "https://avatars.githubusercontent.com/u/48134104?v=4" */,
   },

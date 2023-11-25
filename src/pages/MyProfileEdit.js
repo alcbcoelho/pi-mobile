@@ -40,6 +40,7 @@ export default function MyProfileEdit({ route, navigation }) {
     const { themeType } = useAppTheme();
 
     const onSubmit = () => {
+        console.log("onsubmit")
         navigation.navigate("MyProfile");
     }
 
