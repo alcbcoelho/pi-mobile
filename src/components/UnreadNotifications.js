@@ -1,5 +1,5 @@
-import NotificationList from "../components/NotificationList";
+import NotificationList from '../components/NotificationList';
 
 export default function UnreadNotifications({ navigation }) {
-  return <NotificationList navigation={navigation} />;
+	return <NotificationList navigation={navigation} />;
 }

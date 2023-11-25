@@ -5,7 +5,6 @@ import { useTheme } from 'react-native-paper';
 // Styles
 import { global } from '../styles/global';
 
-
 export default function TextInputController({
 	style,
 	name,

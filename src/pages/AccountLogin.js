@@ -29,13 +29,13 @@ export default function AccountLogin({ navigation }) {
 
 	const onSignIn = (data) => {
 		console.log('Dados Formulário Login:', data);
-		login(data.email === 'alcbcoelho@gmail.com' ? data.email : 'cleitin.hta@gmail.com'/* data.email */);
+		login(data.email === 'alcbcoelho@gmail.com' ? data.email : 'cleitin.hta@gmail.com' /* data.email */);
 		navigation.navigate('AuthenticatedRoutes', { screen: 'MyObjects' });
 	};
 
-	const toggleShowPassword = () => setShowPassword(previous => !previous);
+	const toggleShowPassword = () => setShowPassword((previous) => !previous);
 
-	const setIconColor = (name) => errors[name] ? colorUnauthScreensError : 'white';
+	const setIconColor = (name) => (errors[name] ? colorUnauthScreensError : 'white');
 
 	return (
 		<LinearGradientView>
@@ -92,10 +92,14 @@ export default function AccountLogin({ navigation }) {
 
 			<View style={global.loginLinks}>
 				<Pressable onPress={() => navigation.navigate('AccountRecover')}>
-					<Text style={[styleUnauthenticatedScreens.whiteText, styleUnauthenticatedScreens.underlinedText]}>Recuperar conta</Text>
+					<Text style={[styleUnauthenticatedScreens.whiteText, styleUnauthenticatedScreens.underlinedText]}>
+						Recuperar conta
+					</Text>
 				</Pressable>
 				<Pressable onPress={() => navigation.navigate('AccountRegister')}>
-					<Text style={[styleUnauthenticatedScreens.whiteText, styleUnauthenticatedScreens.underlinedText]}>Criar conta</Text>
+					<Text style={[styleUnauthenticatedScreens.whiteText, styleUnauthenticatedScreens.underlinedText]}>
+						Criar conta
+					</Text>
 				</Pressable>
 			</View>
 		</LinearGradientView>

@@ -28,7 +28,7 @@ export const global = StyleSheet.create({
 	helperTextUnauthenticatedPage: {
 		backgroundColor: 'rgb(186, 26, 26)',
 		color: '#fff',
-		borderRadius: 32
+		borderRadius: 32,
 	},
 	imagePlaceholder: {
 		alignItems: 'center',
@@ -37,13 +37,13 @@ export const global = StyleSheet.create({
 		// backgroundColor: 'rgba(148, 109, 81, 0.175)'
 	},
 	imageBackground: {
-		aspectRatio: 4/3/* 16 / 9 */,
+		aspectRatio: 4 / 3 /* 16 / 9 */,
 		objectFit: 'contain',
 		resizeMode: 'center',
 	},
 	imageRating: {
 		width: '100%',
-		aspectRatio: 4/3,
+		aspectRatio: 4 / 3,
 		backgroundColor: 'rgb(32, 26, 23)' /* 'grey' */,
 	},
 	input: {
@@ -100,7 +100,7 @@ export const global = StyleSheet.create({
 	pageContainer: {
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
 	},
 	perfilUserName: { fontSize: 24 },
 	pressableButton: {
@@ -121,13 +121,13 @@ export const global = StyleSheet.create({
 	title: {
 		fontSize: 28,
 		marginBottom: 32,
-		marginTop: 32
+		marginTop: 32,
 	},
 });
 
 export const styleUnauthenticatedScreens = StyleSheet.create({
 	whiteText: {
-		color: '#fff'
+		color: '#fff',
 	},
 	underlinedText: {
 		borderStyle: 'dotted',
@@ -136,11 +136,11 @@ export const styleUnauthenticatedScreens = StyleSheet.create({
 		// textDecorationLine: 'underline'
 	},
 	input: {
-		backgroundColor: '#AA866D'
+		backgroundColor: '#AA866D',
 	},
 	logo: {
 		marginBottom: 32,
 		width: 278,
 		height: 30,
-	}
+	},
 });

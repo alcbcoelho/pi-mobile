@@ -27,7 +27,7 @@ export default function AccountRecover({ navigation }) {
 
 	return (
 		<LinearGradientView>
-			<View style={{ marginBottom: 32, marginHorizontal: 16}}>
+			<View style={{ marginBottom: 32, marginHorizontal: 16 }}>
 				<Text style={[global.message, styleUnauthenticatedScreens.whiteText]}>
 					Insira o seu email de cadastro abaixo para que possamos lhe enviar uma nova senha:
 				</Text>
@@ -40,7 +40,9 @@ export default function AccountRecover({ navigation }) {
 				control={control}
 				error={errors.email}
 				keyboardType={'email-address'}
-				leftIcon={<Ionicons name='mail-outline' size={24} color={errors.email ? colorUnauthScreensError : 'white'} />}		
+				leftIcon={
+					<Ionicons name='mail-outline' size={24} color={errors.email ? colorUnauthScreensError : 'white'} />
+				}
 			/>
 
 			<Button
@@ -57,10 +59,14 @@ export default function AccountRecover({ navigation }) {
 
 			<View style={global.loginLinks}>
 				<Pressable onPress={() => navigation.navigate('AccountLogin')}>
-					<Text style={[styleUnauthenticatedScreens.whiteText, styleUnauthenticatedScreens.underlinedText]}>Fazer login</Text>
+					<Text style={[styleUnauthenticatedScreens.whiteText, styleUnauthenticatedScreens.underlinedText]}>
+						Fazer login
+					</Text>
 				</Pressable>
 				<Pressable onPress={() => navigation.navigate('AccountRegister')}>
-					<Text style={[styleUnauthenticatedScreens.whiteText, styleUnauthenticatedScreens.underlinedText]}>Criar conta</Text>
+					<Text style={[styleUnauthenticatedScreens.whiteText, styleUnauthenticatedScreens.underlinedText]}>
+						Criar conta
+					</Text>
 				</Pressable>
 			</View>
 		</LinearGradientView>
