@@ -14,7 +14,7 @@ import TextInputController from '../components/TextInputController';
 // Styles
 import { global } from '../styles/global';
 
-export default function ObjectRegister() {
+export default function ObjectRegister({ navigation }) {
 	const [radioValue, setRadioValue] = useState('found'); // setar um valor inicial?
 	const [isSwitchOn, setIsSwitchOn] = useState(false);
 

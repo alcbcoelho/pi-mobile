@@ -11,7 +11,7 @@ import { Ionicons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { userSchemaValidation } from "../helpers/userSchemaValidation";
+import { registerSchemaValidation } from "../helpers/registerSchemaValidation";
 
 // Components
 import TextInputController from "../components/TextInputController";
@@ -34,7 +34,7 @@ export default function AccountRegister({ navigation }) {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({ mode: "all", resolver: yupResolver(userSchemaValidation) });
+  } = useForm({ mode: "all", resolver: yupResolver(registerSchemaValidation) });
 
   const onSignUp = (data) => {
     console.log("Dados Formulário Usuário:", data);
