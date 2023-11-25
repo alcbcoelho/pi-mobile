@@ -1,9 +1,13 @@
 import axios from 'axios';
 import endpoints from '../helpers/endpoints';
 
-const signIn = async () => {
+const signIn = async (credencial, password) => {
 	try {
-		const res = await axios.post(`${endpoints.BASE_URL}${endpoints.SIGNIN_URL}`);
+		const res = await axios.post(`${endpoints.BASE_URL}${endpoints.SIGNIN_URL}`, {
+			credencial,
+			password,
+		});
+		console.log('SignIn', res);
 	} catch (e) {
 		console.error('Client Error:', e);
 	}
@@ -12,6 +16,7 @@ const signIn = async () => {
 const signOut = async () => {
 	try {
 		const res = await axios.get(`${endpoints.BASE_URL}${endpoints.SIGNOUT_URL}`);
+		console.log('SignOut', res);
 	} catch (e) {
 		console.error('Client Error:', e);
 	}
@@ -27,6 +32,7 @@ const signUp = async (cpf, email, password, firstName, lastName, phone) => {
 			lastName,
 			phone,
 		});
+		console.log('SignUp', res);
 	} catch (e) {
 		console.error('Client Error:', e);
 	}
