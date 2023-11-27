@@ -3,7 +3,7 @@ const MyObjectsList = {
     {
       id: "1",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Copo Stanley",
       brand: "Stanley",
       model: "SVT40",
@@ -23,7 +23,7 @@ const MyObjectsList = {
     {
       id: "2",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Copo Stanley",
       brand: "Stanley",
       model: "SVT40",
@@ -43,7 +43,7 @@ const MyObjectsList = {
     {
       id: "3",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Copo Stanley",
       brand: "Stanley",
       model: "SVT40",
@@ -63,7 +63,7 @@ const MyObjectsList = {
     {
       id: "4",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 4",
       brand: "Acme",
       model: "XYZ",
@@ -78,7 +78,7 @@ const MyObjectsList = {
     {
       id: "5",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 5",
       brand: "Stanley",
       model: "SVT40",
@@ -93,7 +93,7 @@ const MyObjectsList = {
     {
       id: "6",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 6",
       brand: "Stanley",
       model: "SVT40",
@@ -108,7 +108,7 @@ const MyObjectsList = {
     {
       id: "7",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 7",
       brand: "Stanley",
       model: "SVT40",
@@ -123,7 +123,7 @@ const MyObjectsList = {
     {
       id: "8",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 8",
       brand: "Stanley",
       model: "SVT40",
@@ -138,7 +138,7 @@ const MyObjectsList = {
     {
       id: "9",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 9",
       brand: "Stanley",
       model: "SVT40",
@@ -153,7 +153,7 @@ const MyObjectsList = {
     {
       id: "10",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 10",
       brand: "Stanley",
       model: "SVT40",
@@ -168,7 +168,7 @@ const MyObjectsList = {
     {
       id: "11",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 11",
       brand: "Stanley",
       model: "SVT40",
@@ -183,7 +183,7 @@ const MyObjectsList = {
     {
       id: "12",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 12",
       brand: "Stanley",
       model: "SVT40",
@@ -198,7 +198,7 @@ const MyObjectsList = {
     {
       id: "13",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 13",
       brand: "Stanley",
       model: "SVT40",
@@ -213,7 +213,7 @@ const MyObjectsList = {
     {
       id: "14",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 14",
       brand: "Stanley",
       model: "SVT40",
@@ -228,7 +228,7 @@ const MyObjectsList = {
     {
       id: "15",
       situation: "lost",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Objeto 15",
       brand: "Stanley",
       model: "SVT40",
@@ -245,7 +245,7 @@ const MyObjectsList = {
     {
       id: "1",
       situation: "found",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Relógio Rolex",
       brand: "Rolex",
       model: "",
@@ -262,7 +262,7 @@ const MyObjectsList = {
     {
       id: "2",
       situation: "found",
-      owner: "Cleiton Fernandes",
+      // ownerId: "Cleiton Fernandes",
       object: "Relógio Rolex",
       brand: "Stanley",
       model: "",

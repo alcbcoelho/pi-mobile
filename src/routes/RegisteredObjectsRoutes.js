@@ -6,24 +6,40 @@ import Home from "../pages/Home";
 import PrimaryFAB from "../components/PrimaryFAB";
 import { Portal, Snackbar, Text } from "react-native-paper";
 
+import { useContext } from "react";
+
+// Contexts
+import { AuthContext } from "../contexts/AuthContext";
+import { DataMockupContext } from "../contexts/DataMockupContext";
+
 // Data
-import RegisteredObjectsData from "../mockup/RegisteredObjectsData";
-const { lostObjects, foundObjects } = RegisteredObjectsData;
+// import RegisteredObjectsData from "../mockup/RegisteredObjectsData";
+// const { lostObjects, foundObjects } = RegisteredObjectsData;
 
 // Styles
 import { global } from "../styles/global";
 
 export default function RegisteredObjectsRoutes({ navigation, route }) {
+  const { userData } = useContext(DataMockupContext);
+  const {
+    user: { id },
+  } = useContext(AuthContext);
+
+  const index = userData.findIndex((user) => user.id == id);
+
+  const foundObjects = userData[index]?.objects.foundObjects;
+  const lostObjects = userData[index]?.objects.lostObjects;
+
   const page =
-    foundObjects.length || lostObjects.length ? (
+    foundObjects?.length || lostObjects?.length ? (
       <TabBar
         screens={[
           { component: LostObjects, title: "Objetos Perdidos" },
           { component: FoundObjects, title: "Objetos Achados" },
         ]}
         hasBadge={[
-          RegisteredObjectsData.lostObjects.length,
-          RegisteredObjectsData.foundObjects.length,
+          userData[index]?.objects.lostObjects.length,
+          userData[index]?.objects.foundObjects.length,
         ]}
       />
     ) : (
@@ -37,9 +53,13 @@ export default function RegisteredObjectsRoutes({ navigation, route }) {
         style={global.fabButton}
         icon="plus"
         label="Novo Registro"
-        onPress={() => navigation.navigate("ObjectRegister")}
+        onPress={() =>
+          navigation.navigate("ObjectRegister", {
+            userId: id,
+          })
+        }
       />
-      <Portal>
+      {/* <Portal>
         <Snackbar visible={route?.params ? true : false}>
           {
             RegisteredObjectsData[
@@ -47,7 +67,7 @@ export default function RegisteredObjectsRoutes({ navigation, route }) {
             ][route?.params?.objectId - 1]?.object + " apagado com sucesso"
           }
         </Snackbar>
-      </Portal>
+      </Portal> */}
     </>
   );
 }

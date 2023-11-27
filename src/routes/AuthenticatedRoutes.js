@@ -9,6 +9,7 @@ import {
 } from "@react-navigation/drawer";
 
 // Hooks
+import { useContext } from "react";
 import useAppTheme from "../hooks/useAppTheme";
 
 // Routes
@@ -24,20 +25,23 @@ import Home from "../pages/Home";
 import MyProfile from "../pages/MyProfile";
 import ObjectRegister from "../pages/ObjectRegister";
 
+// Context
+import { DataMockupContext } from "../contexts/DataMockupContext";
+import { AuthContext } from "../contexts/AuthContext";
+
 // Components
 import Header from "../components/Header";
 
 // Styles
 import { global } from "../styles/global";
 
-// Data
-import MyObjectsList from "../mockup/RegisteredObjectsData";
-const { lostObjects, foundObjects } = MyObjectsList;
-
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
   const { theme } = useAppTheme();
+
+  const { logout } = useContext(AuthContext);
+  const { userData } = useContext(DataMockupContext);
 
 //   const miscStyleProperties = {
 // 	style: { borderRadius: 32 },
@@ -88,9 +92,11 @@ function CustomDrawerContent(props) {
         label="Sair"
         onPress={() => {
           // setInputLabelColor('#fff')
-          props.navigation.navigate("UnauthenticatedRoutes", {
-            screen: "AccountLogin",
-          });
+          console.log(userData);  //
+          logout();
+          // props.navigation.navigate("UnauthenticatedRoutes", {
+          //   screen: "AccountLogin",
+          // });
         }}
         style={{ borderRadius: 32 }}
         activeBackgroundColor="#946D51"
@@ -102,6 +108,8 @@ function CustomDrawerContent(props) {
 }
 
 export default function AuthenticatedRoutes({ route }) {
+  const { user: { id } } = useContext(AuthContext);
+
   const { theme } = useAppTheme();
   const { top } = useSafeAreaInsets();
 
