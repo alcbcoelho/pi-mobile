@@ -8,7 +8,7 @@ import {
 import { Text, Button, HelperText } from "react-native-paper";
 import { Ionicons, AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchemaValidation } from "../helpers/registerSchemaValidation";
@@ -20,6 +20,11 @@ import TextInputController2, {
 } from "../components/TextInputController2";
 import LinearGradientView from "../components/LinearGradientView";
 
+// Contexts
+import { AuthContext } from "../contexts/AuthContext";
+import { DataMockupContext } from "../contexts/DataMockupContext";  // Database Mockup Context
+import { defaultFields } from "../mockup/UserData";
+
 // Styles
 import { global, styleUnauthenticatedScreens } from "../styles/global";
 
@@ -30,6 +35,9 @@ export default function AccountRegister({ navigation }) {
   const toggleShowPassword = () => setShowPassword((previous) => !previous);
   const toggleShowPassword2 = () => setShowPassword2((previous) => !previous);
 
+  const { login } = useContext(AuthContext);
+  const { userData, createUser } = useContext(DataMockupContext);
+
   const {
     control,
     handleSubmit,
@@ -38,7 +46,25 @@ export default function AccountRegister({ navigation }) {
 
   const onSignUp = (data) => {
     console.log("Dados Formulário Usuário:", data);
-    navigation.navigate("AuthenticatedRoutes", { screen: "Home" });
+
+    let highestId = 0;
+    userData.forEach(({ id }) => highestId = id > highestId ? id : highestId)
+    
+    const { firstName, lastName, password, email, phone } = data;
+
+    createUser({
+      id: highestId + 1,
+      firstName,
+      lastName,
+      password,
+      email,
+      phone,
+      ...defaultFields    // avatar, objects
+    });   // TODO: transformar isso aqui em promise/async
+
+    // login(email);  // ¯\_(ツ)_/¯
+
+    navigation.navigate("AuthenticatedRoutes", { screen: "MyObjects", params: { email } });   //
   };
 
   const setIconColor = (name) =>

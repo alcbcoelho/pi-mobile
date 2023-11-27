@@ -9,17 +9,22 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { userSchemaValidation } from "../helpers/userSchemaValidation";
 
 // Hooks
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import useAppTheme from "../hooks/useAppTheme";
+
+// Contexts
+import { DataMockupContext } from "../contexts/DataMockupContext";
 
 // Styles
 import { global } from "../styles/global";
 
 // Data
-import { userData } from "../mockup/UserData";
+// import { userData } from "../mockup/UserData";
 
 export default function MyProfileEdit({ route, navigation }) {
+    const { userData, editUser } = useContext(DataMockupContext);
+
     const index = userData.findIndex(user => user.id == route.params.userId);
 
     const [showPassword, setShowPassword] = useState(false);
@@ -39,8 +44,20 @@ export default function MyProfileEdit({ route, navigation }) {
     const theme = useTheme();
     const { themeType } = useAppTheme();
 
-    const onSubmit = () => {
-        console.log("onsubmit")
+    const onSubmit = (data) => {
+        const obj = {
+            id: route.params.userId,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            password: data.password,
+            email: data.email,
+            phone: data.phone,
+            avatar: userData[index].avatar,
+            objects: userData[index].objects
+        };
+        
+        editUser(obj);
+        console.log(obj);   //
         navigation.navigate("MyProfile");
     }
 

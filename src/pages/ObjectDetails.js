@@ -15,8 +15,12 @@ import PrimaryFAB from "../components/PrimaryFAB";
 import { useWindowDimensions } from "react-native";
 
 // Hooks
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useAppTheme from "../hooks/useAppTheme";
+
+// Context
+import { AuthContext } from "../contexts/AuthContext";
+import { DataMockupContext } from "../contexts/DataMockupContext";
 
 // Data
 import MyObjectsList from "../mockup/RegisteredObjectsData";
@@ -25,10 +29,24 @@ import MyObjectsList from "../mockup/RegisteredObjectsData";
 import { global } from "../styles/global";
 
 export default function ObjectDetails({ navigation, route }) {
+  const { userData, removeObject } = useContext(DataMockupContext);
+  const {
+    user: { id },
+  } = useContext(AuthContext);
+
+  const user = userData[userData.findIndex((user) => user.id == id)];
+  const username = user?.firstName + " " + user?.lastName;
+
+  const objectSituation = route.params.foundObject
+    ? "foundObjects"
+    : "lostObjects";
+
+  const objectIndex = user?.objects[objectSituation].findIndex(
+    (object) => object.id == route.params.objectId
+  );
+
   const object =
-    MyObjectsList[route.params.foundObject ? "foundObjects" : "lostObjects"][
-      route.params.objectId - 1
-    ];
+    user?.objects[objectSituation][objectIndex /* route.params.objectId - 1 */];
 
   const [dialogVisibility, setDialogVisibility] = useState(false);
 
@@ -68,6 +86,9 @@ export default function ObjectDetails({ navigation, route }) {
               <Button
                 onPress={() => {
                   setDialogVisibility(false);
+
+                  removeObject(route.params.objectId, route.params.userId, route.params.foundObject);
+
                   navigation.navigate("MyObjects", {
                     foundObject: route.params.foundObject,
                     objectId: route.params.objectId,
@@ -110,7 +131,7 @@ export default function ObjectDetails({ navigation, route }) {
                 />
               </View>
             )}
-            data={object.imgUrl}
+            data={object?.imgUrl}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             alwaysBounceHorizontal={false}
@@ -128,11 +149,11 @@ export default function ObjectDetails({ navigation, route }) {
             )}
           />
           <View style={global.objectTags}>
-            {object.brand ? <Chip mode="outlined">{object.brand}</Chip> : null}
-            {object.model ? <Chip mode="outlined">{object.model}</Chip> : null}
-            {object.color ? <Chip mode="outlined">{object.color}</Chip> : null}
-            {object.characteristics.length !== 0
-              ? object.characteristics.map((item, index) => (
+            {object?.brand ? <Chip mode="outlined">{object?.brand}</Chip> : null}
+            {object?.model ? <Chip mode="outlined">{object?.model}</Chip> : null}
+            {object?.color ? <Chip mode="outlined">{object?.color}</Chip> : null}
+            {object?.characteristics.split(/\s*,\s*/).length !== 0
+              ? object?.characteristics.split(/\s*,\s*/).map((item, index) => (
                   <Chip key={index} mode="outlined">
                     {item}
                   </Chip>
@@ -142,7 +163,9 @@ export default function ObjectDetails({ navigation, route }) {
           <View style={global.objectSpecs}>
             <List.Item
               style={global.objectItemSpec}
-              title={`${route.params.foundObject ? "Achado" : "Perdido"} por ${object.owner}`}
+              title={`${
+                route.params.foundObject ? "Achado" : "Perdido"
+              } por ${username}`}
               left={(props) => (
                 <List.Icon
                   {...props} /* icon='account-circle-outline' */
@@ -164,7 +187,7 @@ export default function ObjectDetails({ navigation, route }) {
             />
             <List.Item
               style={global.objectItemSpec}
-              title={object.date}
+              title={object?.date}
               left={(props) => (
                 <List.Icon
                   {...props}
@@ -183,7 +206,9 @@ export default function ObjectDetails({ navigation, route }) {
             />
             <List.Item
               style={global.objectItemSpec}
-              title={`${route.params.foundObject ? "Às" : "Por volta das"} ${object.time}`}
+              title={`${route.params.foundObject ? "Às" : "Por volta das"} ${
+                object?.time
+              }`}
               left={(props) => (
                 <List.Icon
                   {...props}
@@ -195,7 +220,7 @@ export default function ObjectDetails({ navigation, route }) {
             />
             <List.Item
               style={global.objectItemSpec}
-              title={object.place}
+              title={object?.place}
               left={(props) => (
                 <List.Icon
                   {...props}
@@ -209,10 +234,10 @@ export default function ObjectDetails({ navigation, route }) {
                 />
               )}
             />
-            <Divider style={{ marginTop: 16 }}/>
+            <Divider style={{ marginTop: 16 }} />
           </View>
           <View style={global.objectInfo}>
-            <Text style={global.objectInfoText}>{object.info}</Text>
+            <Text style={global.objectInfoText}>{object?.info}</Text>
           </View>
         </View>
       </ScrollView>
@@ -222,11 +247,11 @@ export default function ObjectDetails({ navigation, route }) {
           onPress={
             () =>
               navigation.navigate("ObjectScreenRoutes", {
-				screen: "ObjectEdit",
-				params: {
-					foundObject: route.params.foundObject,
-					objectId: route.params.objectId,
-				}
+                screen: "ObjectEdit",
+                params: {
+                  foundObject: route.params.foundObject,
+                  objectId: route.params.objectId,
+                },
               }) /* console.log("Editar") */
           }
         />

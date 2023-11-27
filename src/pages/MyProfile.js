@@ -8,30 +8,32 @@ import PrimaryFAB from "../components/PrimaryFAB";
 import useAppTheme from "../hooks/useAppTheme";
 
 // Contexts
+import { DataMockupContext } from "../contexts/DataMockupContext";
 import { AuthContext } from "../contexts/AuthContext";
 
 // Styles
 import { global } from "../styles/global";
 
 // Data
-import { userData } from "../mockup/UserData";
+// import { userData } from "../mockup/UserData";
 
 export default function MyProfile({ navigation }) {
-  const { user } = useContext(AuthContext);
+  const { user: { id } } = useContext(AuthContext);
+  const { userData } = useContext(DataMockupContext);
   const { themeType } = useAppTheme();
 
-  const index = userData.findIndex((user_) => user_.email === user.email);
+  const index = userData.findIndex((user) => user.id === id);
 
   return (
     <View style={[global.pageContainer, { justifyContent: "flex-start" }]}>
-      {userData[index].avatar ? (
+      {userData[index]?.avatar ? (
         <Avatar.Image
           size={192}
           style={{ marginVertical: 32 }}
           source={() => (
             <Image
               style={{ aspectRatio: 1 / 1, borderRadius: 256 }}
-              source={{ uri: userData[index].avatar }}
+              source={{ uri: userData[index]?.avatar }}
             />
           )}
         />
@@ -50,11 +52,11 @@ export default function MyProfile({ navigation }) {
           }}
         />
       )}
-      <Text style={global.perfilUserName}>{`${userData[index].firstName} ${userData[index].lastName}`}</Text>
+      <Text style={global.perfilUserName}>{`${userData[index]?.firstName} ${userData[index]?.lastName}`}</Text>
       <View style={global.button}>
         <List.Item
           style={global.objectItemSpec}
-          title={userData[index].email}
+          title={userData[index]?.email}
           left={(props) => (
             <List.Icon
               {...props}
@@ -69,7 +71,7 @@ export default function MyProfile({ navigation }) {
         />
         <List.Item
           style={global.objectItemSpec}
-          title={userData[index].phone}
+          title={userData[index]?.phone}
           left={(props) => (
             <List.Icon
               {...props}
@@ -88,7 +90,7 @@ export default function MyProfile({ navigation }) {
           icon="pencil-outline"
           onPress={() =>
             navigation.navigate("EditProfile", {
-              userId: userData[index].id,
+              userId: id,
             })
           }
         />

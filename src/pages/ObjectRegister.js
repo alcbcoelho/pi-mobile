@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import { Text, RadioButton, Button, HelperText, Switch, TextInput, useTheme } from 'react-native-paper';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
@@ -11,10 +11,14 @@ import { objectSchemaValidation } from '../helpers/objectSchemaValidation';
 // Components
 import TextInputController from '../components/TextInputController';
 
+// Contexts
+import { AuthContext } from '../contexts/AuthContext';
+import { DataMockupContext } from '../contexts/DataMockupContext';
+
 // Styles
 import { global } from '../styles/global';
 
-export default function ObjectRegister({ navigation }) {
+export default function ObjectRegister({ navigation, route }) {
 	const [radioValue, setRadioValue] = useState('found'); // setar um valor inicial?
 	const [isSwitchOn, setIsSwitchOn] = useState(false);
 
@@ -24,6 +28,8 @@ export default function ObjectRegister({ navigation }) {
 	const [formatedTime, setFormatedTime] = useState('');
 	const [showDatePicker, setShowDatePicker] = useState(false);
 
+	const { userData, createObject } = useContext(DataMockupContext);
+	const { user: {id} } = useContext(AuthContext);
 	const theme = useTheme();
 
 	const situation = radioValue === 'found' ? ['achado', 'achei'] : ['perdido', 'perdi'];
@@ -41,6 +47,31 @@ export default function ObjectRegister({ navigation }) {
 
 	const onSubmit = (data) => {
 		console.log('Dados Formulário Objeto:', data);
+		
+		const { situation, object, brand, model, color, characteristics, place, date, time, info } = data;
+		
+		let highestId = 0;
+		const situation_ = data.situation === "found" ? "foundObjects" : "lostObjects";
+		userData[userData.findIndex(user => user.id == id)]?.objects[situation_].forEach(({ id }) => highestId = id > highestId ? id : highestId);
+
+		console.log('ID do usuário: ' + id + '\nID do novo objeto: ' + (highestId + 1));	//
+		
+		createObject({
+			id: highestId + 1,
+			situation,
+			object,
+			brand: typeof brand !== "undefined" ? brand : null,
+			model: typeof model !== "undefined" ? model : null,
+			color,
+			characteristics,
+			place,
+			date,
+			time,
+			info: typeof info !== "undefined" ? info : null,
+			imgUrl: []
+		}, id);
+
+		navigation.navigate('MyObjects', { screen: "FoundObjects" });	// ❤
 	};
 
 	const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);

@@ -7,6 +7,7 @@ import { StatusBar } from "react-native";
 // Contexts
 import AuthProvider from "./src/contexts/AuthContext";
 import AppThemeProvider from "./src/contexts/AppThemeContext";
+import DataMockupProvider from "./src/contexts/DataMockupContext";
 
 // Routes
 import MainRoutes from "./src/routes/MainRoutes";
@@ -24,12 +25,14 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <AppThemeProvider>
-        <AuthProvider>
-          <StatusBar barStyle={"light-content"} />
-          {/* <SafeAreaView style={{ flex: 1, backgroundColor: 'blue' }}> */}
-          {/* showSplashScreen ? <SplashScreen /> : */ <MainRoutes />}
-          {/* </SafeAreaView> */}
-        </AuthProvider>
+        <DataMockupProvider>
+          <AuthProvider>
+            <StatusBar barStyle={"light-content"} />
+            {/* <SafeAreaView style={{ flex: 1, backgroundColor: 'blue' }}> */}
+            {/* showSplashScreen ? <SplashScreen /> : */ <MainRoutes />}
+            {/* </SafeAreaView> */}
+          </AuthProvider>
+        </DataMockupProvider>
       </AppThemeProvider>
     </SafeAreaProvider>
   );

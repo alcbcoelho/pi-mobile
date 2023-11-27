@@ -1,12 +1,17 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { DataMockupContext } from "./DataMockupContext";
 
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
+    const { userData } = useContext(DataMockupContext);
+    
     const [user, setUser] = useState({ loggedIn: false });
 
     const login = function(email) {
-        setUser({ email, loggedIn: true });
+        const id = userData[userData.findIndex(user => user.email === email)].id;
+
+        setUser({ id, email, loggedIn: true });
     }
 
     const logout = function() {
