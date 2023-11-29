@@ -24,14 +24,14 @@ export default function MyProfile({ navigation }) {
 
 	return (
 		<View style={[global.pageContainer, { justifyContent: 'flex-start' }]}>
-			{userData[index].avatar ? (
+			{userData[index]?.avatar ? (
 				<Avatar.Image
 					size={192}
 					style={{ marginVertical: 32 }}
 					source={() => (
 						<Image
 							style={{ aspectRatio: 1 / 1, borderRadius: 256 }}
-							source={{ uri: userData[index].avatar }}
+							source={{ uri: userData[index]?.avatar }}
 						/>
 					)}
 				/>
@@ -45,11 +45,11 @@ export default function MyProfile({ navigation }) {
 					}}
 				/>
 			)}
-			<Text style={global.perfilUserName}>{`${userData[index].firstName} ${userData[index].lastName}`}</Text>
+			<Text style={global.perfilUserName}>{`${userData[index]?.firstName} ${userData[index]?.lastName}`}</Text>
 			<View style={global.button}>
 				<List.Item
 					style={global.objectItemSpec}
-					title={userData[index].email}
+					title={userData[index]?.email}
 					left={(props) => (
 						<List.Icon
 							{...props}
@@ -64,7 +64,7 @@ export default function MyProfile({ navigation }) {
 				/>
 				<List.Item
 					style={global.objectItemSpec}
-					title={userData[index].phone}
+					title={userData[index]?.phone}
 					left={(props) => (
 						<List.Icon
 							{...props}
@@ -83,7 +83,7 @@ export default function MyProfile({ navigation }) {
 					icon='pencil-outline'
 					onPress={() =>
 						navigation.navigate('EditProfile', {
-							userId: userData[index].id,
+							userId: userData[index]?.id,
 						})
 					}
 				/>

@@ -32,11 +32,11 @@ export default function MyProfileEdit({ route, navigation }) {
 	} = useForm({
 		resolver: yupResolver(userSchemaValidation),
 		defaultValues: {
-			firstName: userData[index].firstName,
-			lastName: userData[index].lastName,
-			phone: userData[index].phone,
-			email: userData[index].email,
-			password: userData[index].password,
+			firstName: userData[index]?.firstName,
+			lastName: userData[index]?.lastName,
+			phone: userData[index]?.phone,
+			email: userData[index]?.email,
+			password: userData[index]?.password,
 		},
 	});
 
@@ -58,14 +58,14 @@ export default function MyProfileEdit({ route, navigation }) {
 	return (
 		<View style={{ flex: 1 }}>
 			<ScrollView contentContainerStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-				{userData[index].avatar ? (
+				{userData[index]?.avatar ? (
 					<Avatar.Image
 						size={192}
 						style={{ marginVertical: 32 }}
 						source={() => (
 							<Image
 								style={{ aspectRatio: 1 / 1, borderRadius: 256 }}
-								source={{ uri: userData[index].avatar }}
+								source={{ uri: userData[index]?.avatar }}
 							/>
 						)}
 					/>
