@@ -1,12 +1,17 @@
-import { useState } from 'react';
-import { View, ScrollView } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Alert, View, ScrollView } from 'react-native';
 import { Text, RadioButton, Button, HelperText, Switch, TextInput, useTheme } from 'react-native-paper';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
-
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { objectSchemaValidation } from '../helpers/objectSchemaValidation';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+// Services
+import { createItem } from '../services/objectService';
+
+// Hooks
+import useUser from '../hooks/useUser';
 
 // Components
 import TextInputController from '../components/TextInputController';
@@ -14,10 +19,9 @@ import TextInputController from '../components/TextInputController';
 // Styles
 import { global } from '../styles/global';
 
-export default function ObjectRegister() {
-	const [radioValue, setRadioValue] = useState('found'); // setar um valor inicial?
+export default function ObjectRegister({ navigation }) {
 	const [isSwitchOn, setIsSwitchOn] = useState(false);
-
+	const [radioValue, setRadioValue] = useState('found');
 	const [date, setDate] = useState(new Date());
 	const [mode, setMode] = useState('date');
 	const [formatedDate, setFormatedDate] = useState('');
@@ -25,6 +29,7 @@ export default function ObjectRegister() {
 	const [showDatePicker, setShowDatePicker] = useState(false);
 
 	const theme = useTheme();
+	const { userItems } = useUser();
 
 	const situation = radioValue === 'found' ? ['achado', 'achei'] : ['perdido', 'perdi'];
 	const labelPlace = `Local em que foi ${situation[0]}`;
@@ -34,14 +39,29 @@ export default function ObjectRegister() {
 
 	const {
 		control,
+		reset,
+		setValue,
 		handleSubmit,
 		formState: { errors },
-		setValue,
-	} = useForm({ mode: 'onSubmit', resolver: yupResolver(objectSchemaValidation) });
+	} = useForm({ resolver: yupResolver(objectSchemaValidation) });
 
-	const onSubmit = (data) => {
-		console.log('Dados Formulário Objeto:', data);
+	const onSubmit = async (data) => {
+		const characteristics = data?.characteristics ? data.characteristics.split(',').map((item) => item.trim()) : [];
+		const newData = { ...data, characteristics };
+		console.log('Dados Formulário Objeto:', newData);
+
+		const result = await createItem(newData);
+		if (result.id) {
+			Alert.alert('Objeto cadastrado com sucesso!');
+			navigation.navigate('MyObjects');
+		} else {
+			Alert.alert('Erro ao cadastrar o objeto!');
+		}
 	};
+
+	useEffect(() => {
+		reset();
+	}, [userItems]);
 
 	const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
@@ -51,20 +71,17 @@ export default function ObjectRegister() {
 	};
 
 	const onChangeDate = (event, selectedDate) => {
-		const currentDate = selectedDate || date;
+		const usedDate = selectedDate || date;
 		setShowDatePicker(false);
-		setDate(currentDate);
+		setDate(usedDate);
 
-		let tempDate = new Date(currentDate).toLocaleDateString('pt-BR', { dateStyle: 'short' });
-		let tempTime = new Date(currentDate).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+		let dateTimeValue = new Date(usedDate).toISOString();
+		let tempDate = new Date(usedDate).toLocaleDateString('pt-BR', { dateStyle: 'short' });
+		let tempTime = new Date(usedDate).toLocaleTimeString('pt-BR', { timeStyle: 'long' });
 
-		if (mode === 'date') {
-			setValue('date', tempDate);
-			setFormatedDate(tempDate);
-		} else {
-			setValue('time', tempTime);
-			setFormatedTime(tempTime);
-		}
+		setValue('datetime', dateTimeValue);
+		setFormatedDate(tempDate);
+		setFormatedTime(tempTime);
 	};
 
 	return (
@@ -96,28 +113,28 @@ export default function ObjectRegister() {
 						</RadioButton.Group>
 					)}
 				/>
-				{errors.situation && (
+				{errors.situation ? (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.situation?.message}
 					</HelperText>
-				)}
+				) : null}
 
 				<TextInputController
-					name={'object'}
+					name={'objectType'}
 					label={'Objeto'}
 					placeholder={'Ex.: "Celular"'}
 					control={control}
-					error={errors.object}
+					error={errors.objectType}
 					leftIcon={<Ionicons name='watch-outline' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					Aquilo que seu objeto consiste.
 				</HelperText>
-				{errors.object && (
+				{errors.objectType ? (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-						{errors.object?.message}
+						{errors.objectType?.message}
 					</HelperText>
-				)}
+				) : null}
 
 				<TextInputController
 					name={'brand'}
@@ -130,11 +147,6 @@ export default function ObjectRegister() {
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					A marca do seu objeto, caso seja aplicável.
 				</HelperText>
-				{/* {errors.brand ? (
-						<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-							{errors.brand?.message}
-						</HelperText>
-					) : null} */}
 
 				<TextInputController
 					name={'model'}
@@ -147,11 +159,6 @@ export default function ObjectRegister() {
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					O modelo do seu objeto, caso seja aplicável.
 				</HelperText>
-				{/* {errors.model ? (
-						<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-							{errors.model?.message}
-						</HelperText>
-					) : null} */}
 
 				<TextInputController
 					name={'color'}
@@ -164,11 +171,11 @@ export default function ObjectRegister() {
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					A cor predominante do seu objeto.
 				</HelperText>
-				{errors.color && (
+				{errors.color ? (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.color?.message}
 					</HelperText>
-				)}
+				) : null}
 
 				<TextInputController
 					name={'characteristics'}
@@ -183,11 +190,6 @@ export default function ObjectRegister() {
 					{`\n`}
 					<Text style={{ fontWeight: 'bold' }}>Separe cada característica com uma vírgula.</Text>
 				</HelperText>
-				{/* {errors.characteristics ? (
-						<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-							{errors.characteristics?.message}
-						</HelperText>
-					) : null} */}
 
 				<TextInputController
 					name={'place'}
@@ -196,26 +198,30 @@ export default function ObjectRegister() {
 					error={errors.place}
 					leftIcon={<Ionicons name='location-outline' size={24} color={theme.colors.outline} />}
 				/>
-				{errors.place && (
+				{errors.place ? (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 						{errors.place?.message}
 					</HelperText>
-				)}
+				) : null}
 
-				{showDatePicker && (
-					<DateTimePicker
-						value={date}
-						onChange={onChangeDate}
-						mode={mode}
-						is24Hour={true}
-						display={'spinner'}
-					/>
-				)}
+				{showDatePicker ? (
+					<View>
+						<DateTimePicker
+							value={date}
+							onChange={onChangeDate}
+							mode={mode}
+							is24Hour={true}
+							display={'spinner'}
+							minuteInterval={1}
+							dateFormat='day month year'
+						/>
+					</View>
+				) : null}
 
 				<TextInput
 					style={global.input}
 					label={labelDate}
-					error={errors.date}
+					error={errors.datetime}
 					value={formatedDate}
 					maxLength={10}
 					mode='outlined'
@@ -226,16 +232,16 @@ export default function ObjectRegister() {
 						/>
 					}
 				/>
-				{errors.date && (
+				{errors.datetime ? (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-						{errors.date?.message}
+						{errors.datetime?.message}
 					</HelperText>
-				)}
+				) : null}
 
 				<TextInput
 					style={global.input}
 					label={labelTime}
-					error={errors.time}
+					error={errors.datetime}
 					value={formatedTime}
 					maxLength={5}
 					mode='outlined'
@@ -246,11 +252,11 @@ export default function ObjectRegister() {
 						/>
 					}
 				/>
-				{errors.time && (
+				{errors.datetime ? (
 					<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-						{errors.time?.message}
+						{errors.datetime?.message}
 					</HelperText>
-				)}
+				) : null}
 
 				<TextInputController
 					name={'info'}
@@ -259,17 +265,12 @@ export default function ObjectRegister() {
 					control={control}
 					error={errors.info}
 					multiline={true}
-					maxLength={110}
+					maxLength={140}
 					leftIcon={<Ionicons name='information' size={24} color={theme.colors.outline} />}
 				/>
 				<HelperText type='info' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
 					Informações adicionais sobre o objeto que você ache importante ressaltar.
 				</HelperText>
-				{/* {errors.info ? (
-						<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-							{errors.info?.message}
-						</HelperText>
-					) : null} */}
 
 				<View style={global.agreement}>
 					<Text style={{ width: '80%' }}>{labelAgreement}</Text>
@@ -280,7 +281,7 @@ export default function ObjectRegister() {
 					style={global.button}
 					mode='contained'
 					// loading={true}
-					disabled={isSwitchOn ? false : true} // adicionar mais condições
+					disabled={isSwitchOn ? false : true}
 					onPress={handleSubmit(onSubmit)}
 				>
 					Adicionar Objeto

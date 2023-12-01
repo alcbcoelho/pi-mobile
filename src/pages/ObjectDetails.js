@@ -1,29 +1,47 @@
-import { View, Image, ScrollView, FlatList } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Image, ScrollView, FlatList, useWindowDimensions } from 'react-native';
 import { Button, Chip, Dialog, Divider, FAB, List, Portal, Text, useTheme } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
+import endpoints from '../config/endpoints';
+
+// Components
 import PrimaryFAB from '../components/PrimaryFAB';
-import { useWindowDimensions } from 'react-native';
+
+// Services
+import { findItemById, removeItem } from '../services/objectService';
 
 // Hooks
-import { useState } from 'react';
+import useUser from '../hooks/useUser';
 import useAppTheme from '../hooks/useAppTheme';
-
-// Data
-import MyObjectsList from '../mockup/RegisteredObjectsData';
 
 // Styles
 import { global } from '../styles/global';
+import { Alert } from 'react-native';
 
 export default function ObjectDetails({ navigation, route }) {
-	const object = MyObjectsList[route.params.foundObject ? 'foundObjects' : 'lostObjects'][route.params.objectId - 1];
-
-	const [dialogVisibility, setDialogVisibility] = useState(false);
-
 	const theme = useTheme();
 	const { themeType } = useAppTheme();
 	const { width } = useWindowDimensions();
+	const { userData, userItems } = useUser();
 
-	//   console.log(route.params);
+	const [item, setItem] = useState();
+	const [dialogVisibility, setDialogVisibility] = useState(false);
+	const controller = new AbortController();
+	const defaultItemPhoto = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-photo.jpg`;
+	const defaultUserAvatar = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-avatar.jpg`;
+
+	useEffect(() => {
+		const searchForItem = async () => {
+			if (route.params.fromLoggedUser) {
+				setItem(userItems.find((item) => item.id === route.params.objectId));
+			} else {
+				const itemFoundById = await findItemById(route.params.objectId);
+				setItem(itemFoundById);
+			}
+		};
+		searchForItem();
+		return () => controller.abort();
+	}, [route.params?.objectId]);
 
 	return (
 		<>
@@ -38,9 +56,9 @@ export default function ObjectDetails({ navigation, route }) {
 						height: '27.5%',
 					}}
 				>
-					<Dialog.Title style={{ textAlign: 'center' }}>Apagar registro?</Dialog.Title>
+					<Dialog.Title style={{ textAlign: 'center' }}>Apagar Registro</Dialog.Title>
 					<Dialog.Content style={{ marginBottom: 0 }}>
-						<Text style={global.message}>Tem certeza que deseja apagar esse registro de objeto?</Text>
+						<Text style={global.message}>Tem certeza que deseja apagar esse objeto?</Text>
 						<Dialog.Actions
 							style={{
 								marginTop: 16,
@@ -49,12 +67,22 @@ export default function ObjectDetails({ navigation, route }) {
 						>
 							<Button onPress={() => setDialogVisibility(false)}>Não</Button>
 							<Button
-								onPress={() => {
+								onPress={async () => {
 									setDialogVisibility(false);
-									navigation.navigate('MyObjects', {
-										foundObject: route.params.foundObject,
-										objectId: route.params.objectId,
-									});
+									const res = await removeItem(route.params.objectId);
+									if (res === 204) {
+										navigation.navigate('MyObjects', {
+											foundObject: route.params.foundObject,
+											objectId: route.params.objectId,
+											objectDeleted: true,
+											objectRemovedName: userItems.find(
+												(item) => item.id === route.params.objectId
+											).objectType,
+										});
+									} else {
+										Alert.alert('Não foi possível deletar o objeto!');
+										console.log('resposta deleção', res);
+									}
 								}}
 							>
 								Sim
@@ -88,28 +116,35 @@ export default function ObjectDetails({ navigation, route }) {
 								/>
 							</View>
 						)}
-						data={object.imgUrl}
+						data={item?.photos}
 						horizontal={true}
 						showsHorizontalScrollIndicator={false}
 						alwaysBounceHorizontal={false}
 						bounces={false}
 						directionalLockEnabled={true}
 						pagingEnabled={true}
-						// ListEmptyComponent={}	// configurar isso aqui depois
-						renderItem={({ item, index }) => (
+						renderItem={({ photo, index }) => (
 							<View key={index} style={{ width, height: width }}>
-								<Image style={{ width, height: '100%' }} source={{ uri: item }} />
+								<Image
+									style={{ width, height: '100%' }}
+									source={{
+										uri:
+											item?.photos[0] === 'default-photo.jpg'
+												? defaultItemPhoto
+												: item?.photos[0],
+									}}
+								/>
 							</View>
 						)}
 					/>
 					<View style={global.objectTags}>
-						{object.brand ? <Chip mode='outlined'>{object.brand}</Chip> : null}
-						{object.model ? <Chip mode='outlined'>{object.model}</Chip> : null}
-						{object.color ? <Chip mode='outlined'>{object.color}</Chip> : null}
-						{object.characteristics.length !== 0
-							? object.characteristics.map((item, index) => (
+						{item?.brand ? <Chip mode='outlined'>{item?.brand}</Chip> : null}
+						{item?.model ? <Chip mode='outlined'>{item?.model}</Chip> : null}
+						{item?.color ? <Chip mode='outlined'>{item?.color}</Chip> : null}
+						{item?.characteristics.length !== 0
+							? item?.characteristics.map((characteristic, index) => (
 									<Chip key={index} mode='outlined'>
-										{item}
+										{characteristic}
 									</Chip>
 							  ))
 							: null}
@@ -117,14 +152,20 @@ export default function ObjectDetails({ navigation, route }) {
 					<View style={global.objectSpecs}>
 						<List.Item
 							style={global.objectItemSpec}
-							title={`${route.params.foundObject ? 'Achado' : 'Perdido'} por ${object.owner}`}
+							title={`${route.params.foundObject ? 'Achado' : 'Perdido'} por ${
+								userData?.firstName + ' ' + userData.lastName
+							}`}
 							left={(props) => (
 								<List.Icon
-									{...props} /* icon='account-circle-outline' */
+									{...props}
+									// icon='account-circle-outline'
 									icon={({ size }) => (
 										<Image
 											source={{
-												uri: 'https://img.freepik.com/psd-gratuitas/ilustracao-3d-de-avatar-ou-perfil-humano_23-2150671142.jpg',
+												uri:
+													userData?.avatar === 'default-avatar.jpg'
+														? defaultUserAvatar
+														: userData?.avatar,
 											}}
 											style={{
 												width: size,
@@ -139,11 +180,12 @@ export default function ObjectDetails({ navigation, route }) {
 						/>
 						<List.Item
 							style={global.objectItemSpec}
-							title={object.date}
+							title={`${new Date(item?.datetime).toLocaleDateString('pt-BR')}`}
 							left={(props) => (
 								<List.Icon
 									{...props}
-									/* icon='calendar-month-outline' */ icon={({ size, color }) => (
+									// icon='calendar-month-outline'
+									icon={({ size, color }) => (
 										<Ionicons name='calendar-outline' size={size} color={color} />
 									)}
 								/>
@@ -151,11 +193,14 @@ export default function ObjectDetails({ navigation, route }) {
 						/>
 						<List.Item
 							style={global.objectItemSpec}
-							title={`${route.params.foundObject ? 'Às' : 'Por volta das'} ${object.time}`}
+							title={`${route.params.foundObject ? 'Às' : 'Por volta das'} ${new Date(
+								item?.datetime
+							).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`}
 							left={(props) => (
 								<List.Icon
 									{...props}
-									/* icon='clock-outline' */ icon={({ size, color }) => (
+									// icon='clock-outline'
+									icon={({ size, color }) => (
 										<Ionicons name='time-outline' size={size} color={color} />
 									)}
 								/>
@@ -163,11 +208,12 @@ export default function ObjectDetails({ navigation, route }) {
 						/>
 						<List.Item
 							style={global.objectItemSpec}
-							title={object.place}
+							title={item?.place}
 							left={(props) => (
 								<List.Icon
 									{...props}
-									/* icon='map-marker-outline' */ icon={({ size, color }) => (
+									// icon='map-marker-outline'
+									icon={({ size, color }) => (
 										<Ionicons name='location-outline' size={size} color={color} />
 									)}
 								/>
@@ -176,30 +222,33 @@ export default function ObjectDetails({ navigation, route }) {
 						<Divider style={{ marginTop: 16 }} />
 					</View>
 					<View style={global.objectInfo}>
-						<Text style={global.objectInfoText}>{object.info}</Text>
+						{item?.info ? (
+							<Text style={global.objectInfoText}>{item?.info}</Text>
+						) : (
+							<Text style={global.objectInfoText}>Informações adicionais não foram especificadas!</Text>
+						)}
 					</View>
 				</View>
 			</ScrollView>
 			<View style={[global.fabButton, { gap: 16 }]}>
 				<PrimaryFAB
 					icon='pencil-outline'
-					onPress={
-						() =>
-							navigation.navigate('ObjectScreenRoutes', {
-								screen: 'ObjectEdit',
-								params: {
-									foundObject: route.params.foundObject,
-									objectId: route.params.objectId,
-								},
-							}) /* console.log("Editar") */
-					}
+					onPress={() => {
+						navigation.navigate('ObjectScreenRoutes', {
+							screen: 'ObjectEdit',
+							params: {
+								foundObject: route.params.foundObject,
+								objectId: route.params.objectId,
+							},
+						});
+					}}
 				/>
 				<FAB
 					icon='trash-can-outline'
-					color={'white' /* theme.colors.onError */}
-					style={{
-						backgroundColor: 'rgb(186, 26, 26)' /* theme.colors.error */,
-					}}
+					color={'white'}
+					// color={theme.colors.onError}
+					style={{ backgroundColor: 'rgb(186, 26, 26)' }}
+					// style={{ backgroundColor: theme.colors.error }}
 					onPress={() => setDialogVisibility(true)}
 				/>
 			</View>

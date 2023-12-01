@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import PrimaryFAB from '../components/PrimaryFAB';
+// import PrimaryFAB from '../components/PrimaryFAB';
 
 // Styles
 import { global } from '../styles/global';
@@ -25,10 +25,9 @@ const styles = StyleSheet.create({
 	homeContainer: {
 		flex: 1,
 		alignItems: 'center',
-		// justifyContent: 'center',
 		width: '100%',
 		paddingHorizontal: 32,
-		paddingVertical: 64 /*64*/,
+		paddingVertical: 64,
 	},
 	greeting: {
 		fontSize: 24,

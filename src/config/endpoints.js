@@ -1,5 +1,7 @@
+const ip = process.env.EXPO_PUBLIC_IP_ADDRESS;
+
 const endpoints = {
-	BASE_URL: 'http://localhost:3000',
+	BASE_URL: `http://${ip}:3000`,
 	SIGNIN_URL: '/signin',
 	SIGNOUT_URL: '/signout',
 	SIGNUP_URL: '/signup',
@@ -8,6 +10,7 @@ const endpoints = {
 	RESET_URL: '/reset',
 
 	USERS_URL: '/users',
+	USERS_ID_URL: '/users/',
 	USERS_UPLOAD_URL: '/users/upload',
 
 	ITEMS_URL: '/items',

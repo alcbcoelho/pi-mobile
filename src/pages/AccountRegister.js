@@ -1,15 +1,15 @@
-// import { useState } from 'react';
-import { View, Pressable, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { Text, Button, HelperText } from 'react-native-paper';
-import { Ionicons, AntDesign, SimpleLineIcons } from '@expo/vector-icons';
-
 import { useState } from 'react';
+import { Alert, View, Pressable, ScrollView } from 'react-native';
+import { Text, Button } from 'react-native-paper';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { userSchemaValidation } from '../helpers/userSchemaValidation';
+import { registerSchemaValidation } from '../helpers/registerSchemaValidation';
+
+// Hooks
+import useAuth from '../hooks/useAuth';
 
 // Components
-import TextInputController from '../components/TextInputController';
 import TextInputController2, { colorUnauthScreensError } from '../components/TextInputController2';
 import LinearGradientView from '../components/LinearGradientView';
 
@@ -17,6 +17,8 @@ import LinearGradientView from '../components/LinearGradientView';
 import { global, styleUnauthenticatedScreens } from '../styles/global';
 
 export default function AccountRegister({ navigation }) {
+	const { register } = useAuth();
+
 	const [showPassword, setShowPassword] = useState(false);
 	const [showPassword2, setShowPassword2] = useState(false);
 
@@ -27,11 +29,17 @@ export default function AccountRegister({ navigation }) {
 		control,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({ mode: 'all', resolver: yupResolver(userSchemaValidation) });
+	} = useForm({ resolver: yupResolver(registerSchemaValidation) });
 
-	const onSignUp = (data) => {
-		console.log('Dados Formulário Usuário:', data);
-		navigation.navigate('AuthenticatedRoutes', { screen: 'Home' });
+	const onSignUp = async (data) => {
+		console.log('Dados Formulário Registro de Usuário:', data);
+		const result = await register(data);
+		if (result) {
+			Alert.alert('Sucesso ao cadastrar conta!');
+			navigation.navigate('AuthenticatedRoutes', { screen: 'MyObjects' });
+		} else {
+			Alert.alert();
+		}
 	};
 
 	const setIconColor = (name) => (errors[name] ? colorUnauthScreensError : 'white');
@@ -80,6 +88,8 @@ export default function AccountRegister({ navigation }) {
 						label={'Telefone'}
 						placeholder={'Seu número de telefone'}
 						control={control}
+						maxLength={11}
+						minLength={10}
 						error={errors.phone}
 						keyboardType={'phone-pad'}
 						leftIcon={<AntDesign name='idcard' size={24} color={setIconColor('phone')} />}
@@ -151,7 +161,6 @@ export default function AccountRegister({ navigation }) {
 
 					<Button
 						style={{
-							// width: '30%',
 							marginVertical: 32,
 						}}
 						buttonColor='white'

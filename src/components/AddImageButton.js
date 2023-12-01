@@ -1,6 +1,8 @@
 import { View, useWindowDimensions, Image, Pressable } from 'react-native';
-import useAppTheme from '../hooks/useAppTheme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+// Hooks
+import useAppTheme from '../hooks/useAppTheme';
 
 export default function AddImageButton({ image, onPress }) {
 	const { theme, themeType } = useAppTheme();
@@ -9,7 +11,9 @@ export default function AddImageButton({ image, onPress }) {
 	const imageButtonSize = (width / 2) * 0.8;
 	const imageSelectorBackgroundColor = themeType === 'light' ? 'rgba(147, 75, 0, 0.15)' : 'rgba(255, 183, 130, 0.15)';
 
-	const handleOnPress = () => {};
+	const handleOnPress = () => {
+		console.log('Fui clicado');
+	};
 
 	return (
 		<Pressable

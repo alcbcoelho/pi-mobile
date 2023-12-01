@@ -13,17 +13,11 @@ export default function TextInputController2(props) {
 	return (
 		<>
 			<TextInputController
-				style={[
-					global.input,
-					{
-						backgroundColor: /* props.error
-              ? colorError
-              :  */ colorUnauthScreensBG,
-					},
-				]}
+				// style={[global.input, { backgroundColor: props.error ? colorError : 'red', width: '100%' }]}
+				style={[global.input, { backgroundColor: colorUnauthScreensBG }]}
+				theme={{ colors: { onSurfaceVariant: '#fff', error: colorUnauthScreensError } }}
 				outlineColor={'white'}
 				textColor={'white'}
-				theme={{ colors: { onSurfaceVariant: '#fff', error: colorUnauthScreensError } }}
 				{...props}
 			/>
 			{props.error && (
@@ -34,7 +28,7 @@ export default function TextInputController2(props) {
 							width: size,
 							alignItems: 'center',
 							justifyContent: 'center',
-							backgroundColor: colorUnauthScreensError /* "#fff" */,
+							backgroundColor: colorUnauthScreensError,
 							borderRadius: size,
 						}}
 					>
@@ -42,8 +36,8 @@ export default function TextInputController2(props) {
 							!
 						</Text>
 					</View>
-					<HelperText type='error' theme={{ colors: { error: colorUnauthScreensError /* "#fff" */ } }}>
-						{props.error['message']}
+					<HelperText type='error' theme={{ colors: { error: colorUnauthScreensError } }}>
+						{props.error.message}
 					</HelperText>
 				</View>
 			)}

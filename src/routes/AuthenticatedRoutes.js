@@ -1,68 +1,39 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Divider, useTheme } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Divider } from 'react-native-paper';
+// import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createDrawerNavigator, DrawerItemList, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 
 // Hooks
 import useAppTheme from '../hooks/useAppTheme';
+import useAuth from '../hooks/useAuth';
 
 // Routes
-import RegisteredObjectsRoutes from './RegisteredObjectsRoutes';
+import ObjectsRoutes from './ObjectsRoutes';
+import UserScreenRoutes from './UserScreenRoutes';
 import NotificationsRoutes from './NotificationsRoutes';
 import ObjectScreenRoutes from './ObjectScreenRoutes';
-import UserScreenRoutes from './UserScreenRoutes';
 
 // Pages
-import Home from '../pages/Home';
-// import MyNotifications from '../pages/MyNotifications';
-// import MyObjects from '../pages/MyObjects';
-import MyProfile from '../pages/MyProfile';
 import ObjectRegister from '../pages/ObjectRegister';
 
 // Components
 import Header from '../components/Header';
 
-// Styles
-import { global } from '../styles/global';
-
-// Data
-import MyObjectsList from '../mockup/RegisteredObjectsData';
-const { lostObjects, foundObjects } = MyObjectsList;
-
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
 	const { theme } = useAppTheme();
+	const { logout } = useAuth();
 
-	//   const miscStyleProperties = {
+	// const miscStyleProperties = {
 	// 	style: { borderRadius: 32 },
-	// 	activeBackgroundColor: "#946D51",
+	// 	activeBackgroundColor: '#946D51',
 	// 	activeTintColor: theme.colors.surface,
-	// 	inactiveTintColor: theme.colors.onSurfaceVariant
-	//   }
+	// 	inactiveTintColor: theme.colors.onSurfaceVariant,
+	// };
 
 	return (
 		<DrawerContentScrollView {...props}>
-			{/* <DrawerItem
-        icon={({ focused, color, size }) => (
-          <Ionicons
-            name={focused ? "person-circle" : "person-circle-outline"}
-            size={size}
-            color={color}
-          />
-        )}
-        label="Meu Perfil"
-        onPress={() => {
-          props.navigation.navigate("UserScreenRoutes", {
-            screen: "MyProfile"
-          });
-        }}
-		{...miscStyleProperties}
-        // style={{ borderRadius: 32 }}
-        // activeBackgroundColor="#946D51"
-        // activeTintColor={theme.colors.surface}
-        // inactiveTintColor={theme.colors.onSurfaceVariant}
-      /> */}
 			<DrawerItemList {...props} />
 			<Divider
 				bold
@@ -78,10 +49,11 @@ function CustomDrawerContent(props) {
 				)}
 				label='Sair'
 				onPress={() => {
-					// setInputLabelColor('#fff')
-					props.navigation.navigate('UnauthenticatedRoutes', {
-						screen: 'AccountLogin',
-					});
+					logout();
+					// FIXME: descobrir qual é a treta com a navegação
+					// props.navigation.navigate('UnauthenticatedRoutes', {
+					// 	screen: 'AccountLogin',
+					// });
 				}}
 				style={{ borderRadius: 32 }}
 				activeBackgroundColor='#946D51'
@@ -92,9 +64,9 @@ function CustomDrawerContent(props) {
 	);
 }
 
-export default function AuthenticatedRoutes({ route }) {
+export default function AuthenticatedRoutes() {
 	const { theme } = useAppTheme();
-	const { top } = useSafeAreaInsets();
+	// const { top } = useSafeAreaInsets();
 
 	return (
 		<Drawer.Navigator
@@ -102,37 +74,25 @@ export default function AuthenticatedRoutes({ route }) {
 			drawerContent={(props) => <CustomDrawerContent {...props} />}
 			screenOptions={{
 				headerShown: true,
-				header: ({ navigation, route, back, options }) => (
-					<Header navigation={navigation} route={route} back={back} options={options} />
-				),
-				swipeEnabled: false, // Manter False ou não?
+				header: (props) => <Header {...props} />,
+				swipeEnabled: false,
 				drawerPosition: 'right',
-				drawerActiveBackgroundColor: '#946D51' /* theme.colors.primary */,
+				drawerActiveBackgroundColor: '#946D51',
 				drawerActiveTintColor: theme.colors.surface,
 				drawerInactiveTintColor: theme.colors.onSurfaceVariant,
 				drawerStyle: {
 					height: '50%',
-					// borderTopStartRadius: 32,
+					borderTopStartRadius: 32,
 					borderBottomStartRadius: 32,
 					backgroundColor: theme.colors.background,
 					// paddingBottom: top,
 				},
 				drawerItemStyle: { borderRadius: 32 },
-				// tentar colocar o theme.roundness ao invés de 32
 			}}
 		>
-			{/* <Drawer.Screen
-					name='Home'
-					component={Home}
-					options={{
-						drawerIcon: ({ focused, color, size }) => <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color} />,
-						drawerLabel: 'Início',
-						title: 'Santo Pulinho', // Qual nome a gnt deve deixar?
-					}}
-				/> */}
 			<Drawer.Screen
 				name='MyObjects'
-				component={RegisteredObjectsRoutes}
+				component={ObjectsRoutes}
 				options={{
 					drawerIcon: ({ focused, color, size }) => (
 						<Ionicons name={focused ? 'albums' : 'albums-outline'} size={size} color={color} />
@@ -152,9 +112,10 @@ export default function AuthenticatedRoutes({ route }) {
 							color={color}
 						/>
 					),
-					headerShown: false,
 					drawerLabel: 'Meu Perfil',
-					//   drawerItemStyle: { display: "none" },
+					title: 'Meu Perfil',
+					headerShown: false,
+					// drawerItemStyle: { display: 'none' },
 				}}
 			/>
 			<Drawer.Screen
@@ -176,8 +137,8 @@ export default function AuthenticatedRoutes({ route }) {
 				name='ObjectScreenRoutes'
 				component={ObjectScreenRoutes}
 				options={{
-					drawerItemStyle: { display: 'none' },
 					headerShown: false,
+					drawerItemStyle: { display: 'none' },
 				}}
 			/>
 			<Drawer.Screen

@@ -1,11 +1,16 @@
-import { CardStyleInterpolators, TransitionSpecs, createStackNavigator } from '@react-navigation/stack';
+import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
+
+// Components
 import Header from '../components/Header';
+
+// Screens
+// import ObjectRegister from '../pages/ObjectRegister';
 import ObjectDetails from '../pages/ObjectDetails';
 import ObjectEdit from '../pages/ObjectEdit';
 
 // Data
-import MyObjectsList from '../mockup/RegisteredObjectsData';
-const { lostObjects, foundObjects } = MyObjectsList;
+// import MyObjectsList from '../mockup/RegisteredObjectsData';
+// const { lostObjects, foundObjects } = MyObjectsList;
 
 const Stack = createStackNavigator();
 
@@ -13,9 +18,7 @@ export default function ObjectScreenRoutes() {
 	return (
 		<Stack.Navigator
 			screenOptions={{
-				header: ({ navigation, route, back, options }) => (
-					<Header navigation={navigation} route={route} back={back} options={options} />
-				),
+				header: (props) => <Header {...props} />,
 				// animationEnabled: false,
 				cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
 			}}
@@ -23,12 +26,9 @@ export default function ObjectScreenRoutes() {
 			<Stack.Screen
 				name='ObjectDetails'
 				component={ObjectDetails}
-				options={({ route }) => ({
-					title:
-						(route.params?.foundObject
-							? foundObjects[route.params?.objectId - 1]?.object
-							: lostObjects[route.params?.objectId - 1]?.object) || 'Detalhes do Objeto',
-				})}
+				options={{
+					title: 'Detalhes do Objeto',
+				}}
 			/>
 			<Stack.Screen
 				name='ObjectEdit'
@@ -39,12 +39,13 @@ export default function ObjectScreenRoutes() {
 				}}
 			/>
 			{/* <Stack.Screen
-        name="ObjectRegister"
-        component={ObjectRegister}
-        options={{
-          title: "Novo Registro",
-        }}
-      /> */}
+				name='ObjectRegister'
+				component={ObjectRegister}
+				options={{
+					title: 'Novo Registro',
+					hideDrawerMenu: true,
+				}}
+			/> */}
 		</Stack.Navigator>
 	);
 }

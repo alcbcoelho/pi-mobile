@@ -1,5 +1,4 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
 import { Badge, useTheme } from 'react-native-paper';
 
 const Tab = createMaterialTopTabNavigator();
@@ -29,8 +28,6 @@ export default function TabBar({ screens, hasBadge = false }) {
 	const generateBadge = function (index = 0) {
 		return badges !== null ? badges[index] : null;
 	};
-
-	//   console.log(badges)
 
 	return (
 		<Tab.Navigator

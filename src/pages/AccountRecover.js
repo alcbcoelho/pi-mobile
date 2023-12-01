@@ -1,10 +1,13 @@
-import { View, Pressable } from 'react-native';
+import { Alert, View, Pressable } from 'react-native';
 import { Text, Button, HelperText } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { recoverSchemaValidation } from '../helpers/recoverSchemaValidation';
 import LinearGradientView from '../components/LinearGradientView';
+
+// Hooks
+import useAuth from '../hooks/useAuth';
 
 // Components
 import TextInputController from '../components/TextInputController';
@@ -14,15 +17,23 @@ import TextInputController2, { colorUnauthScreensError } from '../components/Tex
 import { global, styleUnauthenticatedScreens } from '../styles/global';
 
 export default function AccountRecover({ navigation }) {
+	const { reset, authError } = useAuth();
+
 	const {
 		control,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({ mode: 'all', resolver: yupResolver(recoverSchemaValidation) });
+	} = useForm({ resolver: yupResolver(recoverSchemaValidation) });
 
-	const onSubmitRecover = (data) => {
+	const onSubmitRecover = async (data) => {
 		console.log('Dados Formulário Recover:', data);
-		navigation.navigate('AccountLogin');
+		const result = await reset(data);
+		if (result) {
+			navigation.navigate('AuthenticatedRoutes', { screen: 'MyObjects' });
+		} else {
+			Alert.alert('Erro ao recuperar senha!');
+			// Alert.alert(authError);
+		}
 	};
 
 	return (
