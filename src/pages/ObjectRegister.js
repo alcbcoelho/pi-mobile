@@ -12,6 +12,7 @@ import { createItem } from '../services/objectService';
 
 // Hooks
 import useUser from '../hooks/useUser';
+import useAuth from '../hooks/useAuth';
 
 // Components
 import TextInputController from '../components/TextInputController';
@@ -28,8 +29,9 @@ export default function ObjectRegister({ navigation }) {
 	const [formatedTime, setFormatedTime] = useState('');
 	const [showDatePicker, setShowDatePicker] = useState(false);
 
+	const { userAuth } = useAuth();
+	const { userItems, getUserItems } = useUser();
 	const theme = useTheme();
-	const { userItems } = useUser();
 
 	const situation = radioValue === 'found' ? ['achado', 'achei'] : ['perdido', 'perdi'];
 	const labelPlace = `Local em que foi ${situation[0]}`;
@@ -42,7 +44,7 @@ export default function ObjectRegister({ navigation }) {
 		reset,
 		setValue,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm({ resolver: yupResolver(objectSchemaValidation) });
 
 	const onSubmit = async (data) => {
@@ -52,6 +54,7 @@ export default function ObjectRegister({ navigation }) {
 
 		const result = await createItem(newData);
 		if (result.id) {
+			await getUserItems();
 			Alert.alert('Objeto cadastrado com sucesso!');
 			navigation.navigate('MyObjects');
 		} else {
@@ -61,7 +64,7 @@ export default function ObjectRegister({ navigation }) {
 
 	useEffect(() => {
 		reset();
-	}, [userItems]);
+	}, [userItems, userAuth, navigation.isFocused]);
 
 	const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
@@ -280,7 +283,7 @@ export default function ObjectRegister({ navigation }) {
 				<Button
 					style={global.button}
 					mode='contained'
-					// loading={true}
+					loading={isSubmitting}
 					disabled={isSwitchOn ? false : true}
 					onPress={handleSubmit(onSubmit)}
 				>

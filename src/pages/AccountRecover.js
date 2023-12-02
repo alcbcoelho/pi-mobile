@@ -22,7 +22,7 @@ export default function AccountRecover({ navigation }) {
 	const {
 		control,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm({ resolver: yupResolver(recoverSchemaValidation) });
 
 	const onSubmitRecover = async (data) => {
@@ -61,7 +61,7 @@ export default function AccountRecover({ navigation }) {
 				buttonColor='white'
 				textColor='#946d51'
 				mode='contained'
-				// loading={true}
+				loading={isSubmitting}
 				disabled={errors.email ? true : false}
 				onPress={handleSubmit(onSubmitRecover)}
 			>

@@ -29,7 +29,7 @@ export default function AccountLogin({ navigation }) {
 	const {
 		control,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm({ resolver: yupResolver(loginSchemaValidation) });
 
 	const onSignIn = async (data) => {
@@ -106,7 +106,7 @@ export default function AccountLogin({ navigation }) {
 						buttonColor='white'
 						textColor='#946d51'
 						mode='contained'
-						// loading={true}
+						loading={isSubmitting}
 						onPress={handleSubmit(onSignIn)}
 					>
 						Entrar

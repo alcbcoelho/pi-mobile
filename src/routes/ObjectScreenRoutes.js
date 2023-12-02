@@ -8,10 +8,6 @@ import Header from '../components/Header';
 import ObjectDetails from '../pages/ObjectDetails';
 import ObjectEdit from '../pages/ObjectEdit';
 
-// Data
-// import MyObjectsList from '../mockup/RegisteredObjectsData';
-// const { lostObjects, foundObjects } = MyObjectsList;
-
 const Stack = createStackNavigator();
 
 export default function ObjectScreenRoutes() {

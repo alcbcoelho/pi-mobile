@@ -111,8 +111,8 @@ export default function AuthProvider({ children }) {
 	};
 
 	const authContextValues = {
-		error,
 		userAuth,
+		error,
 		login,
 		logout,
 		register,

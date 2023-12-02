@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Image } from 'react-native';
 import { Text, Avatar, List } from 'react-native-paper';
-import { Ionicons } from '@expo/vector-icons';
+// import { Ionicons } from '@expo/vector-icons';
 import { api } from '../config/axiosConfig';
 import endpoints from '../config/endpoints';
 
@@ -9,33 +9,16 @@ import endpoints from '../config/endpoints';
 import PrimaryFAB from '../components/PrimaryFAB';
 
 // Hooks
-import useAuth from '../hooks/useAuth';
+import useUser from '../hooks/useUser';
 // import useAppTheme from '../hooks/useAppTheme';
 
 // Styles
 import { global } from '../styles/global';
 
 export default function MyProfile({ navigation }) {
-	const [userData, setUserData] = useState();
-	const { userAuth } = useAuth();
 	// const { themeType } = useAppTheme();
-	const controller = new AbortController();
+	const { userData } = useUser();
 	const defaultUserAvatar = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-avatar.jpg`;
-
-	// const index = userData.findIndex((user_) => user_.email === user.email);
-
-	useEffect(() => {
-		const getUserData = async () => {
-			// TODO: remover chamada da api e colocar no arquivo de services
-			const res = await api.get(endpoints.USERS_URL);
-			if (res?.data) {
-				setUserData(res.data);
-			}
-		};
-		getUserData();
-
-		return () => controller.abort();
-	}, []);
 
 	return (
 		<View style={[global.pageContainer, { justifyContent: 'flex-start' }]}>

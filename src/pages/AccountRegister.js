@@ -18,18 +18,18 @@ import { global, styleUnauthenticatedScreens } from '../styles/global';
 
 export default function AccountRegister({ navigation }) {
 	const { register } = useAuth();
-
 	const [showPassword, setShowPassword] = useState(false);
 	const [showPassword2, setShowPassword2] = useState(false);
-
-	const toggleShowPassword = () => setShowPassword((previous) => !previous);
-	const toggleShowPassword2 = () => setShowPassword2((previous) => !previous);
 
 	const {
 		control,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm({ resolver: yupResolver(registerSchemaValidation) });
+
+	const toggleShowPassword = () => setShowPassword((previous) => !previous);
+	const toggleShowPassword2 = () => setShowPassword2((previous) => !previous);
+	const setIconColor = (name) => (errors[name] ? colorUnauthScreensError : 'white');
 
 	const onSignUp = async (data) => {
 		console.log('Dados Formulário Registro de Usuário:', data);
@@ -42,19 +42,15 @@ export default function AccountRegister({ navigation }) {
 		}
 	};
 
-	const setIconColor = (name) => (errors[name] ? colorUnauthScreensError : 'white');
-
 	return (
 		<LinearGradientView>
 			<View style={{ flex: 1 }}>
 				<ScrollView
-					contentContainerStyle={{
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}
+					contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
 					showsVerticalScrollIndicator={false}
 				>
 					<Text style={[global.title, styleUnauthenticatedScreens.whiteText]}>Cadastre-se</Text>
+
 					<TextInputController2
 						name={'cpf'}
 						label={'CPF'}
@@ -160,13 +156,11 @@ export default function AccountRegister({ navigation }) {
 					/>
 
 					<Button
-						style={{
-							marginVertical: 32,
-						}}
+						style={{ marginVertical: 32 }}
 						buttonColor='white'
 						textColor='#946d51'
 						mode='contained'
-						// loading={{}}
+						loading={isSubmitting}
 						onPress={handleSubmit(onSignUp)}
 					>
 						Criar Conta

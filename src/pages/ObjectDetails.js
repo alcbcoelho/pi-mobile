@@ -22,7 +22,7 @@ export default function ObjectDetails({ navigation, route }) {
 	const theme = useTheme();
 	const { themeType } = useAppTheme();
 	const { width } = useWindowDimensions();
-	const { userData, userItems } = useUser();
+	const { userData, userItems, getUserItems } = useUser();
 
 	const [item, setItem] = useState();
 	const [dialogVisibility, setDialogVisibility] = useState(false);
@@ -71,6 +71,7 @@ export default function ObjectDetails({ navigation, route }) {
 									setDialogVisibility(false);
 									const res = await removeItem(route.params.objectId);
 									if (res === 204) {
+										await getUserItems();
 										navigation.navigate('MyObjects', {
 											foundObject: route.params.foundObject,
 											objectId: route.params.objectId,
@@ -138,6 +139,7 @@ export default function ObjectDetails({ navigation, route }) {
 						)}
 					/>
 					<View style={global.objectTags}>
+						{item?.objectType ? <Chip mode='outlined'>{item?.objectType}</Chip> : null}
 						{item?.brand ? <Chip mode='outlined'>{item?.brand}</Chip> : null}
 						{item?.model ? <Chip mode='outlined'>{item?.model}</Chip> : null}
 						{item?.color ? <Chip mode='outlined'>{item?.color}</Chip> : null}

@@ -32,5 +32,9 @@ export const objectSchemaValidation = yup.object({
 		.transform((value) => capitalizeFirstLetter(value))
 		.required('O local é obrigatório!'),
 	datetime: yup.string().required('A data e o horário são obrigatórios!'),
-	info: yup.string().trim().notRequired(),
+	info: yup
+		.string()
+		.trim()
+		.transform((value) => capitalizeFirstLetter(value))
+		.notRequired(),
 });

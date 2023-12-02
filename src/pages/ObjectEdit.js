@@ -18,14 +18,11 @@ import AddImageButton from '../components/AddImageButton';
 
 // Hooks
 import useUser from '../hooks/useUser';
+import useAuth from '../hooks/useAuth';
 // import useAppTheme from '../hooks/useAppTheme';
 
 // Styles
 import { global } from '../styles/global';
-
-// Data
-// import MyObjectsList from '../mockup/RegisteredObjectsData';
-// const { foundObjects, lostObjects } = MyObjectsList;
 
 export default function ObjectEdit({ navigation, route }) {
 	const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -35,9 +32,10 @@ export default function ObjectEdit({ navigation, route }) {
 	const [formatedDate, setFormatedDate] = useState('');
 	const [formatedTime, setFormatedTime] = useState('');
 	const [showDatePicker, setShowDatePicker] = useState(false);
-	const { userItems } = useUser();
-	const [item, setItem] = useState(userItems.find((item) => item.id === route.params.objectId));
 
+	const [item, setItem] = useState(userItems.find((item) => item.id === route.params.objectId));
+	const { userItems, getUserItems } = useUser();
+	const { userAuth } = useAuth();
 	const theme = useTheme();
 
 	const situation = radioValue === 'found' ? ['achado', 'achei'] : ['perdido', 'perdi'];
@@ -49,22 +47,12 @@ export default function ObjectEdit({ navigation, route }) {
 	const controller = new AbortController();
 	const defaultItemPhoto = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-photo.jpg`;
 
-	useEffect(() => {
-		setItem(userItems.find((item) => item.id === route.params.objectId));
-		return () => controller.abort();
-	}, [route.params.objectId]);
-
-	// useEffect(() => {
-	// 	setItem(userItems.find((item) => item.id === route.params.objectId));
-	// 	return () => controller.abort();
-	// }, []);
-
 	const {
 		control,
 		reset,
 		setValue,
 		handleSubmit,
-		formState: { errors, isSubmitSuccessful },
+		formState: { errors, isSubmitting },
 	} = useForm({
 		defaultValues: {
 			situation: item?.situation,
@@ -91,32 +79,33 @@ export default function ObjectEdit({ navigation, route }) {
 		resolver: yupResolver(objectSchemaValidation),
 	});
 
+	useEffect(() => {
+		setItem(userItems.find((item) => item.id === route.params.objectId));
+		return () => controller.abort();
+	}, [route.params.objectId]);
+
+	// useEffect(() => {
+	// 	reset();
+	// }, [userItems, userAuth, navigation.isFocused]);
+
 	const onSubmit = async (data) => {
 		const characteristics = data?.characteristics ? data.characteristics.split(',').map((item) => item.trim()) : [];
 		const newData = { ...data, characteristics };
 		console.log('Dados Formulário Objeto Edit:', newData);
 
-		// const result = await updateItem(route.params.objectId, newData);
-		// if (result.id) {
-		// 	Alert.alert('Objeto atualizado com sucesso!');
-		// 	navigation.navigate('ObjectDetails', {
-		// 		foundObject: route.params.foundObject,
-		// 		objectId: route.params.objectId,
-		// 	});
-		// } else {
-		// 	Alert.alert('Erro ao cadastrar o objeto!');
-		// }
-
-		if (isSubmitSuccessful) reset();
+		const result = await updateItem(route.params.objectId, newData);
+		if (result.id) {
+			await getUserItems();
+			Alert.alert('Objeto atualizado com sucesso!');
+			navigation.navigate('ObjectDetails', {
+				foundObject: route.params.foundObject,
+				objectId: route.params.objectId,
+			});
+			// reset();
+		} else {
+			Alert.alert('Erro ao cadastrar o objeto!');
+		}
 	};
-
-	useEffect(() => {
-		// Será que tá fazendo alguma diferença?
-		// if (isSubmitSuccessful) {
-		// 	reset();
-		// }
-		reset();
-	}, [isSubmitSuccessful]);
 
 	const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
@@ -361,7 +350,7 @@ export default function ObjectEdit({ navigation, route }) {
 					<Button
 						style={global.button}
 						mode='contained'
-						// loading={true}
+						loading={isSubmitting}
 						disabled={isSwitchOn ? false : true}
 						onPress={handleSubmit(onSubmit)}
 					>

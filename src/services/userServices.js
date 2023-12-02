@@ -8,7 +8,7 @@ const findUser = async () => {
 		if (res?.data) return res.data;
 	} catch (e) {
 		if (axios.isAxiosError(e)) {
-			console.error(e.response?.data);
+			console.error('Axios Error:', e.response?.data);
 		} else {
 			console.error('User Services:', e);
 		}
@@ -21,7 +21,7 @@ const findUserById = async (id) => {
 		if (res?.data) return res.data;
 	} catch (e) {
 		if (axios.isAxiosError(e)) {
-			console.error(e.response?.data);
+			console.error('Axios Error:', e.response?.data);
 		} else {
 			console.error('User Services:', e);
 		}
@@ -34,7 +34,7 @@ const updateUser = async (data) => {
 		if (res?.data) return res.data;
 	} catch (e) {
 		if (axios.isAxiosError(e)) {
-			console.error(e.response?.data);
+			console.error('Axios Error:', e.response?.data);
 		} else {
 			console.error('User Services:', e);
 		}
@@ -47,7 +47,7 @@ const uploadUserAvatar = async (data) => {
 		if (res?.data) return res.data;
 	} catch (e) {
 		if (axios.isAxiosError(e)) {
-			console.error(e.response?.data);
+			console.error('Axios Error:', e.response?.data);
 		} else {
 			console.error('User Services:', e);
 		}
@@ -60,7 +60,7 @@ const deleteUser = async () => {
 		if (res?.data) return res.data;
 	} catch (e) {
 		if (axios.isAxiosError(e)) {
-			console.error(e.response?.data);
+			console.error('Axios Error:', e.response?.data);
 		} else {
 			console.error('User Services:', e);
 		}
