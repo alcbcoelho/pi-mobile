@@ -1,23 +1,85 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
-// import PrimaryFAB from '../components/PrimaryFAB';
+import { ActivityIndicator, Portal, Snackbar, Text } from 'react-native-paper';
+
+// Components
+import TabBar from '../components/TabBar';
+import PrimaryFAB from '../components/PrimaryFAB';
+import LostObjects from '../components/LostObjects';
+import FoundObjects from '../components/FoundObjects';
+
+// Hooks
+import useUser from '../hooks/useUser';
 
 // Styles
 import { global } from '../styles/global';
 
-export default function Home() {
-	const [user, setUser] = useState({ name: 'Fulano de Tal' });
+export default function Home({ navigation, route }) {
+	const [wasDeleted, setWasDeleted] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const { userItems } = useUser();
+	const controller = new AbortController();
+
+	useEffect(() => {
+		let snackbarTime;
+		if (route.params?.objectDeleted) {
+			setWasDeleted(true);
+
+			snackbarTime = setTimeout(() => {
+				setWasDeleted(false);
+				route.params.objectDeleted = false;
+			}, 3000);
+		}
+
+		return () => {
+			controller.abort();
+			clearTimeout(snackbarTime);
+		};
+	}, [route.params]);
+
+	useEffect(() => {
+		if (userItems.length) setIsLoading(false);
+	}, [userItems]);
 
 	return (
-		<View style={global.pageContainer}>
-			<View style={styles.homeContainer}>
-				<Text style={styles.greeting}>Sem objetos para exibir</Text>
-				<Text style={styles.message}>
-					Parece que você ainda não fez nenhum registro de item achado ou perdido!
-				</Text>
-			</View>
-		</View>
+		<>
+			{isLoading ? (
+				<View style={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
+					<ActivityIndicator animating={true} size={'large'} />
+				</View>
+			) : userItems.length ? (
+				<TabBar
+					screens={[
+						{ component: LostObjects, title: 'Objetos Perdidos' },
+						{ component: FoundObjects, title: 'Objetos Achados' },
+					]}
+					hasBadge={[
+						userItems.filter((object) => object.situation === 'lost').length,
+						userItems.filter((object) => object.situation === 'found').length,
+					]}
+				/>
+			) : (
+				<View style={global.pageContainer}>
+					<View style={styles.homeContainer}>
+						<Text style={styles.greeting}>Sem objetos para exibir</Text>
+						<Text style={styles.message}>
+							Parece que você ainda não fez nenhum registro de item achado ou perdido!
+						</Text>
+					</View>
+				</View>
+			)}
+			<PrimaryFAB
+				style={global.fabButton}
+				icon='plus'
+				label='Novo Registro'
+				onPress={() => {
+					navigation.navigate('ObjectRegister', { unsavedChanges: false });
+				}}
+			/>
+			<Portal>
+				<Snackbar visible={wasDeleted}>Objeto apagado com sucesso!</Snackbar>
+			</Portal>
+		</>
 	);
 }
 
@@ -36,9 +98,5 @@ const styles = StyleSheet.create({
 	message: {
 		textAlign: 'center',
 		fontSize: 16,
-	},
-	routesContainer: {
-		marginVertical: 64,
-		gap: 16,
 	},
 });

@@ -56,7 +56,7 @@ export default function ObjectRegister({ navigation }) {
 		if (result.id) {
 			await getUserItems();
 			Alert.alert('Objeto cadastrado com sucesso!');
-			navigation.navigate('MyObjects');
+			navigation.navigate('MyObjects', { screen: 'Home' });
 		} else {
 			Alert.alert('Erro ao cadastrar o objeto!');
 		}

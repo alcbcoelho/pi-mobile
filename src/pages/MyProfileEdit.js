@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Image, ScrollView, View } from 'react-native';
-import { Button, HelperText, useTheme, Avatar, IconButton } from 'react-native-paper';
+import { useState, useEffect } from 'react';
+import { Image, ScrollView, Text, View } from 'react-native';
+import { HelperText, useTheme, Avatar, IconButton } from 'react-native-paper';
 import { Ionicons, AntDesign, SimpleLineIcons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -29,7 +29,7 @@ export default function MyProfileEdit({ route, navigation }) {
 	const {
 		control,
 		handleSubmit,
-		formState: { errors, isSubmitting },
+		formState: { errors, isDirty },
 	} = useForm({
 		resolver: yupResolver(userSchemaValidation),
 		defaultValues: {
@@ -47,6 +47,10 @@ export default function MyProfileEdit({ route, navigation }) {
 			password: userData?.password,
 		},
 	});
+
+	useEffect(() => {
+		navigation.setParams({ userId: route.params.id, unsavedChanges: isDirty });
+	}, [isDirty]);
 
 	const toggleShowPassword = () => setShowPassword((previous) => !previous);
 	const toggleShowPassword2 = () => setShowPassword2((previous) => !previous);
@@ -104,7 +108,7 @@ export default function MyProfileEdit({ route, navigation }) {
 					placeholder={'Seu nome'}
 					control={control}
 					error={errors.firstName}
-					// style={{}}
+					style={[global.input, { marginBottom: 0 }]}
 					leftIcon={<AntDesign name='idcard' {...iconProperties} />}
 				/>
 				<HelperText type='error'>{errors.firstName?.message}</HelperText>
@@ -115,7 +119,7 @@ export default function MyProfileEdit({ route, navigation }) {
 					placeholder={'Seu sobrenome'}
 					control={control}
 					error={errors.lastName}
-					// style={{}}
+					style={[global.input, { marginBottom: 0 }]}
 					leftIcon={<AntDesign name='idcard' {...iconProperties} />}
 				/>
 				<HelperText type='error'>{errors.lastName?.message}</HelperText>
@@ -126,7 +130,7 @@ export default function MyProfileEdit({ route, navigation }) {
 					placeholder={'Seu número de telefone'}
 					control={control}
 					error={errors.phone}
-					// style={{}}
+					style={[global.input, { marginBottom: 0 }]}
 					leftIcon={<SimpleLineIcons name='phone' {...iconProperties} />}
 				/>
 				<HelperText type='error'>{errors.phone?.message}</HelperText>
@@ -137,7 +141,7 @@ export default function MyProfileEdit({ route, navigation }) {
 					placeholder={'Seu endereço de email'}
 					control={control}
 					error={errors.email}
-					// style={{}}
+					style={[global.input, { marginBottom: 0 }]}
 					leftIcon={<Ionicons name='mail-outline' {...iconProperties} />}
 				/>
 				<HelperText type='error'>{errors.email?.message}</HelperText>
@@ -148,7 +152,7 @@ export default function MyProfileEdit({ route, navigation }) {
 					placeholder={'Uma senha forte'}
 					control={control}
 					error={errors.password}
-					// style={{}}
+					style={[global.input, { marginBottom: 0 }]}
 					leftIcon={<Ionicons name='lock-closed-outline' {...iconProperties} />}
 					secureTextEntry={!showPassword}
 					rightIcon={
@@ -167,7 +171,7 @@ export default function MyProfileEdit({ route, navigation }) {
 					placeholder={'Confirme a senha anterior'}
 					control={control}
 					error={errors.confirm}
-					// style={{}}
+					style={[global.input, { marginBottom: 0 }]}
 					leftIcon={<Ionicons name='lock-closed-outline' {...iconProperties} />}
 					secureTextEntry={!showPassword2}
 					rightIcon={
@@ -182,13 +186,13 @@ export default function MyProfileEdit({ route, navigation }) {
 					{errors.confirm?.message}
 				</HelperText>
 
-				<Button style={global.button} mode='contained' loading={isSubmitting} onPress={handleSubmit(onSubmit)}>
-					Atualizar Objeto
-				</Button>
+				<View style={{ marginBottom: 8 }}>
+					<Text>{` `}</Text>
+				</View>
 			</ScrollView>
-			{/* <View style={[global.fabButton, { gap: 16 }]}>
+			<View style={[global.fabButton, { gap: 16 }]}>
 				<PrimaryFAB icon='content-save-outline' onPress={handleSubmit(onSubmit)} />
-			</View> */}
+			</View>
 		</View>
 	);
 }

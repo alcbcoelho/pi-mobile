@@ -1,65 +1,70 @@
-import React, { useContext, useCallback } from 'react';
-import { Appbar } from 'react-native-paper';
+import { useCallback, useState } from 'react';
+import { Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Appbar } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
 
-import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+// Components
+import StandardizedDialog from './StandardizedDialog';
 
 // Hooks
 import useAppTheme from '../hooks/useAppTheme';
 
-// Styles
-import { global } from '../styles/global';
-
 export default function Header({ navigation, route, back, options }) {
+	const [dialogVisibility, setDialogVisibility] = useState();
+
 	const { theme, toggleThemeType, themeType } = useAppTheme();
 	const { top } = useSafeAreaInsets();
 
+	function handleOnPress() {
+		if (route.params?.unsavedChanges) {
+			Keyboard.dismiss();
+			setDialogVisibility(true);
+		} else navigation.goBack();
+	}
+
 	return (
-		<Appbar.Header style={{ backgroundColor: '#946D51' }} elevated={true} safeAreaInsets={top}>
-			{back || route.name !== 'MyObjects' ? (
-				<Appbar.BackAction color={'#fff'} onPress={() => navigation.goBack()} />
-			) : null}
-			{/* Verificar lógica do botão de voltar */}
-			<Appbar.Content title={options.title} titleStyle={{ color: '#fff' }} />
-			<Appbar.Action
-				icon={useCallback(
-					() => (
-						<Ionicons
-							name={themeType === 'dark' ? 'moon' : 'moon-outline'}
-							color='#fff'
-							size={24}
-							onPress={toggleThemeType}
-							// onPress={() => {
-							// 	console.log(options.title);
-							// }}
-						/>
-					),
-					[themeType]
-				)}
-			/>
-			{!options.hideDrawerMenu && (
+		<>
+			<Appbar.Header style={{ backgroundColor: '#946D51' }} elevated={true} safeAreaInsets={top}>
+				{back || route.name !== 'Home' ? <Appbar.BackAction color={'#fff'} onPress={handleOnPress} /> : null}
+				<Appbar.Content title={options.title} titleStyle={{ color: '#fff' }} />
 				<Appbar.Action
 					icon={useCallback(
 						() => (
 							<Ionicons
-								name='menu-outline'
+								name={themeType === 'dark' ? 'moon' : 'moon-outline'}
 								color='#fff'
 								size={24}
-								onPress={() => navigation.toggleDrawer()}
+								onPress={toggleThemeType}
 							/>
 						),
-						[]
+						[themeType]
 					)}
 				/>
-			)}
-			{/* <Appbar.Action
-				icon={() => <MaterialIcons name='notifications' size={24} />}
-				onPress={() => navigation.navigate('MyNotifications')}
+				{!options.hideDrawerMenu && (
+					<Appbar.Action
+						icon={useCallback(
+							() => (
+								<Ionicons
+									name='menu-outline'
+									color='#fff'
+									size={24}
+									onPress={() => navigation.toggleDrawer()}
+								/>
+							),
+							[]
+						)}
+					/>
+				)}
+			</Appbar.Header>
+			<StandardizedDialog
+				title='Edições não salvas'
+				content='Um ou mais campos foram editados. Deseja retornar mesmo assim e descartar as edições?'
+				visibilityStateArray={[dialogVisibility, setDialogVisibility]}
+				navigationArgs={{
+					function: 'goBack',
+				}}
 			/>
-			<Appbar.Action
-				icon={() => <MaterialIcons name='account-circle' size={24} />}
-				onPress={() => navigation.navigate('MyProfile')}
-			/> */}
-		</Appbar.Header>
+		</>
 	);
 }

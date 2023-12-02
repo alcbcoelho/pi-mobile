@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, ScrollView } from 'react-native';
-import { Button, Text, RadioButton, HelperText, TextInput, Switch, useTheme } from 'react-native-paper';
+import { Text, RadioButton, HelperText, TextInput, useTheme } from 'react-native-paper';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useForm, Controller } from 'react-hook-form';
@@ -14,7 +14,7 @@ import { findItemById, updateItem } from '../services/objectService';
 // Components
 import TextInputController from '../components/TextInputController';
 import AddImageButton from '../components/AddImageButton';
-// import PrimaryFAB from '../components/PrimaryFAB';
+import PrimaryFAB from '../components/PrimaryFAB';
 
 // Hooks
 import useUser from '../hooks/useUser';
@@ -25,7 +25,6 @@ import useAuth from '../hooks/useAuth';
 import { global } from '../styles/global';
 
 export default function ObjectEdit({ navigation, route }) {
-	const [isSwitchOn, setIsSwitchOn] = useState(false);
 	const [radioValue, setRadioValue] = useState(item?.situation);
 	const [date, setDate] = useState(new Date());
 	const [mode, setMode] = useState('date');
@@ -33,7 +32,7 @@ export default function ObjectEdit({ navigation, route }) {
 	const [formatedTime, setFormatedTime] = useState('');
 	const [showDatePicker, setShowDatePicker] = useState(false);
 
-	const [item, setItem] = useState(userItems.find((item) => item.id === route.params.objectId));
+	const [item, setItem] = useState();
 	const { userItems, getUserItems } = useUser();
 	const { userAuth } = useAuth();
 	const theme = useTheme();
@@ -42,7 +41,6 @@ export default function ObjectEdit({ navigation, route }) {
 	const labelPlace = `Local em que foi ${situation[0]}`;
 	const labelDate = `Data em que foi ${situation[0]}`;
 	const labelTime = `Horário em que foi ${situation[0]}`;
-	const labelAgreement = `Atesto que realmente ${situation[1]} este objeto, sob pena de perda da conta em caso de registro falso.`;
 
 	const controller = new AbortController();
 	const defaultItemPhoto = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-photo.jpg`;
@@ -52,7 +50,7 @@ export default function ObjectEdit({ navigation, route }) {
 		reset,
 		setValue,
 		handleSubmit,
-		formState: { errors, isSubmitting },
+		formState: { errors, isDirty },
 	} = useForm({
 		defaultValues: {
 			situation: item?.situation,
@@ -88,6 +86,15 @@ export default function ObjectEdit({ navigation, route }) {
 	// 	reset();
 	// }, [userItems, userAuth, navigation.isFocused]);
 
+	useEffect(() => {
+		const preservedParams = {
+			foundObject: route.params.foundObject,
+			objectId: route.params.objectId,
+		};
+
+		navigation.setParams({ ...preservedParams, unsavedChanges: isDirty });
+	}, [isDirty]);
+
 	const onSubmit = async (data) => {
 		const characteristics = data?.characteristics ? data.characteristics.split(',').map((item) => item.trim()) : [];
 		const newData = { ...data, characteristics };
@@ -106,8 +113,6 @@ export default function ObjectEdit({ navigation, route }) {
 			Alert.alert('Erro ao cadastrar o objeto!');
 		}
 	};
-
-	const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
 	const onChangeMode = (selectedMode) => {
 		setShowDatePicker(true);
@@ -342,27 +347,14 @@ export default function ObjectEdit({ navigation, route }) {
 						Informações adicionais sobre o objeto que você ache importante ressaltar.
 					</HelperText>
 
-					<View style={global.agreement}>
-						<Text style={{ width: '80%' }}>{labelAgreement}</Text>
-						<Switch value={isSwitchOn} onValueChange={onToggleSwitch} style={{ width: '20%' }} />
+					<View style={{ marginBottom: 32 }}>
+						<Text>{` `}</Text>
 					</View>
-
-					<Button
-						style={global.button}
-						mode='contained'
-						loading={isSubmitting}
-						disabled={isSwitchOn ? false : true}
-						onPress={handleSubmit(onSubmit)}
-					>
-						Atualizar Objeto
-					</Button>
-
-					<View style={{ marginBottom: 32 }} />
 				</View>
 			</ScrollView>
-			{/* <View style={[global.fabButton, { gap: 16 }]}>
+			<View style={[global.fabButton, { gap: 16 }]}>
 				<PrimaryFAB icon='content-save-outline' onPress={handleSubmit(onSubmit)} />
-			</View> */}
+			</View>
 		</>
 	);
 }

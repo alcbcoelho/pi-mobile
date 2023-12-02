@@ -99,6 +99,7 @@ export default function AuthenticatedRoutes() {
 					),
 					drawerLabel: 'Meus Objetos',
 					title: 'Meus Objetos',
+					headerShown: false,
 				}}
 			/>
 			<Drawer.Screen
@@ -141,14 +142,14 @@ export default function AuthenticatedRoutes() {
 					drawerItemStyle: { display: 'none' },
 				}}
 			/>
-			<Drawer.Screen
+			{/* <Drawer.Screen
 				name='ObjectRegister'
 				component={ObjectRegister}
 				options={{
 					title: 'Novo Registro',
 					drawerItemStyle: { display: 'none' },
 				}}
-			/>
+			/> */}
 		</Drawer.Navigator>
 	);
 }

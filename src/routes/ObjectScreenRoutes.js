@@ -4,7 +4,6 @@ import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/
 import Header from '../components/Header';
 
 // Screens
-// import ObjectRegister from '../pages/ObjectRegister';
 import ObjectDetails from '../pages/ObjectDetails';
 import ObjectEdit from '../pages/ObjectEdit';
 
@@ -34,14 +33,6 @@ export default function ObjectScreenRoutes() {
 					hideDrawerMenu: true,
 				}}
 			/>
-			{/* <Stack.Screen
-				name='ObjectRegister'
-				component={ObjectRegister}
-				options={{
-					title: 'Novo Registro',
-					hideDrawerMenu: true,
-				}}
-			/> */}
 		</Stack.Navigator>
 	);
 }

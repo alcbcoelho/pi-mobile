@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { View, Image, ScrollView, FlatList, useWindowDimensions } from 'react-native';
-import { Button, Chip, Dialog, Divider, FAB, List, Portal, Text, useTheme } from 'react-native-paper';
+import { Chip, Divider, FAB, List, Text, useTheme } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import endpoints from '../config/endpoints';
 
 // Components
 import PrimaryFAB from '../components/PrimaryFAB';
+import StandardizedDialog from '../components/StandardizedDialog';
 
 // Services
-import { findItemById, removeItem } from '../services/objectService';
+import { findItemById } from '../services/objectService';
 
 // Hooks
 import useUser from '../hooks/useUser';
@@ -16,13 +17,12 @@ import useAppTheme from '../hooks/useAppTheme';
 
 // Styles
 import { global } from '../styles/global';
-import { Alert } from 'react-native';
 
 export default function ObjectDetails({ navigation, route }) {
 	const theme = useTheme();
 	const { themeType } = useAppTheme();
 	const { width } = useWindowDimensions();
-	const { userData, userItems, getUserItems } = useUser();
+	const { userData, userItems } = useUser();
 
 	const [item, setItem] = useState();
 	const [dialogVisibility, setDialogVisibility] = useState(false);
@@ -45,53 +45,22 @@ export default function ObjectDetails({ navigation, route }) {
 
 	return (
 		<>
-			<Portal>
-				<Dialog
-					visible={dialogVisibility}
-					onDismiss={() => setDialogVisibility(false)}
-					// contentContainerStyle={{ backgroundColor: theme.colors.background, padding: 16 }}
-					style={{
-						backgroundColor: theme.colors.background,
-						padding: 8,
-						height: '27.5%',
-					}}
-				>
-					<Dialog.Title style={{ textAlign: 'center' }}>Apagar Registro</Dialog.Title>
-					<Dialog.Content style={{ marginBottom: 0 }}>
-						<Text style={global.message}>Tem certeza que deseja apagar esse objeto?</Text>
-						<Dialog.Actions
-							style={{
-								marginTop: 16,
-								justifyContent: 'space-evenly',
-							}}
-						>
-							<Button onPress={() => setDialogVisibility(false)}>Não</Button>
-							<Button
-								onPress={async () => {
-									setDialogVisibility(false);
-									const res = await removeItem(route.params.objectId);
-									if (res === 204) {
-										await getUserItems();
-										navigation.navigate('MyObjects', {
-											foundObject: route.params.foundObject,
-											objectId: route.params.objectId,
-											objectDeleted: true,
-											objectRemovedName: userItems.find(
-												(item) => item.id === route.params.objectId
-											).objectType,
-										});
-									} else {
-										Alert.alert('Não foi possível deletar o objeto!');
-										console.log('resposta deleção', res);
-									}
-								}}
-							>
-								Sim
-							</Button>
-						</Dialog.Actions>
-					</Dialog.Content>
-				</Dialog>
-			</Portal>
+			<StandardizedDialog
+				title='Apagar registro?'
+				content='Tem certeza que deseja apagar esse registro de objeto?'
+				visibilityStateArray={[dialogVisibility, setDialogVisibility]}
+				deleteArgs={true}
+				navigationArgs={{
+					function: 'navigate',
+					name: 'MyObjects',
+					params: {
+						screen: 'MyObjects',
+						foundObject: route.params.foundObject,
+						objectId: route.params.objectId,
+						objectDeleted: true,
+					},
+				}}
+			/>
 			<ScrollView>
 				<View style={[global.pageContainer, { justifyContent: 'flex-start', height: '100%' }]}>
 					<FlatList
@@ -139,7 +108,6 @@ export default function ObjectDetails({ navigation, route }) {
 						)}
 					/>
 					<View style={global.objectTags}>
-						{item?.objectType ? <Chip mode='outlined'>{item?.objectType}</Chip> : null}
 						{item?.brand ? <Chip mode='outlined'>{item?.brand}</Chip> : null}
 						{item?.model ? <Chip mode='outlined'>{item?.model}</Chip> : null}
 						{item?.color ? <Chip mode='outlined'>{item?.color}</Chip> : null}
@@ -241,6 +209,7 @@ export default function ObjectDetails({ navigation, route }) {
 							params: {
 								foundObject: route.params.foundObject,
 								objectId: route.params.objectId,
+								unsavedChanges: false,
 							},
 						});
 					}}

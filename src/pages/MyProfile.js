@@ -91,6 +91,7 @@ export default function MyProfile({ navigation }) {
 					onPress={() =>
 						navigation.navigate('EditProfile', {
 							userId: userData?.id,
+							unsavedChanges: false,
 						})
 					}
 				/>
