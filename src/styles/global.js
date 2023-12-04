@@ -19,6 +19,17 @@ export const global = StyleSheet.create({
 		backgroundColor: '#f5f5f5',
 		padding: 10,
 	},
+	dialog: {
+		padding: 8,
+		height: '27.5%'
+	},
+	dialogActions: {
+		marginTop: 16,
+		justifyContent: 'space-evenly',
+	},
+	dialogTitle: {
+		textAlign: "center"
+	},
 	fabButton: {
 		position: 'absolute',
 		margin: 16,

@@ -13,7 +13,7 @@ export const userSchemaValidationObject = {
 	email: yup.string().email('O email deve estar no formato correto!').lowercase().required('O email é obrigatório!'),
 	password: yup
 		.string()
-		.min(8, 'A senha deve conter ao menos uma letra maiúscula,\numa letra minúscula, um número e 8 caracateres!')
+		.min(8, 'A senha deve conter ao menos uma letra maiúscula,\numa letra minúscula, um número e 8 caracteres!')
 		.required('A senha é obrigatória!'),
 	confirm: yup
 		.string()

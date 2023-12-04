@@ -31,7 +31,9 @@ export const objectSchemaValidation = yup.object({
 		.trim()
 		.transform((value) => capitalizeFirstLetter(value))
 		.required('O local é obrigatório!'),
-	datetime: yup.string().required('A data e o horário são obrigatórios!'),
+	date: yup.string().required("A data é obrigatória!"),
+	time: yup.string().required("O horário é obrigatório!"),
+	// datetime: yup.string().required('A data e o horário são obrigatórios!'),
 	info: yup
 		.string()
 		.trim()

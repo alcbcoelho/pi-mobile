@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Image, ScrollView, FlatList, useWindowDimensions } from 'react-native';
 import { Chip, Divider, FAB, List, Text, useTheme } from 'react-native-paper';
+import ObjectSituationSnackbar from '../components/ObjectSituationSnackbar';
 import { Ionicons } from '@expo/vector-icons';
 import endpoints from '../config/endpoints';
 
@@ -54,37 +55,45 @@ export default function ObjectDetails({ navigation, route }) {
 					function: 'navigate',
 					name: 'MyObjects',
 					params: {
-						screen: 'MyObjects',
-						foundObject: route.params.foundObject,
-						objectId: route.params.objectId,
-						objectDeleted: true,
-					},
+						screen: 'Home',
+						params: {
+							foundObject: route.params.foundObject,
+							objectId: route.params.objectId,
+							actionOnObjectRecord: "delete",
+						}
+					}
 				}}
 			/>
 			<ScrollView>
 				<View style={[global.pageContainer, { justifyContent: 'flex-start', height: '100%' }]}>
 					<FlatList
 						ListEmptyComponent={() => (
-							<View
-								style={[
-									global.imagePlaceholder,
-									{
-										width,
-										height: width,
-										flex: 1,
-										backgroundColor:
-											themeType === 'light'
-												? 'rgba(147, 75, 0, 0.15)'
-												: 'rgba(255, 183, 130, 0.15)',
-									},
-								]}
-							>
-								<Ionicons
-									name='american-football'
-									size={width * 0.75}
-									color={theme.colors.background}
+							<View style={{ width, height: width }}>
+								<Image
+									style={{ width, height: '100%' }}
+									source={{ uri: defaultItemPhoto }}
 								/>
 							</View>
+							// <View
+							// 	style={[
+							// 		global.imagePlaceholder,
+							// 		{
+							// 			width,
+							// 			height: width,
+							// 			flex: 1,
+							// 			backgroundColor:
+							// 				themeType === 'light'
+							// 					? 'rgba(147, 75, 0, 0.15)'
+							// 					: 'rgba(255, 183, 130, 0.15)',
+							// 		},
+							// 	]}
+							// >
+							// 	<Ionicons
+							// 		name='american-football'
+							// 		size={width * 0.75}
+							// 		color={theme.colors.background}
+							// 	/>
+							// </View>
 						)}
 						data={item?.photos}
 						horizontal={true}
@@ -93,16 +102,11 @@ export default function ObjectDetails({ navigation, route }) {
 						bounces={false}
 						directionalLockEnabled={true}
 						pagingEnabled={true}
-						renderItem={({ photo, index }) => (
+						renderItem={({ item, index }) => (
 							<View key={index} style={{ width, height: width }}>
 								<Image
 									style={{ width, height: '100%' }}
-									source={{
-										uri:
-											item?.photos[0] === 'default-photo.jpg'
-												? defaultItemPhoto
-												: item?.photos[0],
-									}}
+									source={{uri: item}}
 								/>
 							</View>
 						)}
@@ -223,6 +227,7 @@ export default function ObjectDetails({ navigation, route }) {
 					onPress={() => setDialogVisibility(true)}
 				/>
 			</View>
+			<ObjectSituationSnackbar />
 		</>
 	);
 }
