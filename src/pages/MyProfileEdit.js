@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Image, ScrollView, Text, View } from 'react-native';
-import { HelperText, useTheme, Avatar, IconButton } from 'react-native-paper';
+import { Alert, Image, ScrollView, Text, View } from 'react-native';
+import { Button, HelperText, useTheme, Avatar, IconButton, Portal, Dialog } from 'react-native-paper';
 import { Ionicons, AntDesign, SimpleLineIcons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { userSchemaValidation } from '../helpers/userSchemaValidation';
+import * as ImagePicker from 'expo-image-picker';
+import { userEditSchemaValidation } from '../helpers/userEditSchemaValidation';
+import endpoints from '../config/endpoints';
 
 // Components
 import TextInputController from '../components/TextInputController';
@@ -12,39 +14,40 @@ import PrimaryFAB from '../components/PrimaryFAB';
 
 // Hooks
 import useUser from '../hooks/useUser';
-import useAppTheme from '../hooks/useAppTheme';
 
 // Styles
 import { global } from '../styles/global';
+import { updateUser, uploadUserAvatar } from '../services/userServices';
 
 export default function MyProfileEdit({ route, navigation }) {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showPassword2, setShowPassword2] = useState(false);
-	const { userData } = useUser();
-	const { themeType } = useAppTheme();
+	const [isVisible, setIsVisible] = useState(false);
+	const [file, setFile] = useState(null);
+
+	const { userData, getUserData } = useUser();
 	const theme = useTheme();
 
 	const iconProperties = { size: 24, color: theme.colors.outline };
+	const defaultUserAvatar = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-avatar.jpg`;
 
 	const {
 		control,
 		handleSubmit,
 		formState: { errors, isDirty },
 	} = useForm({
-		resolver: yupResolver(userSchemaValidation),
+		resolver: yupResolver(userEditSchemaValidation),
 		defaultValues: {
 			firstName: userData?.firstName,
 			lastName: userData?.lastName,
 			phone: userData?.phone,
 			email: userData?.email,
-			password: userData?.password,
 		},
 		values: {
 			firstName: userData?.firstName,
 			lastName: userData?.lastName,
 			phone: userData?.phone,
 			email: userData?.email,
-			password: userData?.password,
 		},
 	});
 
@@ -52,47 +55,127 @@ export default function MyProfileEdit({ route, navigation }) {
 		navigation.setParams({ userId: route.params.id, unsavedChanges: isDirty });
 	}, [isDirty]);
 
+	useEffect(() => {
+		setFile(null);
+	}, []);
+
 	const toggleShowPassword = () => setShowPassword((previous) => !previous);
 	const toggleShowPassword2 = () => setShowPassword2((previous) => !previous);
 
-	const onSubmit = () => {
-		navigation.navigate('MyProfile');
+	const uploadAvatarFile = async () => {
+		try {
+			const permitted = await ImagePicker.getMediaLibraryPermissionsAsync();
+			if (permitted.granted) {
+				const res = await ImagePicker.launchImageLibraryAsync({
+					allowsEditing: true,
+					aspect: [1, 1],
+					mediaTypes: ImagePicker.MediaTypeOptions.Images,
+					quality: 1,
+				});
+				if (!res.canceled) {
+					await saveFile(res.assets[0]);
+				}
+			} else {
+				throw Error('Acesso não permitido!');
+			}
+		} catch (e) {
+			// TODO: Mostrar mensagem de ERRO
+			console.error('Error ImagePiker:', e);
+			setIsVisible(false);
+		}
 	};
 
-	// const onSignUp = async (data) => {
-	// 	console.log('Dados Formulário Registro de Usuário:', data);
-	// 	const result = await register(data);
-	// 	if (result) {
-	// 		Alert.alert('Sucesso ao cadastrar conta!');
-	// 		navigation.navigate('AuthenticatedRoutes', { screen: 'MyObjects' });
-	// 	} else {
-	// 		Alert.alert();
-	// 	}
-	// };
+	const saveFile = async (selectedImage) => {
+		try {
+			// console.log(selectedImage);
+			setFile(selectedImage);
+			setIsVisible(false);
+		} catch (e) {
+			// TODO: Mostrar mensagem de ERRO
+			console.error('Error ImagePiker:', e);
+			setIsVisible(false);
+		}
+	};
+
+	const removeAvatarFile = async () => {
+		try {
+			saveFile(null);
+			// FIXME: utilizar userServices pra apagar essa imagem
+		} catch (e) {
+			// TODO: Mostrar mensagem de ERRO
+			console.error('Error ImagePiker:', e);
+			setIsVisible(false);
+		}
+	};
+
+	const onSubmit = async (data) => {
+		try {
+			console.log('Dados Formulário Edição de Usuário:', data);
+
+			const imageFormData = new FormData();
+			imageFormData.append('avatar', {
+				uri: file?.uri,
+				type: 'image/jpeg',
+				name: `${file?.height}-${file?.width}`,
+			});
+
+			let resUpdate, resUpload;
+			if (data) resUpdate = await updateUser(data);
+			if (file) resUpload = await uploadUserAvatar(imageFormData);
+
+			console.log('ResUpdate:', resUpdate);
+			console.log('ResUpload:', resUpload);
+
+			if (resUpdate?.id !== '' || resUpload?.id !== '') {
+				Alert.alert('Informações de usuário atualizadas com sucesso!');
+				if (resUpload?.id !== '') setFile(null);
+				await getUserData();
+				navigation.navigate('MyProfile');
+			} else {
+				Alert.alert('Erro eo enviar informações do usuário!');
+			}
+		} catch (e) {
+			console.error('Error ProfileEdit:', e);
+		}
+	};
 
 	return (
 		<View style={{ flex: 1 }}>
+			<Portal>
+				<Dialog visible={isVisible} onDismiss={() => setIsVisible(false)}>
+					<Dialog.Title>Foto de Perfil</Dialog.Title>
+					<Dialog.Actions>
+						<Button onPress={() => uploadAvatarFile()}>Abrir Galeria</Button>
+					</Dialog.Actions>
+					<Dialog.Actions>
+						<Button onPress={() => removeAvatarFile()}>Remover Imagem</Button>
+					</Dialog.Actions>
+				</Dialog>
+			</Portal>
 			<ScrollView contentContainerStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-				{userData?.avatar ? (
+				{file ? (
+					<Avatar.Image
+						size={192}
+						style={{ marginVertical: 32 }}
+						source={() => (
+							<Image style={{ aspectRatio: 1 / 1, borderRadius: 256 }} source={{ uri: file?.uri }} />
+						)}
+					/>
+				) : (
 					<Avatar.Image
 						size={192}
 						style={{ marginVertical: 32 }}
 						source={() => (
 							<Image
 								style={{ aspectRatio: 1 / 1, borderRadius: 256 }}
-								source={{ uri: userData?.avatar }}
+								source={{
+									uri:
+										userData?.avatar === 'default-avatar.jpg'
+											? defaultUserAvatar
+											: userData?.avatar,
+								}}
 							/>
 						)}
-					/>
-				) : (
-					<Avatar.Icon
-						size={192}
-						icon={({ size, color }) => <Ionicons name='person' size={size} color={color} />} /* 'account' */
-						style={{
-							backgroundColor:
-								themeType === 'light' ? 'rgba(147, 75, 0, 0.15)' : 'rgba(255, 183, 130, 0.15)',
-							marginVertical: 32,
-						}}
 					/>
 				)}
 				<IconButton
@@ -100,7 +183,7 @@ export default function MyProfileEdit({ route, navigation }) {
 					iconColor='white'
 					containerColor='#946D51'
 					style={{ position: 'absolute', top: 185, right: 125 }}
-					onPress={() => alert('pick a profile photo')}
+					onPress={() => setIsVisible(true)}
 				/>
 				<TextInputController
 					name={'firstName'}

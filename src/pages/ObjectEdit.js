@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
-import { View, ScrollView } from 'react-native';
-import { Text, RadioButton, HelperText, TextInput, useTheme } from 'react-native-paper';
+import { Alert, View, ScrollView } from 'react-native';
+import { Button, Text, RadioButton, HelperText, TextInput, Portal, Dialog, useTheme } from 'react-native-paper';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { objectSchemaValidation } from '../helpers/objectSchemaValidation';
 import endpoints from '../config/endpoints';
+import * as ImagePicker from 'expo-image-picker';
 
 // Services
-import { findItemById, updateItem } from '../services/objectService';
+import { updateItem, uploadItemPhotos } from '../services/objectService';
 
 // Components
 import TextInputController from '../components/TextInputController';
@@ -19,7 +20,6 @@ import PrimaryFAB from '../components/PrimaryFAB';
 // Hooks
 import useUser from '../hooks/useUser';
 import useAuth from '../hooks/useAuth';
-// import useAppTheme from '../hooks/useAppTheme';
 
 // Styles
 import { global } from '../styles/global';
@@ -31,6 +31,8 @@ export default function ObjectEdit({ navigation, route }) {
 	const [formatedDate, setFormatedDate] = useState('');
 	const [formatedTime, setFormatedTime] = useState('');
 	const [showDatePicker, setShowDatePicker] = useState(false);
+	const [isVisible, setIsVisible] = useState(false);
+	const [files, setFiles] = useState(null);
 
 	const [item, setItem] = useState();
 	const { userItems, getUserItems } = useUser();
@@ -95,25 +97,6 @@ export default function ObjectEdit({ navigation, route }) {
 		navigation.setParams({ ...preservedParams, unsavedChanges: isDirty });
 	}, [isDirty]);
 
-	const onSubmit = async (data) => {
-		const characteristics = data?.characteristics ? data.characteristics.split(',').map((item) => item.trim()) : [];
-		const newData = { ...data, characteristics };
-		console.log('Dados Formulário Objeto Edit:', newData);
-
-		const result = await updateItem(route.params.objectId, newData);
-		if (result.id) {
-			await getUserItems();
-			Alert.alert('Objeto atualizado com sucesso!');
-			navigation.navigate('ObjectDetails', {
-				foundObject: route.params.foundObject,
-				objectId: route.params.objectId,
-			});
-			// reset();
-		} else {
-			Alert.alert('Erro ao cadastrar o objeto!');
-		}
-	};
-
 	const onChangeMode = (selectedMode) => {
 		setShowDatePicker(true);
 		setMode(selectedMode);
@@ -133,8 +116,106 @@ export default function ObjectEdit({ navigation, route }) {
 		setFormatedTime(tempTime);
 	};
 
+	const uploadObjectPhotos = async () => {
+		try {
+			const permitted = await ImagePicker.getMediaLibraryPermissionsAsync();
+			if (permitted.granted) {
+				const res = await ImagePicker.launchImageLibraryAsync({
+					allowsMultipleSelection: true,
+					selectionLimit: 4,
+					aspect: [1, 1],
+					mediaTypes: ImagePicker.MediaTypeOptions.Images,
+					quality: 1,
+				});
+				if (!res.canceled) {
+					await saveFiles(res.assets);
+				}
+			} else {
+				throw Error('Acesso não permitido!');
+			}
+		} catch (e) {
+			// TODO: Mostrar mensagem de ERRO
+			console.error('Error ImagePiker:', e);
+			setIsVisible(false);
+		}
+	};
+
+	const saveFiles = async (selectedPhotos) => {
+		try {
+			setFiles(selectedPhotos);
+			setIsVisible(false);
+		} catch (e) {
+			// TODO: Mostrar mensagem de ERRO
+			console.error('Error ImagePiker:', e);
+			setIsVisible(false);
+		}
+	};
+
+	const removeObjectPhotos = async () => {
+		try {
+			saveFiles(null);
+			// FIXME: utilizar userServices pra apagar essa imagem
+		} catch (e) {
+			// TODO: Mostrar mensagem de ERRO
+			console.error('Error ImagePiker:', e);
+			setIsVisible(false);
+		}
+	};
+
+	const onSubmit = async (data) => {
+		try {
+			const characteristics = data?.characteristics
+				? data.characteristics.split(',').map((item) => item.trim())
+				: [];
+			const newData = { ...data, characteristics };
+			console.log('Dados Formulário Objeto Edit:', newData);
+
+			const photosFormData = new FormData();
+
+			for (let i = 0; i < files?.length; i++) {
+				photosFormData.append('photos', {
+					uri: files[i]?.uri,
+					type: 'image/jpeg',
+					name: `${files[i]?.height}-${files[i]?.width}`,
+				});
+			}
+
+			let resUpdate, resUpload;
+			if (data) resUpdate = await updateItem(route.params.objectId, newData);
+			if (files) resUpload = await uploadItemPhotos(route.params.objectId, photosFormData);
+
+			console.log('ResUpdate:', resUpdate);
+			console.log('ResUpload:', resUpload);
+
+			if (resUpdate?.id !== '' || resUpload?.id !== '') {
+				await getUserItems();
+				Alert.alert('Objeto atualizado com sucesso!');
+				if (resUpload?.id !== '') setFiles(null);
+				navigation.navigate('ObjectDetails', {
+					foundObject: route.params.foundObject,
+					objectId: route.params.objectId,
+				});
+			} else {
+				Alert.alert('Erro ao atualizar o objeto!');
+			}
+		} catch (e) {
+			console.error('Error ObjectEdit:', e);
+		}
+	};
+
 	return (
 		<>
+			<Portal>
+				<Dialog visible={isVisible} onDismiss={() => setIsVisible(false)}>
+					<Dialog.Title>Fotos do Objeto</Dialog.Title>
+					<Dialog.Actions>
+						<Button onPress={() => uploadObjectPhotos()}>Abrir Galeria</Button>
+					</Dialog.Actions>
+					<Dialog.Actions>
+						<Button onPress={() => removeObjectPhotos()}>Remover Imagens</Button>
+					</Dialog.Actions>
+				</Dialog>
+			</Portal>
 			<ScrollView>
 				<View style={global.pageContainer}>
 					<View
@@ -146,17 +227,21 @@ export default function ObjectEdit({ navigation, route }) {
 							marginTop: 32,
 						}}
 					>
-						{[1, 2, 3, 4].map((photo) => (
-							<AddImageButton
-								key={photo}
-								image={
-									item?.photos[photo - 1] === 'default-photo.jpg'
-										? defaultItemPhoto
-										: item?.photos[photo - 1]
-								}
-								onPress={() => console.log('*abre galeria de fotos*')}
-							/>
-						))}
+						{files?.length
+							? [1, 2, 3, 4].map((photo, index) => (
+									<AddImageButton
+										key={photo}
+										image={files[index]?.uri}
+										onPress={() => setIsVisible(true)}
+									/>
+							  ))
+							: [1, 2, 3, 4].map((photo, index) => (
+									<AddImageButton
+										key={photo}
+										image={item?.photos[index]}
+										onPress={() => setIsVisible(true)}
+									/>
+							  ))}
 					</View>
 
 					<Controller

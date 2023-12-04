@@ -1,8 +1,5 @@
-import { useState, useEffect } from 'react';
 import { View, Image } from 'react-native';
 import { Text, Avatar, List } from 'react-native-paper';
-// import { Ionicons } from '@expo/vector-icons';
-import { api } from '../config/axiosConfig';
 import endpoints from '../config/endpoints';
 
 // Components
@@ -10,36 +7,19 @@ import PrimaryFAB from '../components/PrimaryFAB';
 
 // Hooks
 import useUser from '../hooks/useUser';
-// import useAppTheme from '../hooks/useAppTheme';
 
 // Styles
 import { global } from '../styles/global';
+import { useEffect } from 'react';
 
 export default function MyProfile({ navigation }) {
-	// const { themeType } = useAppTheme();
-	const { userData } = useUser();
+	const { userData, getUserData } = useUser();
 	const defaultUserAvatar = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-avatar.jpg`;
+
+	// useEffect(() => {});
 
 	return (
 		<View style={[global.pageContainer, { justifyContent: 'flex-start' }]}>
-			{/* {userData.avatar ? (
-				<Avatar.Image
-					size={192}
-					style={{ marginVertical: 32 }}
-					source={() => (
-						<Image style={{ aspectRatio: 1 / 1, borderRadius: 256 }} source={{ uri: userData.avatar }} />
-					)}
-				/>
-			) : (
-				<Avatar.Icon
-					size={192}
-					icon={({ size, color }) => <Ionicons name='person' size={size} color={color} />}
-					style={{
-						backgroundColor: themeType === 'light' ? 'rgba(147, 75, 0, 0.15)' : 'rgba(255, 183, 130, 0.15)',
-						marginVertical: 32,
-					}}
-				/>
-			)} */}
 			<Avatar.Image
 				size={192}
 				style={{ marginVertical: 32 }}

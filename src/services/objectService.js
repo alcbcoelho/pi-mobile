@@ -54,9 +54,17 @@ const updateItem = async (id, data) => {
 	}
 };
 
-const uploadItemPhotos = async (id, data) => {
+const uploadItemPhotos = async (id, formData) => {
 	try {
-		const res = await api.patchForm(`${endpoints.ITEMS_UPLOAD_ID_URL}${id}`, JSON.stringify(data));
+		const res = await api.patch(`${endpoints.ITEMS_UPLOAD_ID_URL}${id}`, formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+			transformRequest: () => {
+				return formData;
+			},
+		});
+
 		if (res?.data) return res.data;
 	} catch (e) {
 		if (axios.isAxiosError(e)) {

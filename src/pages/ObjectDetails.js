@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, Image, ScrollView, FlatList, useWindowDimensions } from 'react-native';
-import { Chip, Divider, FAB, List, Text, useTheme } from 'react-native-paper';
+import { Chip, Divider, FAB, List, Text } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import endpoints from '../config/endpoints';
 
@@ -13,19 +13,17 @@ import { findItemById } from '../services/objectService';
 
 // Hooks
 import useUser from '../hooks/useUser';
-import useAppTheme from '../hooks/useAppTheme';
 
 // Styles
 import { global } from '../styles/global';
 
 export default function ObjectDetails({ navigation, route }) {
-	const theme = useTheme();
-	const { themeType } = useAppTheme();
 	const { width } = useWindowDimensions();
 	const { userData, userItems } = useUser();
 
 	const [item, setItem] = useState();
 	const [dialogVisibility, setDialogVisibility] = useState(false);
+
 	const controller = new AbortController();
 	const defaultItemPhoto = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-photo.jpg`;
 	const defaultUserAvatar = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-avatar.jpg`;
@@ -41,7 +39,7 @@ export default function ObjectDetails({ navigation, route }) {
 		};
 		searchForItem();
 		return () => controller.abort();
-	}, [route.params?.objectId]);
+	}, [userItems, route.params?.objectId]);
 
 	return (
 		<>
@@ -65,25 +63,8 @@ export default function ObjectDetails({ navigation, route }) {
 				<View style={[global.pageContainer, { justifyContent: 'flex-start', height: '100%' }]}>
 					<FlatList
 						ListEmptyComponent={() => (
-							<View
-								style={[
-									global.imagePlaceholder,
-									{
-										width,
-										height: width,
-										flex: 1,
-										backgroundColor:
-											themeType === 'light'
-												? 'rgba(147, 75, 0, 0.15)'
-												: 'rgba(255, 183, 130, 0.15)',
-									},
-								]}
-							>
-								<Ionicons
-									name='american-football'
-									size={width * 0.75}
-									color={theme.colors.background}
-								/>
+							<View style={{ width, height: width }}>
+								<Image style={{ width, height: '100%' }} source={{ uri: defaultItemPhoto }} />
 							</View>
 						)}
 						data={item?.photos}
@@ -93,17 +74,9 @@ export default function ObjectDetails({ navigation, route }) {
 						bounces={false}
 						directionalLockEnabled={true}
 						pagingEnabled={true}
-						renderItem={({ photo, index }) => (
+						renderItem={({ item, index }) => (
 							<View key={index} style={{ width, height: width }}>
-								<Image
-									style={{ width, height: '100%' }}
-									source={{
-										uri:
-											item?.photos[0] === 'default-photo.jpg'
-												? defaultItemPhoto
-												: item?.photos[0],
-									}}
-								/>
+								<Image style={{ width, height: '100%' }} source={{ uri: item }} />
 							</View>
 						)}
 					/>

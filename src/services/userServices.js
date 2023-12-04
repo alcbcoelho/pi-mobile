@@ -41,9 +41,17 @@ const updateUser = async (data) => {
 	}
 };
 
-const uploadUserAvatar = async (data) => {
+const uploadUserAvatar = async (formData) => {
 	try {
-		const res = await api.patchForm(endpoints.USERS_URL, { avatar: data });
+		const res = await api.patch(endpoints.USERS_UPLOAD_URL, formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+			transformRequest: () => {
+				return formData;
+			},
+		});
+
 		if (res?.data) return res.data;
 	} catch (e) {
 		if (axios.isAxiosError(e)) {

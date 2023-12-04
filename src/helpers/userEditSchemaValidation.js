@@ -7,18 +7,21 @@ function transformPhoneValue(value) {
 	return `${str.slice(0, 2)} ${str.slice(2, 6 + increment)}-${str.slice(6 + increment, 10 + increment)}`;
 }
 
-export const userSchemaValidationObject = {
+export const userEditSchemaValidation = yup.object({
 	firstName: yup.string().trim().required('O nome é obrigatório!'),
 	lastName: yup.string().trim().required('O sobrenome é obrigatório!'),
 	email: yup.string().email('O email deve estar no formato correto!').lowercase().required('O email é obrigatório!'),
 	password: yup
 		.string()
 		.min(8, 'A senha deve conter ao menos uma letra maiúscula,\numa letra minúscula, um número e 8 caracteres!')
-		.required('A senha é obrigatória!'),
-	confirm: yup
-		.string()
-		.oneOf([yup.ref('password')], 'A confirmação deve coincidir com a senha!')
-		.required('A confirmação de senha é obrigatória!'),
+		.notRequired(),
+	confirm: yup.string().when('password', ([password], schema) => {
+		return password
+			? schema
+					.oneOf([yup.ref('password')], 'A confirmação deve coincidir com a senha!')
+					.required('A confirmação de senha é obrigatória!')
+			: schema.notRequired();
+	}),
 	phone: yup
 		.string()
 		.matches(
@@ -27,8 +30,4 @@ export const userSchemaValidationObject = {
 		)
 		.transform((value) => transformPhoneValue(value))
 		.required('O telefone é obrigatório!'),
-};
-
-export const userSchemaValidation = yup.object({
-	...userSchemaValidationObject,
 });
