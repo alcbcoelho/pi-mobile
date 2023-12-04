@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Alert, View, ScrollView } from 'react-native';
-import { Button, Text, RadioButton, HelperText, TextInput, Portal, Dialog, useTheme } from 'react-native-paper';
+import { View, ScrollView } from 'react-native';
+import { Button, Text, RadioButton, HelperText, TextInput, useTheme, Dialog, Portal, Snackbar } from 'react-native-paper';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useForm, Controller } from 'react-hook-form';
@@ -34,36 +34,42 @@ export default function ObjectEdit({ navigation, route }) {
 	const [isVisible, setIsVisible] = useState(false);
 	const [files, setFiles] = useState(null);
 
+	// const [dialogVisibility, setDialogVisibility] = useState(false);
+	const [snackbarVisibility, setSnackbarVisibility] = useState();
+	
 	const [item, setItem] = useState();
 	const { userItems, getUserItems } = useUser();
 	const { userAuth } = useAuth();
 	const theme = useTheme();
-
+	
 	const situation = radioValue === 'found' ? ['achado', 'achei'] : ['perdido', 'perdi'];
 	const labelPlace = `Local em que foi ${situation[0]}`;
 	const labelDate = `Data em que foi ${situation[0]}`;
 	const labelTime = `Horário em que foi ${situation[0]}`;
-
+	
 	const controller = new AbortController();
 	const defaultItemPhoto = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-photo.jpg`;
+	
+	const itemDate = `${item?.datetime?.slice(8, 10)}/${item?.datetime?.slice(5, 7)}/${item?.datetime?.slice(0, 4)}`;
+	const itemTime = item?.datetime?.slice(11, 19);
 
 	const {
 		control,
-		reset,
 		setValue,
 		handleSubmit,
 		formState: { errors, isDirty },
 	} = useForm({
 		defaultValues: {
-			situation: item?.situation,
-			objectType: item?.objectType,
-			brand: item?.brand,
-			model: item?.model,
-			color: item?.color,
-			characteristics: item?.characteristics ? item.characteristics.join(', ') : '',
-			place: item?.place,
-			datetime: item?.date,
-			info: item?.info,
+			// situation: item?.situation,
+			// objectType: item?.objectType,
+			// brand: item?.brand,
+			// model: item?.model,
+			// color: item?.color,
+			// characteristics: item?.characteristics ? item.characteristics.join(', ') : '',
+			// place: item?.place,
+			// date: itemDateInStringFormat,
+			// time: itemTimeInStringFormat,
+			// info: item?.info,
 		},
 		values: {
 			situation: item?.situation,
@@ -73,20 +79,39 @@ export default function ObjectEdit({ navigation, route }) {
 			color: item?.color,
 			characteristics: item?.characteristics ? item.characteristics.join(', ') : '',
 			place: item?.place,
-			datetime: item?.date,
+			date: itemDate,
+			time: itemTime,
 			info: item?.info,
 		},
 		resolver: yupResolver(objectSchemaValidation),
 	});
 
+	// Snackbar stuff
+    useEffect(() => {
+        let snackbarTime;
+		if (route.params?.errorDisplay) {
+			setSnackbarVisibility(true);
+
+			snackbarTime = setTimeout(() => {
+				// const paramName = {props.params}
+				setSnackbarVisibility(false);
+				// params[props.params] = false;
+				route.params.errorDisplay = false;
+			}, 3000);
+		}
+
+		return () => {
+			controller.abort();
+			clearTimeout(snackbarTime);
+		};
+    }, [route.params.errorDisplay])
+	//
+
 	useEffect(() => {
 		setItem(userItems.find((item) => item.id === route.params.objectId));
+
 		return () => controller.abort();
 	}, [route.params.objectId]);
-
-	// useEffect(() => {
-	// 	reset();
-	// }, [userItems, userAuth, navigation.isFocused]);
 
 	useEffect(() => {
 		const preservedParams = {
@@ -97,23 +122,73 @@ export default function ObjectEdit({ navigation, route }) {
 		navigation.setParams({ ...preservedParams, unsavedChanges: isDirty });
 	}, [isDirty]);
 
+	const onSubmit = async (data) => {
+		try {
+			const datetime = `${data.date.slice(-4)}-${data.date.slice(3, 5)}-${data.date.slice(0, 2)}T${data.time.slice(0, 6)}00.000Z`;
+			const characteristics = data?.characteristics ? data.characteristics.split(',').map((item) => item.trim()) : [];
+			const newData = { ...data, characteristics, datetime };
+			console.log('Dados Formulário Objeto Edit:', newData);
+	
+			const photosFormData = new FormData();
+
+			for (let i = 0; i < files?.length; i++) {
+				photosFormData.append('photos', {
+					uri: files[i]?.uri,
+					type: 'image/jpeg',
+					name: `${files[i]?.height}-${files[i]?.width}`,
+				});
+			}
+
+			let resUpdate, resUpload;
+
+			if (data)
+				resUpdate = await updateItem(route.params.objectId, newData);
+			if (files)
+				resUpload = await uploadItemPhotos(route.params.objectId, photosFormData);
+
+			console.log('ResUpdate:', resUpdate);
+			console.log('ResUpload:', resUpload);
+	
+			if (resUpdate?.id !== '' || resUpload?.id !== '') {
+				await getUserItems();
+				// Alert.alert('Objeto atualizado com sucesso!');
+				if (resUpload?.id !== '') setFiles(null);
+				navigation.navigate('ObjectDetails', {
+					foundObject: route.params.foundObject,
+					objectId: route.params.objectId,
+					actionOnObjectRecord: 'update'
+				});
+			} else {
+				navigation.setParams({ errorDisplay: true });
+				// Alert.alert('Erro ao editar o objeto!');
+			}
+		} catch (e) {
+			console.error('Error ObjectEdit:', e);
+		}
+	};
+
+	const hideDialog = () => setDialogVisibility(false);
+
 	const onChangeMode = (selectedMode) => {
 		setShowDatePicker(true);
 		setMode(selectedMode);
 	};
 
-	const onChangeDate = (event, selectedDate) => {
+	const onChangeDateTime = (event, selectedDate) => {
 		const usedDate = selectedDate || date;
 		setShowDatePicker(false);
 		setDate(usedDate);
+		if (mode === 'date') {
+			let tempDate = new Date(usedDate).toLocaleDateString('pt-BR', { dateStyle: 'short' });
 
-		let dateTimeValue = new Date(usedDate).toISOString();
-		let tempDate = new Date(usedDate).toLocaleDateString('pt-BR', { dateStyle: 'short' });
-		let tempTime = new Date(usedDate).toLocaleTimeString('pt-BR', { timeStyle: 'long' });
+			setValue('date', tempDate, { shouldDirty: true });
+			setFormatedDate(tempDate);
+		} else if (mode === 'time') {
+			let tempTime = new Date(usedDate).toLocaleTimeString('pt-BR', { timeStyle: 'long' });
 
-		setValue('datetime', dateTimeValue);
-		setFormatedDate(tempDate);
-		setFormatedTime(tempTime);
+			setValue('time', tempTime, { shouldDirty: true })
+			setFormatedTime(tempTime);
+		}
 	};
 
 	const uploadObjectPhotos = async () => {
@@ -162,47 +237,6 @@ export default function ObjectEdit({ navigation, route }) {
 		}
 	};
 
-	const onSubmit = async (data) => {
-		try {
-			const characteristics = data?.characteristics
-				? data.characteristics.split(',').map((item) => item.trim())
-				: [];
-			const newData = { ...data, characteristics };
-			console.log('Dados Formulário Objeto Edit:', newData);
-
-			const photosFormData = new FormData();
-
-			for (let i = 0; i < files?.length; i++) {
-				photosFormData.append('photos', {
-					uri: files[i]?.uri,
-					type: 'image/jpeg',
-					name: `${files[i]?.height}-${files[i]?.width}`,
-				});
-			}
-
-			let resUpdate, resUpload;
-			if (data) resUpdate = await updateItem(route.params.objectId, newData);
-			if (files) resUpload = await uploadItemPhotos(route.params.objectId, photosFormData);
-
-			console.log('ResUpdate:', resUpdate);
-			console.log('ResUpload:', resUpload);
-
-			if (resUpdate?.id !== '' || resUpload?.id !== '') {
-				await getUserItems();
-				Alert.alert('Objeto atualizado com sucesso!');
-				if (resUpload?.id !== '') setFiles(null);
-				navigation.navigate('ObjectDetails', {
-					foundObject: route.params.foundObject,
-					objectId: route.params.objectId,
-				});
-			} else {
-				Alert.alert('Erro ao atualizar o objeto!');
-			}
-		} catch (e) {
-			console.error('Error ObjectEdit:', e);
-		}
-	};
-
 	return (
 		<>
 			<Portal>
@@ -215,7 +249,26 @@ export default function ObjectEdit({ navigation, route }) {
 						<Button onPress={() => removeObjectPhotos()}>Remover Imagens</Button>
 					</Dialog.Actions>
 				</Dialog>
+			</Portal> 
+			<Portal>
+				<Snackbar
+					style={{backgroundColor: theme.colors.error}}
+					visible={snackbarVisibility}
+				>
+					<Text style={{ color: theme.colors.onError }}>Erro ao editar o objeto!</Text>
+				</Snackbar>
 			</Portal>
+			{/* <Portal>
+				<Dialog visible={dialogVisibility} onDismiss={hideDialog} style={[{ backgroundColor: theme.colors.background }, global.dialog]}>
+					<Dialog.Title style={global.dialogTitle}>Erro</Dialog.Title>
+					<Dialog.Content>
+						<Text style={global.message}>Erro ao editar o objeto!</Text>
+					</Dialog.Content>
+					<Dialog.Actions style={global.dialogActions}>
+						<Button onPress={hideDialog}>OK</Button>
+					</Dialog.Actions>
+				</Dialog>
+			</Portal> */}
 			<ScrollView>
 				<View style={global.pageContainer}>
 					<View
@@ -365,7 +418,7 @@ export default function ObjectEdit({ navigation, route }) {
 						<View>
 							<DateTimePicker
 								value={date}
-								onChange={onChangeDate}
+								onChange={onChangeDateTime}
 								mode={mode}
 								is24Hour={true}
 								display={'spinner'}
@@ -375,46 +428,57 @@ export default function ObjectEdit({ navigation, route }) {
 						</View>
 					) : null}
 
-					<TextInput
-						style={global.input}
-						label={labelDate}
-						error={errors.datetime}
-						value={new Date(item?.datetime).toLocaleDateString('pt-BR')}
-						maxLength={10}
-						mode='outlined'
-						onPressIn={() => onChangeMode('date')}
-						left={
-							<TextInput.Icon
-								icon={() => <Ionicons name='calendar-outline' size={24} color={theme.colors.outline} />}
+					<Controller
+						name={'date'}
+						control={control}
+						render={({ field: { value, onChange } }) => (
+							<TextInput
+								style={global.input}
+								label={labelDate}
+								error={errors.date}
+								value={value}	//
+								onChangeText={onChange}
+								maxLength={10}
+								mode='outlined'
+								onPressIn={() => onChangeMode('date')}
+								left={
+									<TextInput.Icon
+										icon={() => <Ionicons name='calendar-outline' size={24} color={theme.colors.outline} />}
+									/>
+								}
 							/>
-						}
+						)}
 					/>
-					{errors.datetime ? (
+					{errors.date ? (
 						<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-							{errors.datetime?.message}
+							{errors.date?.message}
 						</HelperText>
 					) : null}
 
-					<TextInput
-						style={global.input}
-						label={labelTime}
-						error={errors.datetime}
-						value={new Date(item?.datetime).toLocaleTimeString('pt-BR', {
-							hour: '2-digit',
-							minute: '2-digit',
-						})}
-						maxLength={5}
-						mode='outlined'
-						onPressIn={() => onChangeMode('time')}
-						left={
-							<TextInput.Icon
-								icon={() => <Ionicons name='time-outline' size={24} color={theme.colors.outline} />}
+					<Controller
+						name={'time'}
+						control={control}
+						render={({ field: { value, onChange }}) => (
+							<TextInput
+								style={global.input}
+								label={labelTime}
+								error={errors.time}
+								value={value}
+								onChangeText={onChange}
+								maxLength={5}
+								mode='outlined'
+								onPressIn={() => onChangeMode('time')}
+								left={
+									<TextInput.Icon
+										icon={() => <Ionicons name='time-outline' size={24} color={theme.colors.outline} />}
+									/>
+								}
 							/>
-						}
+						)}
 					/>
-					{errors.datetime ? (
+					{errors.time ? (
 						<HelperText type='error' style={[global.input, { marginVertical: 0, paddingVertical: 0 }]}>
-							{errors.datetime?.message}
+							{errors.time?.message}
 						</HelperText>
 					) : null}
 
