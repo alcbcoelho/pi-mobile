@@ -26,7 +26,8 @@ export default function NotificationList({ navigation, allNotifications = false 
 	const controller = new AbortController();
 	const defaultItemPhoto = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-photo.jpg`;
 
-	// console.log(completeObjectsInMatches);	//
+	// console.log('complete', completeObjectsInMatches);
+	console.log('ESTADO OBJETO DE OUTROS:', othersObjectsInMatches);
 
 	useEffect(() => {
 		const loadMatchData = async () => {
@@ -37,23 +38,27 @@ export default function NotificationList({ navigation, allNotifications = false 
 			for (let i = 0; i < userMatches.length; i++) {
 				for (let j = 0; j < userItems.length; j++) {
 					const hasId = userMatches[i].itemIds.indexOf(userItems[j].id);
-					if (hasId !== -1) {
-						userObjectsWithMatch.push(userItems[j]);
-						if (hasId === 0) otherObjectsWithMatch.push(userMatches[i].itemIds[1]);
-						if (hasId === 1) otherObjectsWithMatch.push(userMatches[i].itemIds[0]);
-					}
+					if (hasId === -1) continue
+					if (hasId === 0) otherObjectsWithMatch.push(userMatches[i].itemIds[1]);
+					if (hasId === 1) otherObjectsWithMatch.push(userMatches[i].itemIds[0]);
+					userObjectsWithMatch.push(userItems[j]);
 				}
 			}
 
-			// otherObjectsWithMatch.map(async (id) => {
-			// 	const othersItem = await findItemById(id);
-			// 	if (othersItem) return othersItem; // está substituindo os ids pelos objetos completos dos outros
-			// });
+			console.log('OBJETOS DO USUÁRIO:', userObjectsWithMatch);
+			console.log('OBJETOS DE OUTROS (IDS):', otherObjectsWithMatch);
 
-			for (let k = 0; k < otherObjectsWithMatch.length; k++) {
-				const othersItem = await findItemById(otherObjectsWithMatch[k]);
-				if (othersItem) otherObjectsWithMatch[k] = othersItem; // está substituindo os ids pelos objetos completos de outros
-			}
+			otherObjectsWithMatch = otherObjectsWithMatch.map(async (id) => {
+				const othersObject = await findItemById(id);
+				if (othersObject.id) return othersObject; // está substituindo os ids pelos objetos completos dos outros
+			});
+
+			// for (let k = 0; k < otherObjectsWithMatch.length; k++) {
+			// 	const othersObject = await findItemById(otherObjectsWithMatch[k]);
+			// 	if (othersObject.id) otherObjectsWithMatch[k] = othersObject; // está substituindo os ids pelos objetos completos de outros
+			// }
+
+			console.log('OBJETOS DE OUTROS (COMPLETOS):', otherObjectsWithMatch);
 
 			for (let l = 0; l < userObjectsWithMatch.length; l++) {
 				completeObjectsUserOther.push([userObjectsWithMatch[l], otherObjectsWithMatch[l]]);
@@ -64,23 +69,20 @@ export default function NotificationList({ navigation, allNotifications = false 
 			// setCompleteObjectsInMatches(completeObjectsUserOther);
 		};
 
-		getUserMatches()
 		loadMatchData();
-
 		if (userItems.length) setIsLoading(false);
+		return () => controller.abort();
+	}, [userMatches]);
 
+	useEffect(() => {
+		const launchMatchesSearch = async () => {
+			await triggerMatchSearch(); // Busca por novas possíveis correspondências
+			await getUserMatches(); // Atualiza o estado global "userMatches"
+		};
+
+		launchMatchesSearch();
 		return () => controller.abort();
 	}, []);
-
-	// useEffect(() => {
-	// 	const launchMatchesSearch = async () => {
-	// 		await triggerMatchSearch();
-	// 		await getUserMatches();
-	// 	};
-
-	// 	launchMatchesSearch();
-	// 	return () => controller.abort();
-	// }, []);
 
 	return (
 		<>
@@ -97,7 +99,7 @@ export default function NotificationList({ navigation, allNotifications = false 
 					// }
 					// data={completeObjectsInMatches}
 					data={othersObjectsInMatches}
-					keyExtractor={(othersObject, index) => index}
+					keyExtractor={(othersObject) => othersObject.id}
 					renderItem={({ othersObject }) => (
 						<CustomPressable
 							onPress={() =>
@@ -141,3 +143,43 @@ export default function NotificationList({ navigation, allNotifications = false 
 		</>
 	);
 }
+
+// import { View, FlatList, Image, ScrollView } from 'react-native';
+// import { Divider, Text } from 'react-native-paper';
+// import CustomPressable from './CustomPressable';
+
+// // Data
+// import { unreadNotifications, allNotifications as allNotifications_ } from '../mockup/NotificationsData';
+
+// // Styles
+// import { global } from '../styles/global';
+
+// export default function NotificationList({ navigation, allNotifications = false }) {
+// 	return (
+// 		<FlatList
+// 			data={allNotifications ? allNotifications_ : unreadNotifications}
+// 			keyExtractor={(item) => item.id}
+// 			renderItem={({ item }) => (
+// 				<CustomPressable
+// 					onPress={() =>
+// 						navigation.navigate('ObjectScreenRoutes', {
+// 							screen: 'ObjectDetails',
+// 						})
+// 					}
+// 				>
+// 					<View style={global.item}>
+// 						<Image style={{ width: 50, height: 50, borderRadius: 2.5 }} source={{ uri: item.imgUrl }} />
+// 						<ScrollView>
+// 							<Text variant='titleMedium'>{item.title}</Text>
+// 							<Text variant='labelMedium'>
+// 								{item.foundObject}, achado por {item.user}, corresponde ao seu objeto perdido{' '}
+// 								{item.lostObject}
+// 							</Text>
+// 						</ScrollView>
+// 					</View>
+// 					<Divider />
+// 				</CustomPressable>
+// 			)}
+// 		/>
+// 	);
+// }
