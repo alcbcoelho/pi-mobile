@@ -16,8 +16,10 @@ import TextInputController2, { colorUnauthScreensError } from '../components/Tex
 // Styles
 import { global, styleUnauthenticatedScreens } from '../styles/global';
 
-export default function AccountRecover({ navigation }) {
+export default function AccountRecover({ navigation, route }) {
 	const { reset, authError } = useAuth();
+
+	const controller = new AbortController();
 
 	const {
 		control,

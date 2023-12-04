@@ -8,6 +8,9 @@ import { removeItem } from '../services/objectService';
 // Hooks
 import useUser from '../hooks/useUser';
 
+// Styles
+import { global } from '../styles/global';
+
 export default function StandardizedDialog({ title, content, visibilityStateArray, navigationArgs, deleteArgs }) {
 	const { getUserItems } = useUser();
 	const navigation = useNavigation();
@@ -20,20 +23,13 @@ export default function StandardizedDialog({ title, content, visibilityStateArra
 				visible={visibilityStateArray[0]}
 				onDismiss={() => visibilityStateArray[1](false)}
 				// contentContainerStyle={{ backgroundColor: theme.colors.background, padding: 16 }}
-				style={{
-					backgroundColor: theme.colors.background,
-					padding: 8,
-					height: '27.5%',
-				}}
+				style={[{ backgroundColor: theme.colors.background }, global.dialog]}
 			>
-				<Dialog.Title style={{ textAlign: 'center' }}>{title}</Dialog.Title>
+				<Dialog.Title style={global.dialogTitle}>{title}</Dialog.Title>
 				<Dialog.Content style={{ marginBottom: 0 }}>
 					<Text style={global.message}>{content}</Text>
 					<Dialog.Actions
-						style={{
-							marginTop: 16,
-							justifyContent: 'space-evenly',
-						}}
+						style={global.dialogActions}
 					>
 						<Button onPress={() => visibilityStateArray[1](false)}>Não</Button>
 						<Button

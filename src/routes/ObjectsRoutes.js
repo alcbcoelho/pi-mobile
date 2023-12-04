@@ -80,13 +80,35 @@ import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/
 // Components
 import Header from '../components/Header';
 import Home from '../pages/Home';
+import { Portal, Snackbar } from 'react-native-paper';
 
 // Pages
 import ObjectRegister from '../pages/ObjectRegister';
+import { useEffect, useState } from 'react';
 
 const Stack = createStackNavigator();
 
-export default function RegisteredObjectsRoutes({ navigation }) {
+export default function RegisteredObjectsRoutes({ route }) {
+	const [snackbarVisibility, setSnackbarVisibility] = useState(false);
+	const controller = new AbortController;
+
+	useEffect(() => {
+		let snackbarTime;
+		if (route.params?.createdAccount) {
+			setSnackbarVisibility(true);
+
+			snackbarTime = setTimeout(() => {
+				setSnackbarVisibility(false);
+				route.params.createdAccount = false;
+			}, 3000);
+		}
+
+		return () => {
+			controller.abort();
+			clearTimeout(snackbarTime);
+		};
+	}, [route.params?.createdAccount])
+
 	return (
 		<>
 			<Stack.Navigator
@@ -112,6 +134,14 @@ export default function RegisteredObjectsRoutes({ navigation }) {
 					}}
 				/>
 			</Stack.Navigator>
+			<Portal>
+				<Snackbar visible={snackbarVisibility}>
+					Conta criada com sucesso!
+				</Snackbar>
+        	</Portal>
+			{/* <Snackbar params={route.params?.createdAccount}>
+				Conta criada com sucesso!
+			</Snackbar> */}
 		</>
 	);
 }

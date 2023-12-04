@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Portal, Snackbar, Text } from 'react-native-paper';
+import { ActivityIndicator, Text } from 'react-native-paper';
+import ObjectSituationSnackbar from '../components/ObjectSituationSnackbar';
 
 // Components
 import TabBar from '../components/TabBar';
@@ -15,27 +16,10 @@ import useUser from '../hooks/useUser';
 import { global } from '../styles/global';
 
 export default function Home({ navigation, route }) {
-	const [wasDeleted, setWasDeleted] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const { userItems } = useUser();
-	const controller = new AbortController();
 
-	useEffect(() => {
-		let snackbarTime;
-		if (route.params?.objectDeleted) {
-			setWasDeleted(true);
-
-			snackbarTime = setTimeout(() => {
-				setWasDeleted(false);
-				route.params.objectDeleted = false;
-			}, 3000);
-		}
-
-		return () => {
-			controller.abort();
-			clearTimeout(snackbarTime);
-		};
-	}, [route.params]);
+	// console.log(route.params?.createdAccount);
 
 	useEffect(() => {
 		if (userItems.length) setIsLoading(false);
@@ -76,9 +60,8 @@ export default function Home({ navigation, route }) {
 					navigation.navigate('ObjectRegister', { unsavedChanges: false });
 				}}
 			/>
-			<Portal>
-				<Snackbar visible={wasDeleted}>Objeto apagado com sucesso!</Snackbar>
-			</Portal>
+			{/* <Snackbar params={route.params?.createdAccount}>Conta criada com sucesso!</Snackbar> */}
+			<ObjectSituationSnackbar />
 		</>
 	);
 }
