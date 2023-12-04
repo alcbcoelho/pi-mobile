@@ -1,39 +1,144 @@
+import { useEffect, useState } from 'react';
 import { View, FlatList, Image, ScrollView } from 'react-native';
-import { Divider, Text } from 'react-native-paper';
+import { ActivityIndicator, Divider, Text } from 'react-native-paper';
+import endpoints from '../config/endpoints';
+
+// Services
+import { findItemById } from '../services/objectService';
+import { triggerMatchSearch } from '../services/notificationServices';
+
+// Components
 import CustomPressable from './CustomPressable';
 
-// Data
-import { unreadNotifications, allNotifications as allNotifications_ } from '../mockup/NotificationsData';
+// Hooks
+import useUser from '../hooks/useUser';
 
 // Styles
 import { global } from '../styles/global';
 
 export default function NotificationList({ navigation, allNotifications = false }) {
-	return (
-		<FlatList
-			data={allNotifications ? allNotifications_ : unreadNotifications}
-			keyExtractor={(item) => item.id}
-			renderItem={({ item }) => (
-				<CustomPressable
-					onPress={() =>
-						navigation.navigate('ObjectScreenRoutes', {
-							screen: 'ObjectDetails',
-						})
+	// const [userObjectsInMatches, setUserObjectsInMatches] = useState([]);
+	// const [othersObjectsInMatches, setOthersObjectsInMatches] = useState([]);
+	const [completeObjectsInMatches, setCompleteObjectsInMatches] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+
+	const { userItems, userMatches, getUserMatches } = useUser();
+	const controller = new AbortController();
+	const defaultItemPhoto = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-photo.jpg`;
+
+	console.log(completeObjectsInMatches);
+
+	useEffect(() => {
+		const loadMatchData = async () => {
+			const userObjectsWithMatch = []; // está armazenando os objeto completos do usuário
+			const otherObjectsWithMatch = []; // a princípio está armazenando os ids dos outros objetos, depois recebe os objetos completos de outros
+			const completeObjectsUserOther = [];
+
+			for (let i = 0; i < userMatches.length; i++) {
+				for (let j = 0; j < userItems.length; j++) {
+					const hasId = userMatches[i].itemIds.indexOf(userItems[j].id);
+					if (hasId !== -1) {
+						userObjectsWithMatch.push(userItems[j]);
+						if (hasId === 0) otherObjectsWithMatch.push(userMatches[i].itemIds[1]);
+						if (hasId === 1) otherObjectsWithMatch.push(userMatches[i].itemIds[0]);
 					}
-				>
-					<View style={global.item}>
-						<Image style={{ width: 50, height: 50, borderRadius: 2.5 }} source={{ uri: item.imgUrl }} />
-						<ScrollView>
-							<Text variant='titleMedium'>{item.title}</Text>
-							<Text variant='labelMedium'>
-								{item.foundObject}, achado por {item.user}, corresponde ao seu objeto perdido{' '}
-								{item.lostObject}
-							</Text>
-						</ScrollView>
-					</View>
-					<Divider />
-				</CustomPressable>
+				}
+			}
+
+			// otherObjectsWithMatch.map(async (id) => {
+			// 	const othersItem = await findItemById(id);
+			// 	if (othersItem) return othersItem; // está substituindo os ids pelos objetos completos dos outros
+			// });
+
+			for (let k = 0; k < otherObjectsWithMatch.length; k++) {
+				const othersItem = await findItemById(otherObjectsWithMatch[k]);
+				if (othersItem) otherObjectsWithMatch[k] = othersItem; // está substituindo os ids pelos objetos completos de outros
+			}
+
+			for (let l = 0; l < userObjectsWithMatch.length; l++) {
+				completeObjectsUserOther.push([userObjectsWithMatch[l], otherObjectsWithMatch[l]]);
+			}
+
+			// setUserObjectsInMatches(userObjectsWithMatch);
+			// setOthersObjectsInMatches(otherObjectsWithMatch);
+			setCompleteObjectsInMatches(completeObjectsUserOther);
+		};
+
+		loadMatchData();
+
+		if (userItems.length) setIsLoading(false);
+
+		return () => controller.abort();
+	}, [userMatches]);
+
+	// useEffect(() => {
+	// 	const launchMatchesSearch = async () => {
+	// 		await triggerMatchSearch();
+	// 		await getUserMatches();
+	// 	};
+
+	// 	launchMatchesSearch();
+	// 	return () => controller.abort();
+	// }, []);
+
+	return (
+		<>
+			{isLoading ? (
+				<View style={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
+					<ActivityIndicator animating={true} size={'large'} />
+				</View>
+			) : (
+				<FlatList
+					// data={
+					// 	allNotifications
+					// 		? userMatches.filter((match ou object) => match ou object .solved === false)
+					// 		: userMatches.filter((match ou object) => match ou object .solved === true)
+					// }
+					data={completeObjectsInMatches}
+					keyExtractor={(complete, index) => index}
+					renderItem={({ complete }) => (
+						<CustomPressable
+							onPress={() =>
+								navigation.navigate('ObjectScreenRoutes', {
+									screen: 'ObjectDetails',
+									params: {
+										allNotifications: allNotifications,
+										othersObjectId: complete[1]?.id,
+										fromLoggedUser: false,
+									},
+								})
+							}
+						>
+							<View style={global.item}>
+								<Image
+									style={{ width: 50, height: 50, borderRadius: 2.5 }}
+									source={{
+										uri:
+											complete[1]?.photos[0] === 'default-photo.jpg'
+												? defaultItemPhoto
+												: complete[1]?.photos[0],
+									}}
+								/>
+								<ScrollView>
+									<Text variant='titleMedium'>
+										Registro semelhante a{' '}
+										{complete[0]?.brand
+											? `${complete[0]?.objectType} ${complete[0]?.brand}`
+											: `${complete[0]?.objectType} ${complete[0]?.color}`}
+									</Text>
+									<Text variant='labelMedium'>
+										{complete[1]?.brand
+											? `${complete[1]?.objectType} ${complete[1]?.brand}`
+											: `${complete[1]?.objectType} ${complete[1]?.color}`}
+										, corresponde ao seu objeto?
+									</Text>
+								</ScrollView>
+							</View>
+							<Divider />
+						</CustomPressable>
+					)}
+				/>
 			)}
-		/>
+		</>
 	);
 }

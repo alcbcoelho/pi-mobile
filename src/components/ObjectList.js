@@ -14,12 +14,12 @@ import { global } from '../styles/global';
 
 export default function ObjectList({ navigation, foundObjects = false }) {
 	const { userItems, getUserItems } = useUser();
-	const controller = new AbortController();
 	const defaultItemPhoto = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-photo.jpg`;
+	// const controller = new AbortController();
 
-	useEffect(() => {
-		return () => controller.abort();
-	}, []);
+	// useEffect(() => {
+	// 	return () => controller.abort();
+	// }, []);
 
 	return (
 		<FlatList

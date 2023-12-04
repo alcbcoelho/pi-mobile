@@ -33,7 +33,7 @@ export default function ObjectDetails({ navigation, route }) {
 			if (route.params.fromLoggedUser) {
 				setItem(userItems.find((item) => item.id === route.params.objectId));
 			} else {
-				const itemFoundById = await findItemById(route.params.objectId);
+				const itemFoundById = await findItemById(route.params.othersObjectId);
 				setItem(itemFoundById);
 			}
 		};
