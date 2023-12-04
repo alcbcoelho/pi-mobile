@@ -18,15 +18,15 @@ import { global } from '../styles/global';
 
 export default function NotificationList({ navigation, allNotifications = false }) {
 	// const [userObjectsInMatches, setUserObjectsInMatches] = useState([]);
-	// const [othersObjectsInMatches, setOthersObjectsInMatches] = useState([]);
-	const [completeObjectsInMatches, setCompleteObjectsInMatches] = useState([]);
+	const [othersObjectsInMatches, setOthersObjectsInMatches] = useState([]);
+	// const [completeObjectsInMatches, setCompleteObjectsInMatches] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const { userItems, userMatches, getUserMatches } = useUser();
 	const controller = new AbortController();
 	const defaultItemPhoto = `${endpoints.BASE_URL}${endpoints.PUBLIC_URL}/default-photo.jpg`;
 
-	console.log(completeObjectsInMatches);
+	// console.log(completeObjectsInMatches);	//
 
 	useEffect(() => {
 		const loadMatchData = async () => {
@@ -60,16 +60,17 @@ export default function NotificationList({ navigation, allNotifications = false 
 			}
 
 			// setUserObjectsInMatches(userObjectsWithMatch);
-			// setOthersObjectsInMatches(otherObjectsWithMatch);
-			setCompleteObjectsInMatches(completeObjectsUserOther);
+			setOthersObjectsInMatches(otherObjectsWithMatch);
+			// setCompleteObjectsInMatches(completeObjectsUserOther);
 		};
 
+		getUserMatches()
 		loadMatchData();
 
 		if (userItems.length) setIsLoading(false);
 
 		return () => controller.abort();
-	}, [userMatches]);
+	}, []);
 
 	// useEffect(() => {
 	// 	const launchMatchesSearch = async () => {
@@ -94,16 +95,17 @@ export default function NotificationList({ navigation, allNotifications = false 
 					// 		? userMatches.filter((match ou object) => match ou object .solved === false)
 					// 		: userMatches.filter((match ou object) => match ou object .solved === true)
 					// }
-					data={completeObjectsInMatches}
-					keyExtractor={(complete, index) => index}
-					renderItem={({ complete }) => (
+					// data={completeObjectsInMatches}
+					data={othersObjectsInMatches}
+					keyExtractor={(othersObject, index) => index}
+					renderItem={({ othersObject }) => (
 						<CustomPressable
 							onPress={() =>
 								navigation.navigate('ObjectScreenRoutes', {
 									screen: 'ObjectDetails',
 									params: {
 										allNotifications: allNotifications,
-										othersObjectId: complete[1]?.id,
+										othersObjectId: othersObject?.id,
 										fromLoggedUser: false,
 									},
 								})
@@ -114,22 +116,19 @@ export default function NotificationList({ navigation, allNotifications = false 
 									style={{ width: 50, height: 50, borderRadius: 2.5 }}
 									source={{
 										uri:
-											complete[1]?.photos[0] === 'default-photo.jpg'
+											othersObject?.photos[0] === 'default-photo.jpg'
 												? defaultItemPhoto
-												: complete[1]?.photos[0],
+												: othersObject?.photos[0],
 									}}
 								/>
 								<ScrollView>
 									<Text variant='titleMedium'>
-										Registro semelhante a{' '}
-										{complete[0]?.brand
-											? `${complete[0]?.objectType} ${complete[0]?.brand}`
-											: `${complete[0]?.objectType} ${complete[0]?.color}`}
+										Possível correspondência para um de seus objetos!
 									</Text>
 									<Text variant='labelMedium'>
-										{complete[1]?.brand
-											? `${complete[1]?.objectType} ${complete[1]?.brand}`
-											: `${complete[1]?.objectType} ${complete[1]?.color}`}
+										{othersObject?.brand
+											? `${othersObject?.objectType} ${othersObject?.brand}`
+											: `${othersObject?.objectType} ${othersObject?.color}`}
 										, corresponde ao seu objeto?
 									</Text>
 								</ScrollView>
