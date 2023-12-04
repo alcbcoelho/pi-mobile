@@ -50,13 +50,7 @@ npx expo start
 ### Variáveis de Ambiente do frontend de Mobile (.env.local):
 
 ```
-ACCESS_TOKEN_SECRET = 40acffd68adb0b6e95ffd2859abd93c60aa0010220875f41355b72ecb7a8440a35b95bfb3bbaaa6319973469d397a05cb2bf102ccada8e9d40c86ec783fcb7f4
-
-REFRESH_TOKEN_SECRET = ae0ef388b6890282575bef76d44486fafce3a9768f8050bd73423831172d2e23b03ffcf1c937615d133da0bdd58ac528f7df7d64a056c7d56e5708eab15ef322
-
-DATABASE_URL = mongodb+srv://<>:<>@thecluster.rf7trvj.mongodb.net/Meu-Amigo-PET-2?retryWrites=true&w=majority
-
-PORT = 3500
+EXPO_PUBLIC_IP_ADDRESS="10.0.2.2"
 ```
 
 ### Variáveis de Ambiente do backend de Mobile (.env):
